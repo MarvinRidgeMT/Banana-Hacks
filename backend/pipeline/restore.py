@@ -9,15 +9,18 @@ from .invention_map import invention_map, medoid, summary, regions, overlay
 
 CACHE = Path("cache")
 
-def load_mask(path, shape):
-    """Placeholder until the trained segmenter is plugged in: reads <name>_mask.png if present."""
+def get_mask(path, img):
+    """Use <name>_mask.png if it exists (synthetic tests with known damage); otherwise run our segmenter."""
+    shape = img.shape[:2]
     mp = Path(path).with_name(Path(path).stem + "_mask.png")
-    if not mp.exists():
-        return np.zeros(shape, bool)
-    m = Image.open(mp).convert("L")
-    if m.size != (shape[1], shape[0]):
-        m = m.resize((shape[1], shape[0]), Image.NEAREST)
-    return np.asarray(m) > 127
+    if mp.exists():
+        m = Image.open(mp).convert("L")
+        if m.size != (shape[1], shape[0]):
+            m = m.resize((shape[1], shape[0]), Image.NEAREST)
+        return np.asarray(m) > 127, "provided mask file"
+    from .segment import segment, MODEL_NAME
+    m, _ = segment(img)
+    return m, MODEL_NAME
 
 def _cache_key(sha, mask, seeds, steps):
     mh = hashlib.sha256(np.packbits(mask).tobytes()).hexdigest()[:12]
@@ -26,7 +29,7 @@ def _cache_key(sha, mask, seeds, steps):
 def restore(path, seeds=(11, 12, 13, 14), steps=20):
     d = ingest(path)
     img = d["image"]
-    mask = load_mask(path, img.shape[:2])
+    mask, mask_source = get_mask(path, img)
     log = EditLog(img)
     key = _cache_key(d["sha256"], mask, seeds, steps)
     if key.exists():   # same photo + mask + settings: skip SDXL entirely
@@ -44,11 +47,13 @@ def restore(path, seeds=(11, 12, 13, 14), steps=20):
     out = outs[k]
     label, delta, sigma = invention_map(img, outs, out, used)
     log.record("inpainting", img, out, {
+        "mask_source": mask_source,
         "model_thick": "sdxl-inpainting-0.1", "model_thin": "opencv-telea",
         "seeds": list(seeds), "displayed_seed": seeds[k], "steps": steps, "dilation_px": 4,
         "thin_px": int(thin.sum()), "thick_px": int(thick.sum())})
     return {"sha256": d["sha256"], "original": img, "restored": out, "seed_outputs": outs,
-            "displayed_seed": seeds[k], "mask": used, "thin": thin, "thick": thick,
+            "displayed_seed": seeds[k], "damage_mask": mask, "mask_source": mask_source,
+            "mask": used, "thin": thin, "thick": thick,
             "label": label, "sigma": sigma, "pixel_summary": summary(label),
             "regions": regions(label, used), "log": log}
 
@@ -61,6 +66,7 @@ if __name__ == "__main__":
     stem = Path(p).stem
     Image.fromarray(r["restored"]).save(out / f"{stem}_restored.png")
     Image.fromarray(r["label"]).save(out / f"{stem}_map.png")   # 0/1/2 label PNG for other tools
+    Image.fromarray((r["damage_mask"] * 255).astype(np.uint8)).save(out / f"{stem}_damage.png")
     ov = overlay(r["restored"], r["label"])
     Image.fromarray(np.hstack([r["original"], r["restored"], ov])).save(out / f"{stem}_compare.png")
     Image.fromarray(np.hstack(r["seed_outputs"])).save(out / f"{stem}_seeds.png")
@@ -69,6 +75,7 @@ if __name__ == "__main__":
         s = r["sigma"][th]
         print(f"seed spread inside generated regions: median {np.median(s):.1f}, 90th pct {np.percentile(s, 90):.1f}")
     outside = ((r["original"] != r["restored"]).any(-1) & ~r["mask"]).sum()
+    print(f"mask from: {r['mask_source']}")
     print(f"done in {time.time() - t:.0f}s, displayed seed {r['displayed_seed']}")
     print(f"changed pixels outside the mask: {outside} (must be 0)")
     print("pixel summary:", r["pixel_summary"])

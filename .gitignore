@@ -9,3 +9,4 @@ smoke_out.png
 __pycache__/
 *.pyc
 cache/
+weights/
