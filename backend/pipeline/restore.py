@@ -89,6 +89,13 @@ if __name__ == "__main__":
     Image.fromarray(np.hstack([r["original"], r["restored"], ov])).save(out / f"{stem}_compare.png")
     Image.fromarray(np.hstack(r["seed_outputs"])).save(out / f"{stem}_seeds.png")
     write_manifest(r, out / f"{stem}_manifest.json")
+    try:
+        from .c2pa_embed import embed
+        from .manifest import build_manifest
+        embed(out / f"{stem}_restored.png", out / f"{stem}_restored_c2pa.png", build_manifest(r))
+        print(f"C2PA: signed outputs/{stem}_restored_c2pa.png (test certificate)")
+    except Exception as e:
+        print("C2PA embed failed:", e)
     if r["face_regions"]:
         fr = max(r["face_regions"], key=lambda f: f["invented_fraction"])
         if fr["invented_fraction"] > 0:
