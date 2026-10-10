@@ -6,6 +6,7 @@ from .ingest import ingest
 from .inpaint import inpaint
 from .editlog import EditLog
 from .invention_map import invention_map, medoid, summary, regions, overlay
+from .manifest import write_manifest
 
 CACHE = Path("cache")
 
@@ -70,6 +71,7 @@ if __name__ == "__main__":
     ov = overlay(r["restored"], r["label"])
     Image.fromarray(np.hstack([r["original"], r["restored"], ov])).save(out / f"{stem}_compare.png")
     Image.fromarray(np.hstack(r["seed_outputs"])).save(out / f"{stem}_seeds.png")
+    write_manifest(r, out / f"{stem}_manifest.json")
     th = r["thick"]
     if th.any():
         s = r["sigma"][th]
