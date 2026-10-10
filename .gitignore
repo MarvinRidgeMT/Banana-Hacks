@@ -6,3 +6,6 @@ runs/
 test_inputs/
 outputs/
 smoke_out.png
+__pycache__/
+*.pyc
+cache/
