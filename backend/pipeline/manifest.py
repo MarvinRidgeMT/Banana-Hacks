@@ -27,7 +27,7 @@ def build_manifest(r):
             "caveat": "Seed agreement measures how constrained the model was, not whether it is correct.",
         },
         "pixel_summary": r["pixel_summary"],
-        "regions": r["regions"],
+        "regions": r["regions"] + r.get("face_regions", []),
         "untouched_pixel_check": "pass" if outside == 0 else f"fail ({outside} px)",
     }
 

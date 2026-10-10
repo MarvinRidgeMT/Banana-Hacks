@@ -2,9 +2,12 @@ import cv2, numpy as np, torch
 from PIL import Image
 from diffusers import StableDiffusionXLInpaintPipeline, AutoencoderKL
 
+INPAINT_VERSION = "5"   # bump this whenever inpainting behavior changes, so old cache entries aren't reused
 MODEL = "diffusers/stable-diffusion-xl-1.0-inpainting-0.1"
 PROMPT = "old black and white photograph, film grain, natural lighting"
-NEG = "modern, color, cartoon, painting"
+FACE_PROMPT = ("old black and white photograph, close-up portrait of a person's face, "
+               "detailed eyes, natural skin, film grain")
+NEG = "modern, color, cartoon, painting, deformed, blurry"
 THIN_HALF_WIDTH = 4   # damage up to ~8 px wide is filled from context, not generated
 MIN_CORE_AREA = 150   # ignore tiny thick bits
 GROUP_PX = 48         # thick regions closer than this share one SDXL crop
@@ -37,8 +40,7 @@ def get_pipe():
     return _pipe
 
 def split_thin_thick(raw, m, dilate_px):
-    """Decide on the UNDILATED mask: specks and scratches are thin, tears and holes are thick.
-    Returns (thin, thick) as parts of the dilated mask m."""
+    """Decide on the UNDILATED mask: specks and scratches are thin, tears and holes are thick."""
     dist = cv2.distanceTransform(raw.astype(np.uint8), cv2.DIST_L2, 3)
     core = (dist > THIN_HALF_WIDTH).astype(np.uint8)
     n, lab, stats, _ = cv2.connectedComponentsWithStats(core, 8)
@@ -55,6 +57,11 @@ def thick_groups(thick):
     n, lab, stats, _ = cv2.connectedComponentsWithStats(g, 8)
     return [((lab == i) & thick, stats[i, :4]) for i in range(1, n)]
 
+def _overlaps(a, b):
+    ax, ay, aw, ah = a[:4]
+    bx, by, bw, bh = b[:4]
+    return ax < bx + bw and bx < ax + aw and ay < by + bh and by < ay + ah
+
 def _crop_box(box, W, H):
     x, y, w, h = box
     side = max(max(w, h) * 2 + 64, MIN_CROP)
@@ -63,33 +70,51 @@ def _crop_box(box, W, H):
     x1, y1 = min(W, x0 + side), min(H, y0 + side)
     return max(0, x1 - side), max(0, y1 - side), x1, y1
 
-def _sdxl(crop, cmask, seed, steps, guidance):
+def _sdxl(crop, cmask, seed, steps, guidance, prompt):
     ch, cw = cmask.shape
     s = 1024 / max(ch, cw)   # zoom the crop up so SDXL sees the damage at full detail
     tw, th = max(8, round(cw * s) // 8 * 8), max(8, round(ch * s) // 8 * 8)
-    g = get_pipe()(prompt=PROMPT, negative_prompt=NEG,
+    g = get_pipe()(prompt=prompt, negative_prompt=NEG,
                    image=Image.fromarray(crop).resize((tw, th), Image.LANCZOS),
                    mask_image=Image.fromarray((cmask * 255).astype(np.uint8)).resize((tw, th), Image.NEAREST),
                    height=th, width=tw, num_inference_steps=steps, guidance_scale=guidance,
-                   strength=0.99, generator=torch.Generator("cpu").manual_seed(seed)).images[0]
+                   strength=1.0,   # each seed draws the hole from scratch, not from the blurry pre-fill
+                   generator=torch.Generator("cpu").manual_seed(seed)).images[0]
     return np.asarray(g.resize((cw, ch), Image.LANCZOS))
 
-def _match_tone(out, orig, region, damaged):
-    """Give generated pixels the same color tint as the intact pixels around them (sepia stays sepia)."""
-    ring = (cv2.dilate(region.astype(np.uint8), np.ones((31, 31), np.uint8)) > 0) & ~damaged
+def _blend_in(out, orig, region, damaged):
+    """Make a generated region sit in the photo:
+    1. color tint = median tint of the intact ring around it (sepia stays sepia)
+    2. brightness: shift so the region's border band matches the intact ring (no pale patch)
+    3. grain: add noise so its texture matches the photo's (same noise for every seed,
+       so grain can't create fake seed disagreement in the Invention Map)."""
+    k = np.ones((15, 15), np.uint8)
+    r8 = region.astype(np.uint8)
+    ring = (cv2.dilate(r8, k) > 0) & ~damaged
     if ring.sum() < 20:
         return
-    lo = cv2.cvtColor(orig, cv2.COLOR_RGB2LAB)
-    lab = cv2.cvtColor(out, cv2.COLOR_RGB2LAB)
+    band = region & ~(cv2.erode(r8, k) > 0)
+    lo = cv2.cvtColor(orig, cv2.COLOR_RGB2LAB).astype(np.float32)
+    lab = cv2.cvtColor(out, cv2.COLOR_RGB2LAB).astype(np.float32)
     for c in (1, 2):
         lab[..., c][region] = np.median(lo[..., c][ring])
-    out[region] = cv2.cvtColor(lab, cv2.COLOR_LAB2RGB)[region]
+    L, Lo = lab[..., 0], lo[..., 0]
+    if band.any():
+        L[region] += np.median(Lo[ring]) - np.median(L[band])
+    grain_photo = (Lo - cv2.GaussianBlur(Lo, (0, 0), 1.5))[ring].std()
+    grain_gen = (L - cv2.GaussianBlur(L, (0, 0), 1.5))[region].std()
+    add = max(0.0, grain_photo ** 2 - grain_gen ** 2) ** 0.5
+    if add > 0:
+        noise = np.random.default_rng(1234).normal(0, add, L.shape).astype(np.float32)
+        L[region] += noise[region]
+    out[region] = cv2.cvtColor(lab.clip(0, 255).astype(np.uint8), cv2.COLOR_LAB2RGB)[region]
 
-def inpaint(img, mask, seeds=(11,), steps=20, guidance=6.0, dilate_px=4):
+def inpaint(img, mask, seeds=(11,), steps=20, guidance=6.0, dilate_px=4, face_boxes=()):
     """img: HxWx3 uint8 RGB. mask: HxW bool (True = content lost).
     Returns (one output per seed, used_mask, thin_mask, thick_mask).
     Thin damage is identical in every seed (inferred from context).
-    Thick damage is generated per seed (seeds may disagree: that feeds the Invention Map)."""
+    Thick damage is generated per seed (seeds may disagree: that feeds the Invention Map).
+    Regions that overlap a detected face get a face-specific prompt."""
     H, W = mask.shape
     k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * dilate_px + 1, 2 * dilate_px + 1))
     m = cv2.dilate(mask.astype(np.uint8), k) > 0
@@ -98,16 +123,17 @@ def inpaint(img, mask, seeds=(11,), steps=20, guidance=6.0, dilate_px=4):
     base = img.copy()
     base[m] = telea[m]
     groups = thick_groups(thick)
-    print(f"SDXL regions: {len(groups)}  x  seeds: {len(seeds)}  =  {len(groups) * len(seeds)} runs")
+    is_face = [any(_overlaps(box, fb) for fb in face_boxes) for _, box in groups]
+    print(f"SDXL regions: {len(groups)} ({sum(is_face)} on faces)  x  seeds: {len(seeds)}  =  {len(groups) * len(seeds)} runs")
     outs = []
     for seed in seeds:
         out = base.copy()
         for gi, (region, box) in enumerate(groups):
             x0, y0, x1, y1 = _crop_box(box, W, H)
             cm = region[y0:y1, x0:x1]
-            gen = _sdxl(base[y0:y1, x0:x1], cm, seed + 1000 * gi, steps, guidance)
+            prompt = FACE_PROMPT if is_face[gi] else PROMPT
+            gen = _sdxl(base[y0:y1, x0:x1], cm, seed + 1000 * gi, steps, guidance, prompt)
             out[y0:y1, x0:x1][cm] = gen[cm]
-        if thick.any():
-            _match_tone(out, img, thick, m)
+            _blend_in(out, img, region, m)
         outs.append(out)
     return outs, m, thin, thick
