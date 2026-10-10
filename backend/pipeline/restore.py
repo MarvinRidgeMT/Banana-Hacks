@@ -3,7 +3,7 @@ import numpy as np
 from pathlib import Path
 from PIL import Image
 from .ingest import ingest
-from .inpaint import inpaint, INPAINT_VERSION
+from .inpaint import inpaint, INPAINT_VERSION, add_grain
 from .editlog import EditLog
 from .invention_map import invention_map, medoid, summary, regions, overlay
 from .manifest import write_manifest
@@ -43,6 +43,8 @@ def restore(path, seeds=(11, 12, 13, 14), steps=20, fidelity=0.5, strict_faces=T
         outs, used, thin, thick = inpaint(img, mask, seeds=seeds, steps=steps, face_boxes=fboxes)
         CACHE.mkdir(exist_ok=True)
         np.savez_compressed(key, outs=np.stack(outs), used=used, thin=thin, thick=thick)
+    for o in outs:
+        add_grain(o, img, thin, used)
     pre = [o.copy() for o in outs]
     run_faces = face_stage and bool(fboxes)
     if run_faces:   # Stage 4: CodeFormer on every seed, so its effect shows up in the Invention Map too

@@ -137,3 +137,23 @@ def inpaint(img, mask, seeds=(11,), steps=20, guidance=6.0, dilate_px=4, face_bo
             _blend_in(out, img, region, m)
         outs.append(out)
     return outs, m, thin, thick
+
+def add_grain(out, orig, region, damaged, seed=1234):
+    """Give context-filled (thin) pixels the photo's own grain, so filled scratches don't read as smooth pale bands.
+    Same noise for every seed, so it can't create fake seed disagreement."""
+    if not region.any():
+        return
+    ring = (cv2.dilate(region.astype(np.uint8), np.ones((15, 15), np.uint8)) > 0) & ~damaged
+    if ring.sum() < 20:
+        return
+    Lo = cv2.cvtColor(orig, cv2.COLOR_RGB2LAB).astype(np.float32)[..., 0]
+    lab = cv2.cvtColor(out, cv2.COLOR_RGB2LAB).astype(np.float32)
+    L = lab[..., 0]
+    gp = (Lo - cv2.GaussianBlur(Lo, (0, 0), 1.5))[ring].std()
+    gg = (L - cv2.GaussianBlur(L, (0, 0), 1.5))[region].std()
+    add = max(0.0, gp ** 2 - gg ** 2) ** 0.5
+    if add <= 0:
+        return
+    noise = np.random.default_rng(seed).normal(0, add, L.shape).astype(np.float32)
+    L[region] += noise[region]
+    out[region] = cv2.cvtColor(lab.clip(0, 255).astype(np.uint8), cv2.COLOR_LAB2RGB)[region]
