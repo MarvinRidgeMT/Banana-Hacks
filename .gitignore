@@ -3,3 +3,6 @@ data/
 cache/
 runs/
 *.pth
+test_inputs/
+outputs/
+smoke_out.png
