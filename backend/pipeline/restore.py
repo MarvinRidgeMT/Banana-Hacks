@@ -28,12 +28,13 @@ def _cache_key(sha, mask, seeds, steps):
     mh = hashlib.sha256(np.packbits(mask).tobytes()).hexdigest()[:12]
     return CACHE / f"{sha[:16]}_{mh}_s{'-'.join(map(str, seeds))}_n{steps}_v{INPAINT_VERSION}.npz"
 
-def restore(path, seeds=(11, 12, 13, 14), steps=20):
+def restore(path, seeds=(11, 12, 13, 14), steps=20, fidelity=0.5, strict_faces=True, face_stage=True):
     d = ingest(path)
     img = d["image"]
     mask, mask_source = get_mask(path, img)
     log = EditLog(img)
-    fboxes = load_face_hints(path) or detect_faces_damaged(img, mask)
+    hints = load_face_hints(path)
+    fboxes = hints or detect_faces_damaged(img, mask)
     key = _cache_key(d["sha256"], mask, seeds, steps)
     if key.exists():   # same photo + mask + settings: skip SDXL entirely
         z = np.load(key)
@@ -42,30 +43,41 @@ def restore(path, seeds=(11, 12, 13, 14), steps=20):
         outs, used, thin, thick = inpaint(img, mask, seeds=seeds, steps=steps, face_boxes=fboxes)
         CACHE.mkdir(exist_ok=True)
         np.savez_compressed(key, outs=np.stack(outs), used=used, thin=thin, thick=thick)
-    if d["grayscale"]:   # grayscale lock: regenerated pixels can't introduce color
+    pre = [o.copy() for o in outs]
+    run_faces = face_stage and bool(fboxes)
+    if run_faces:   # Stage 4: CodeFormer on every seed, so its effect shows up in the Invention Map too
+        from .codeformer import face_pass
+        outs = [face_pass(o, img, fboxes, used, fidelity=fidelity, strict=strict_faces) for o in outs]
+    if d["grayscale"]:   # grayscale lock: changed pixels can't introduce color
         for o in outs:
-            g = o[used].mean(1, keepdims=True).round().astype(np.uint8)
-            o[used] = np.repeat(g, 3, 1)
+            ch = (o != img).any(-1)
+            g = o[ch].mean(1, keepdims=True).round().astype(np.uint8)
+            o[ch] = np.repeat(g, 3, 1)
     k = medoid(outs, thick)
     out = outs[k]
     label, delta, sigma = invention_map(img, outs, out, used)
     faces = face_report(out, label, fboxes)
-    log.record("inpainting", img, out, {
+    log.record("inpainting", img, pre[k], {
         "mask_source": mask_source,
         "model_thick": "sdxl-inpainting-0.1", "model_thin": "opencv-telea",
         "seeds": list(seeds), "displayed_seed": seeds[k], "steps": steps, "dilation_px": 4,
         "thin_px": int(thin.sum()), "thick_px": int(thick.sum())})
+    if run_faces:
+        log.record("face_restoration", pre[k], out, {
+            "model": "codeformer v0.1.0", "fidelity_w": fidelity, "strict_mode": strict_faces,
+            "faces": len(fboxes), "face_boxes_source": "provided" if hints else "detected (yunet)"})
     return {"sha256": d["sha256"], "original": img, "restored": out, "seed_outputs": outs,
             "displayed_seed": seeds[k], "damage_mask": mask, "mask_source": mask_source,
             "mask": used, "thin": thin, "thick": thick,
             "label": label, "sigma": sigma, "pixel_summary": summary(label),
-            "regions": regions(label, used), "face_regions": faces, "log": log}
+            "regions": regions(label, used), "face_regions": faces, "fidelity": fidelity, "log": log}
 
 if __name__ == "__main__":
     import sys
     p = sys.argv[1]
+    fid = float(sys.argv[2]) if len(sys.argv) > 2 else 0.5
     t = time.time()
-    r = restore(p)
+    r = restore(p, fidelity=fid)
     out = Path("outputs"); out.mkdir(exist_ok=True)
     stem = Path(p).stem
     Image.fromarray(r["restored"]).save(out / f"{stem}_restored.png")
@@ -88,7 +100,7 @@ if __name__ == "__main__":
         s = r["sigma"][th]
         print(f"seed spread inside generated regions: median {np.median(s):.1f}, 90th pct {np.percentile(s, 90):.1f}")
     outside = ((r["original"] != r["restored"]).any(-1) & ~r["mask"]).sum()
-    print(f"mask from: {r['mask_source']}")
+    print(f"mask from: {r['mask_source']}, face fidelity w = {fid}")
     print(f"done in {time.time() - t:.0f}s, displayed seed {r['displayed_seed']}")
     print(f"changed pixels outside the mask: {outside} (must be 0)")
     print("pixel summary:", r["pixel_summary"])
