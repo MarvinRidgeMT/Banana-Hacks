@@ -26,6 +26,9 @@ class DamageDataset(Dataset):
             return self[(i + 1) % len(self)]
         # Training: fresh random damage every epoch. Validation: fixed damage per photo.
         rng = np.random.default_rng() if self.train else np.random.default_rng(i)
+        if self.train:
+            f = rng.uniform(0.5, 1.3)
+            img = cv2.resize(img, None, fx=f, fy=f, interpolation=cv2.INTER_AREA if f < 1 else cv2.INTER_CUBIC)
         h, w = img.shape[:2]
         s = self.size / min(h, w)
         if s > 1 or not self.train:
