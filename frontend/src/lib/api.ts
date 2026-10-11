@@ -96,14 +96,16 @@ export const api = {
   },
 
   /** Upload a photo and get the segmenter's proposed damage mask to review. */
-  propose(file: File) {
+  propose(file: File, kind: "photo" | "document" = "photo") {
     const form = new FormData();
     form.append("file", file);
+    form.append("kind", kind);
     return call<{ key: string; original: string; mask: string | null }>("/propose", { method: "POST", body: form });
   },
 
-  restore(opts: { file?: File; key?: string; mask?: Blob; fidelity: number; allFidelities?: boolean }) {
+  restore(opts: { file?: File; key?: string; mask?: Blob; kind?: "photo" | "document"; fidelity: number; allFidelities?: boolean }) {
     const form = new FormData();
+    if (opts.kind) form.append("kind", opts.kind);
     if (opts.file) form.append("file", opts.file);
     if (opts.key) form.append("key", opts.key);
     if (opts.mask) form.append("mask", opts.mask, "mask.png");

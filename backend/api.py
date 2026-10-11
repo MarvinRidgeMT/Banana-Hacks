@@ -111,7 +111,8 @@ def _normalise_mask(data: bytes, size: tuple[int, int]) -> bytes:
 
 
 def ingest(image_bytes: bytes, *, filename: str, mask_bytes: bytes | None = None,
-           mask_source: str | None = None, faces_json: bytes | None = None) -> str:
+           mask_source: str | None = None, faces_json: bytes | None = None,
+           kind: str = "photo") -> str:
     """Save the photo (and mask) as cache/<key>/input.png (+ input_mask.png).
 
     key = SHA-256 of the photo, or of photo + mask when a mask is supplied, so a
@@ -121,6 +122,8 @@ def ingest(image_bytes: bytes, *, filename: str, mask_bytes: bytes | None = None
     img = _normalise_image(image_bytes)
     mask_png = _normalise_mask(mask_bytes, img.size) if mask_bytes else None
     key = sha if mask_png is None else hashlib.sha256(image_bytes + b"\0mask\0" + mask_png).hexdigest()
+    if kind == "document":  # documents get their own results, made by the document path
+        key = hashlib.sha256(image_bytes + b"\0document\0" + (mask_png or b"")).hexdigest()
 
     folder = CACHE / key
     if (folder / "source.json").exists():
@@ -139,6 +142,7 @@ def ingest(image_bytes: bytes, *, filename: str, mask_bytes: bytes | None = None
         "sha256": sha,
         "filename": filename,
         "mask_source": mask_source if mask_png is not None else "segmenter",
+        "kind": kind,
         "width": img.size[0],
         "height": img.size[1],
         "ingested_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -280,7 +284,8 @@ def load_demos(warm: bool) -> None:
         key = ingest(path.read_bytes(), filename=path.name,
                      mask_bytes=mask.read_bytes() if mask.exists() else None,
                      mask_source="human_file",
-                     faces_json=faces.read_bytes() if faces.exists() else None)
+                     faces_json=faces.read_bytes() if faces.exists() else None,
+                     kind=entry.get("kind", "photo"))
         DEMO_INDEX.append({**entry, "key": key})
     if warm:
         for fid in (DEFAULT_FIDELITY, *[f for f in FIDELITY_STEPS if f != DEFAULT_FIDELITY]):
@@ -328,6 +333,7 @@ async def restore_route(request: Request):
     want_all = str(form.get("all_fidelities", "true")).lower() in {"1", "true", "yes"}
 
     upload, mask_upload = form.get("file"), form.get("mask")
+    kind = "document" if str(form.get("kind", "")).lower() == "document" else "photo"
     mask_bytes = await mask_upload.read() if hasattr(mask_upload, "read") else None
     if mask_bytes == b"":
         mask_bytes = None
@@ -340,7 +346,7 @@ async def restore_route(request: Request):
             if len(data) > MAX_UPLOAD:
                 return error(413, "That photo is over 30 MB; please export a smaller copy.")
             key = await run_in_threadpool(ingest, data, filename=upload.filename or "upload",
-                                          mask_bytes=mask_bytes, mask_source="human_brush")
+                                          mask_bytes=mask_bytes, mask_source="human_brush", kind=kind)
         elif form.get("key"):
             base = str(form.get("key"))
             if not valid_key(base):
@@ -350,11 +356,12 @@ async def restore_route(request: Request):
             else:  # same photo, new hand-painted mask
                 src = CACHE / base
                 original = json.loads((src / "source.json").read_text())
+                kind = original.get("kind", kind)
                 faces = src / "input_faces.json"
                 key = await run_in_threadpool(
                     ingest, (src / "input.png").read_bytes(), filename=original["filename"],
                     mask_bytes=mask_bytes, mask_source="human_brush",
-                    faces_json=faces.read_bytes() if faces.exists() else None)
+                    faces_json=faces.read_bytes() if faces.exists() else None, kind=kind)
         else:
             return error(400, "Send a photo as 'file' (or the 'key' of one already uploaded).")
     except ValueError as e:
@@ -407,11 +414,12 @@ async def propose_route(request: Request):
     if len(data) > MAX_UPLOAD:
         return error(413, "That photo is over 30 MB; please export a smaller copy.")
     try:
-        key = await run_in_threadpool(ingest, data, filename=upload.filename or "upload")
+        kind = "document" if str(form.get("kind", "")).lower() == "document" else "photo"
+        key = await run_in_threadpool(ingest, data, filename=upload.filename or "upload", kind=kind)
     except ValueError as e:
         return error(400, str(e))
     try:
-        await run_in_threadpool(hook.propose_mask, CACHE / key / "input.png")
+        await run_in_threadpool(hook.propose_mask, CACHE / key / "input.png", kind)
         mask = "proposed_mask.png"
     except Exception as e:  # the brush still works from a blank mask
         print(f"[propose] {key[:8]} failed: {type(e).__name__}: {e}", flush=True)

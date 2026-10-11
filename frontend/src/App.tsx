@@ -17,12 +17,13 @@ import { Home } from "./pages/Home";
 import { HowItWorks } from "./pages/HowItWorks";
 import { NotFound } from "./pages/NotFound";
 
-type JobOpts = { file?: File; key?: string; mask?: Blob };
+type Kind = "photo" | "document";
+type JobOpts = { file?: File; key?: string; mask?: Blob; kind?: Kind };
 
 /** A brush or job screen shown in place of the current page. It isn't a route:
  * any navigation ends it. */
 type Task =
-  | { name: "brush"; title: string; imageUrl: string; maskUrl?: string | null; file?: File; key?: string }
+  | { name: "brush"; title: string; imageUrl: string; maskUrl?: string | null; file?: File; key?: string; kind?: Kind }
   | { name: "job"; title: string; job: Job | null };
 
 const PAGE_TITLE: Record<Exclude<Route["name"], "result">, string> = {
@@ -116,16 +117,17 @@ export default function App() {
     [],
   );
 
-  const onUpload = async (file: File, markMyself: boolean) => {
+  const onUpload = async (file: File, markMyself: boolean, kind: Kind = "photo") => {
     if (markMyself) {
       // Show the segmenter's proposed mask in the brush so a person can fix it before restoring.
       setBanner(null);
       setTask({ name: "job", title: file.name, job: null });
       try {
-        const p = await api.propose(file);
+        const p = await api.propose(file, kind);
         setTask({
           name: "brush",
           title: file.name,
+          kind,
           key: p.key,
           imageUrl: fileUrl(p.key, p.original),
           maskUrl: p.mask ? fileUrl(p.key, p.mask) : null,
@@ -133,10 +135,10 @@ export default function App() {
       } catch {
         if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
         objectUrl.current = URL.createObjectURL(file);
-        setTask({ name: "brush", title: file.name, imageUrl: objectUrl.current, file });
+        setTask({ name: "brush", title: file.name, imageUrl: objectUrl.current, file, kind });
       }
     } else {
-      runJob(file.name, { file });
+      runJob(file.name, { file, kind });
     }
   };
 
@@ -163,7 +165,7 @@ export default function App() {
           onCancel={endTask}
           onSubmit={(mask) => {
             setSubmitting(true);
-            runJob(task.title, { file: task.file, key: task.key, mask });
+            runJob(task.title, { file: task.file, key: task.key, mask, kind: task.kind });
           }}
         />
       );

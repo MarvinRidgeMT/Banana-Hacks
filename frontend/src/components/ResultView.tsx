@@ -190,7 +190,15 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
 
       <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_24rem]">
         <div className="space-y-6">
-          <ReadingHint />
+          {shown.kind === "document" ? (
+            <p className="rounded-sm border border-line bg-surface px-5 py-4 text-body">
+              <span className="font-semibold">Document mode.</span> No text was generated. Blue areas are paper
+              filled in from its surroundings; red areas touched writing, so text was probably lost there and the
+              blank fill is not the original.
+            </p>
+          ) : (
+            <ReadingHint />
+          )}
           <PhotoStage result={shown} showMap={showMap} opacity={opacity} onHover={setHover} busy={busy} />
         </div>
 

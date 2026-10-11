@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { DemoCredit } from "../components/DemoCredit";
 import { ExplodedView } from "../components/ExplodedView";
 import { TrueFaceExhibit } from "../components/TrueFaceExhibit";
@@ -258,7 +258,7 @@ export function Home({ demos, demosError, onRetryDemos }: Props) {
         <ul className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {NUMBERS.map((n) => (
             <li key={n.label}>
-              <p className="font-serif text-4xl sm:text-5xl">{n.value}</p>
+              <p className="font-serif text-4xl sm:text-5xl"><CountUp text={n.value} /></p>
               <p className="mt-2 text-lg text-ground/80">{n.label}</p>
             </li>
           ))}
@@ -327,6 +327,14 @@ function HeroExhibit({
     return (
       <figure>
         <PhotoStage result={heroResult} showMap={showLabels} opacity={0.75} onHover={() => {}} />
+        <p className="readout mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+          <span><span className="blink text-invented">●</span> Case {heroResult.key.slice(0, 6)}</span>
+          <span>{(heroResult as Result & { seeds?: number }).seeds ?? 8} seeds</span>
+          <span>{(100 * heroResult.pixel_summary.observed).toFixed(1)}% real</span>
+          <span>{(100 * heroResult.pixel_summary.inferred).toFixed(1)}% rebuilt</span>
+          <span>{(100 * heroResult.pixel_summary.invented).toFixed(1)}% invented</span>
+          <span>C2PA signed</span>
+        </p>
         <figcaption className="mt-8 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <p className="text-body">
@@ -398,4 +406,30 @@ function HeroExhibit({
       </div>
     </div>
   );
+}
+
+/** Animates the first number in `text` from 0 when it scrolls into view; the rest of the text stays. */
+function CountUp({ text }: { text: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const m = text.match(/\d+(\.\d+)?/);
+  const [shown, setShown] = useState(m ? text.replace(m[0], "0") : text);
+  useEffect(() => {
+    if (!m || !ref.current) return;
+    const target = parseFloat(m[0]); const dec = (m[1] ?? "").length - (m[1] ? 1 : 0);
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) { setShown(text); return; }
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      const t0 = performance.now();
+      const tick = (t: number) => {
+        const k = Math.min(1, (t - t0) / 1200); const v = target * (1 - Math.pow(1 - k, 3));
+        setShown(text.replace(m[0], v.toFixed(dec)));
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }, { threshold: 0.4 });
+    io.observe(ref.current);
+    return () => io.disconnect();
+  }, [text]);
+  return <span ref={ref}>{shown}</span>;
 }

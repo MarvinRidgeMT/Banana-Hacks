@@ -449,7 +449,10 @@ def alternate_faces(result: dict, regions: list[dict], warnings: list[str]) -> t
     return faces, best["bbox"]
 
 
-def propose_mask(image_path: Path) -> Path:
+DOC_WEIGHTS = "weights/seg_doc_best.pth"
+
+
+def propose_mask(image_path: Path, kind: str = "photo") -> Path:
     """Run only the damage segmenter on an uploaded photo, so a person can review and
     correct the mask before restoring (the mask is the biggest quality lever).
     Segments a 1024 px copy, like the pipeline, then widens the result by 2 px so
@@ -465,11 +468,71 @@ def propose_mask(image_path: Path) -> Path:
         from pipeline.segment import segment
         k = min(1.0, 1024 / max(W, H))
         small = img.resize((max(1, round(W * k)), max(1, round(H * k))), Image.LANCZOS) if k < 1 else img
-        ms, _ = segment(np.asarray(small))
+        ms, _ = segment(np.asarray(small), weights=DOC_WEIGHTS if kind == "document" else None)
         ms = ndimage.binary_dilation(ms, iterations=2)
         m = np.asarray(Image.fromarray(ms.astype(np.uint8) * 255, mode="L").resize((W, H), Image.NEAREST)) > 127
     Image.fromarray(m.astype(np.uint8) * 255, mode="L").save(out)
     return out
+
+
+def document_restore(image_path: Path) -> dict:
+    """Document mode: our document damage detector + classical fill (OpenCV Telea) ONLY.
+    No diffusion model runs, so no letters are ever generated. Filled paper is labelled
+    Rebuilt; damaged areas that touch ink (text was probably lost there) are labelled
+    Invented, as a warning that the blank fill is not the original text."""
+    import cv2
+    img = Image.open(image_path).convert("RGB")
+    W, H = img.size
+    k = min(1.0, 1024 / max(W, H))
+    if k < 1:
+        img = img.resize((round(W * k), round(H * k)), Image.LANCZOS)
+    orig = np.asarray(img).copy()
+    h, w = orig.shape[:2]
+    mask_file = image_path.with_name(image_path.stem + "_mask.png")
+    if mask_file.exists():
+        mask = np.asarray(Image.open(mask_file).convert("L").resize((w, h), Image.NEAREST)) > 127
+        mask_source = "provided mask file"
+    else:
+        from pipeline.segment import segment
+        mask, _ = segment(orig, weights=DOC_WEIGHTS)
+        mask = ndimage.binary_dilation(mask, iterations=2)
+        mask_source = "seg_doc_best (document detector)"
+    bgr = cv2.cvtColor(orig, cv2.COLOR_RGB2BGR)
+    filled = cv2.inpaint(bgr, mask.astype(np.uint8) * 255, 3, cv2.INPAINT_TELEA)
+    restored = cv2.cvtColor(filled, cv2.COLOR_BGR2RGB)
+    restored[~mask] = orig[~mask]                     # untouched pixels stay byte for byte
+    gray = cv2.cvtColor(orig, cv2.COLOR_RGB2GRAY).astype(np.float32)
+    paper = float(np.median(gray[~mask])) if (~mask).any() else 230.0
+    ink = (gray < paper * 0.62) & ~mask
+    # Where is there text nearby? Local ink density from the undamaged pixels around each spot.
+    win = max(9, int(round(min(h, w) / 45)))
+    seen = ndimage.uniform_filter((~mask).astype(np.float32), win)
+    density = ndimage.uniform_filter(ink.astype(np.float32), win) / np.maximum(seen, 1e-3)
+    text_area = density > 0.035
+    label = np.zeros((h, w), np.uint8)
+    label[mask] = 1
+    label[mask & text_area] = 2
+    comps, n = ndimage.label(mask)
+    text_lost = int(len(np.unique(comps[mask & text_area])))
+    changed_outside = int((restored[~mask] != orig[~mask]).any(axis=-1).sum())
+    summary = {"observed": float((label == 0).mean()), "inferred": float((label == 1).mean()),
+               "invented": float((label == 2).mean())}
+    manifest = {
+        "tool": "Cold Case, document mode",
+        "working_copy": {"width": w, "height": h, "scale": round(k, 4)},
+        "stages": [
+            {"stage": "damage_segmentation", "model": mask_source},
+            {"stage": "classical_fill", "method": "OpenCV Telea inpainting, radius 3",
+             "generated_text": False, "diffusion_model_used": False},
+            {"stage": "labels", "rule": "fill touching ink (text probably lost) = Invented; other fill = Rebuilt",
+             "damaged_areas": int(n), "areas_touching_text": text_lost},
+        ],
+        "pixel_summary": {k2: round(v, 6) for k2, v in summary.items()},
+        "untouched_pixel_check": {"changed_outside_mask": changed_outside},
+    }
+    return {"original": orig, "restored": restored, "label": label, "damage_mask": mask,
+            "mask_source": mask_source, "pixel_summary": summary, "manifest": manifest,
+            "regions": [], "face_regions": []}
 
 
 def load_manifest(result: dict) -> dict | None:
@@ -531,16 +594,20 @@ def run_restore(image_path: Path, fidelity: float, source: dict,
             return cached
         shutil.rmtree(out, ignore_errors=True)  # made by the other pipeline: redo it
 
-    restore = get_restore()
     t0 = time.perf_counter()
-    params = inspect.signature(restore).parameters
     kwargs: dict[str, Any] = {}
-    fidelity_applied = "fidelity" in params
-    if fidelity_applied:
-        kwargs["fidelity"] = fidelity
-    if seeds and "seeds" in params:
-        kwargs["seeds"] = tuple(seeds)
-    result = restore(str(image_path), **kwargs)
+    if source.get("kind") == "document" and pipeline_name() == "real":
+        result = document_restore(image_path)
+        fidelity_applied = True
+    else:
+        restore = get_restore()
+        params = inspect.signature(restore).parameters
+        fidelity_applied = "fidelity" in params
+        if fidelity_applied:
+            kwargs["fidelity"] = fidelity
+        if seeds and "seeds" in params:
+            kwargs["seeds"] = tuple(seeds)
+        result = restore(str(image_path), **kwargs)
     seconds = time.perf_counter() - t0
 
     if not isinstance(result, dict):
@@ -692,6 +759,7 @@ def run_restore(image_path: Path, fidelity: float, source: dict,
         "human_edited_mask": human_mask,
         "seeds": seeds_used,
         "pipeline": pipeline_name(),
+        "kind": source.get("kind", "photo"),
         "seconds": round(seconds, 2),
         "warnings": warnings,
         "manifest": manifest,

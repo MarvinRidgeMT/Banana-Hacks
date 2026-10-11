@@ -153,6 +153,9 @@ export function PhotoStage({ result, showMap, opacity, onHover, busy }: Props) {
           draggable={false}
         />
 
+        <div className="scan-sweep" key={result.key + result.fidelity} aria-hidden />
+        <span className="hud-corner tl" aria-hidden /><span className="hud-corner tr" aria-hidden />
+        <span className="hud-corner bl" aria-hidden /><span className="hud-corner br" aria-hidden />
         <span className="tag pointer-events-none absolute left-3 top-3">Original</span>
         <span className="tag pointer-events-none absolute right-3 top-3">
           Restored{showMap && !mapError ? (mapLoading ? " · loading labels…" : " + labels") : ""}

@@ -36,6 +36,7 @@ export interface Result {
   faces: { file: string; meta: Record<string, unknown> }[];
   face_original: string | null;
   pixel_summary: Summary;
+  kind?: "photo" | "document";
   regions: Region[];
   mask_source: MaskSource;
   human_edited_mask: boolean;

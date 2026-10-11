@@ -9,7 +9,7 @@ interface Props {
   demosError: string | null;
   onRetryDemos: () => void;
   onOpenDemo: (d: Demo) => void;
-  onUpload: (file: File, markMyself: boolean) => void;
+  onUpload: (file: File, markMyself: boolean, kind: "photo" | "document") => void;
 }
 
 const ACCEPT = "image/jpeg,image/png,image/tiff,image/webp,image/bmp";
@@ -18,6 +18,7 @@ export function UploadView({ demos, demosError, onRetryDemos, onOpenDemo, onUplo
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
   const [markMyself, setMarkMyself] = useState(true);
+  const [kind, setKind] = useState<"photo" | "document">("photo");
   const [note, setNote] = useState<string | null>(null);
 
   const take = (files: FileList | null) => {
@@ -28,7 +29,7 @@ export function UploadView({ demos, demosError, onRetryDemos, onOpenDemo, onUplo
       return;
     }
     setNote(images.length > 1 ? `Restoring the first photo, ${images[0].name}. Batch restore isn't available yet.` : null);
-    onUpload(images[0], markMyself);
+    onUpload(images[0], markMyself, kind);
   };
 
   return (
@@ -95,6 +96,20 @@ export function UploadView({ demos, demosError, onRetryDemos, onOpenDemo, onUplo
                 e.target.value = "";
               }}
             />
+            <div className="mt-6 inline-grid grid-cols-2 overflow-hidden rounded-sm border border-line text-sm" role="radiogroup" aria-label="What are you restoring?">
+              {(["photo", "document"] as const).map((k) => (
+                <button key={k} type="button" role="radio" aria-checked={kind === k} onClick={() => setKind(k)}
+                  className={`px-4 py-2 font-semibold ${kind === k ? "bg-ink text-ground" : "bg-surface hover:bg-tag"}`}>
+                  {k === "photo" ? "Photo" : "Document"}
+                </button>
+              ))}
+            </div>
+            {kind === "document" && (
+              <p className="mx-auto mt-3 max-w-[46ch] text-sm text-body">
+                Document mode uses our document damage detector and a classical fill only. It never generates
+                letters; where text was probably lost, it marks the spot instead of guessing.
+              </p>
+            )}
             <label className="mt-6 flex cursor-pointer items-center justify-center gap-3 text-left">
               <input
                 type="checkbox"

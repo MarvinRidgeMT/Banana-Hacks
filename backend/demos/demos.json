@@ -18,6 +18,44 @@
     "license": "Public domain"
   },
   {
+    "id": "street",
+    "file": "street.png",
+    "title": "Emulsion lost across a crowd",
+    "blurb": "A 1900s street scene where the emulsion has peeled away around the people. Much of what's restored there has to be invented.",
+    "credit": "Lee Moorhouse, Pendleton, Oregon, 1900–1910. University of Oregon Libraries via DPLA / Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:PH036_0774_Lee_Moorhouse_photographs_-_DPLA_-_d2211f339cf49ef97a23ef2d33a3b8e3.jpg",
+    "license": "Public domain"
+  },
+  {
+    "id": "vehicle",
+    "file": "vehicle.png",
+    "title": "A race car, 1921",
+    "blurb": "Roscoe Sarles at the Tacoma Speedway. Emulsion damage across the car and the stands: objects and machinery, not just faces.",
+    "credit": "Marvin D. Boland, 1921. Tacoma Public Library / Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:1921_Tacoma_Speedway_Roscoe_Sarles_Marvin_D_Boland_Collection_G511123.jpg",
+    "license": "Public domain"
+  },
+  {
+    "id": "doc_letter",
+    "file": "doc_letter.png",
+    "kind": "document",
+    "title": "Document: a damaged court letter",
+    "blurb": "Holes and tears through handwriting. Document mode fills paper only, never letters, and flags where text was lost.",
+    "credit": "Baldwin case, Rhode Island v. Massachusetts. Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Baldwin_case_RI_v._Mass_005.jpg",
+    "license": "Public domain"
+  },
+  {
+    "id": "doc_ledger",
+    "file": "doc_ledger.png",
+    "kind": "document",
+    "title": "Document: a 1748 inventory",
+    "blurb": "A water-stained property inventory from 1748. Stains aren't lost content, so most of the page stays Real.",
+    "credit": "Inventario de bienes, 1748, unknown scribe. Archivo Histórico / Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:A.H.T._Inv._bienes_(1748).jpg",
+    "license": "Public domain"
+  },
+  {
     "id": "light",
     "file": "light.png",
     "title": "Barely damaged",
