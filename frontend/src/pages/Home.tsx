@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { DemoCredit } from "../components/DemoCredit";
 import { ExplodedView } from "../components/ExplodedView";
 import { TrueFaceExhibit } from "../components/TrueFaceExhibit";
+import { Comparison } from "../components/Comparison";
 import { DemoCardSkeleton, ErrorNote } from "../components/Feedback";
 import { Link } from "../components/Link";
 import { PhotoStage, Swatch } from "../components/PhotoStage";
@@ -112,6 +113,9 @@ export function Home({ demos, demosError, onRetryDemos }: Props) {
 
       {/* 1c. The answer key: true face vs the AI's three guesses */}
       <TrueFaceExhibit />
+
+      {/* 1d. Typical restorer vs Cold Case */}
+      <Comparison />
 
       {/* 2. The problem */}
       <section>
