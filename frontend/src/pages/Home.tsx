@@ -1,15 +1,14 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Comparison } from "../components/Comparison";
 import { DemoCredit } from "../components/DemoCredit";
 import { ExplodedView } from "../components/ExplodedView";
-import { TrueFaceExhibit } from "../components/TrueFaceExhibit";
-import { Comparison } from "../components/Comparison";
 import { DemoCardSkeleton, ErrorNote } from "../components/Feedback";
+import { HeroScanner } from "../components/HeroScanner";
 import { Link } from "../components/Link";
-import { PhotoStage, Swatch } from "../components/PhotoStage";
+import { TrueFaceExhibit } from "../components/TrueFaceExhibit";
 import { api, fileUrl } from "../lib/api";
-import { CLASSES, CLASS_LABEL, CLASS_MEANING } from "../lib/format";
 import { href } from "../lib/router";
-import type { Demo, Result } from "../lib/types";
+import type { ColorResult, Demo, Result, Summary } from "../lib/types";
 import { DEFAULT_FIDELITY } from "../lib/types";
 
 interface Props {
@@ -18,276 +17,398 @@ interface Props {
   onRetryDemos: () => void;
 }
 
-const PRIMARY =
-  "inline-block rounded-sm bg-ink px-6 py-3 text-lg font-semibold text-ground hover:bg-ink/85";
-const SECONDARY =
-  "inline-block rounded-sm border border-ink px-6 py-3 text-lg font-semibold hover:bg-tag";
+const PRIMARY_DARK =
+  "inline-flex items-center gap-3 rounded-full bg-ground px-7 py-3.5 text-lg font-semibold text-ink transition hover:bg-surface hover:shadow-[0_0_40px_rgba(241,234,219,0.35)]";
+const SECONDARY_DARK =
+  "inline-flex items-center gap-3 rounded-full border border-ground/40 px-7 py-3.5 text-lg font-semibold text-ground transition hover:border-ground hover:bg-ground/10";
 
-const QUOTES: { text: string; quoted: boolean; source: string; url: string }[] = [
+const LEAD_QUOTE = {
+  text: "generated a new, convincing-but-fake person",
+  source: "Santa Barbara County Genealogical Society, republishing genealogist Steve Little",
+  url: "https://sbgen.org/ai-does-not-restore-or-repair-photos/",
+};
+const MORE_QUOTES = [
   {
-    text: "generated a new, convincing-but-fake person",
-    quoted: true,
-    source: "Santa Barbara County Genealogical Society, republishing genealogist Steve Little",
-    url: "https://sbgen.org/ai-does-not-restore-or-repair-photos/",
-  },
-  {
-    text: "AI tools used for \u2018photo restoration\u2019 often fabricate facial features",
-    quoted: true,
+    text: "“AI tools used for ‘photo restoration’ often fabricate facial features”",
     source: "BYU Family History Library",
     url: "https://familyhistory.lib.byu.edu/virtual-classes/ai-image-generation-vs-protecting-trust-in-historical-images",
   },
   {
-    text: "The head of Indonesia\u2019s National Archives warned in August 2026 that AI-polished archival photos can amount to falsification, and that records must stay as originally created.",
-    quoted: false,
+    text: "Indonesia’s National Archives warned in August 2026 that AI-polished archival photos can amount to falsification.",
     source: "Paraphrased from RRI Voice of Indonesia",
     url: "https://rri.co.id/voice-of-indonesia/education/2685199/national-archives-warn-against-ai-altered-historical-records",
   },
 ];
 
-const STEPS: { title: string; text: string }[] = [
-  {
-    title: "Find the damage",
-    text: "A trained segmenter marks scratches, tears and missing emulsion, and you can correct its mask with a brush.",
-  },
-  {
-    title: "Restore several times",
-    text: "Each damaged area is filled four times by diffusion inpainting, each run with a different random seed.",
-  },
-  {
-    title: "Measure disagreement",
-    text: "Where the runs agree a pixel is Rebuilt, where they differ it is Invented, and untouched pixels stay Real.",
-  },
-  {
-    title: "Faces",
-    text: "Damaged faces go through CodeFormer on every run, and the alternative faces are kept so you can compare them.",
-  },
-  {
-    title: "Sign the receipt",
-    text: "Every step, model and label count is written into a C2PA manifest and signed inside the image file.",
-  },
+/** Measured results only; every one is on the Evidence page. */
+const TICKER = [
+  "0 untouched pixels changed",
+  "Invented pixels sit 1.8× further from the truth",
+  "8 independent restorations per photo",
+  "C2PA receipt signed inside every file",
+  "Documents: 0 letters generated",
+  "Color: brightness kept within 0.1 / 100",
+  "Damage detector trained by us",
+  "Faces: every alternative kept",
 ];
 
-const NUMBERS: { value: string; label: string }[] = [
-  { value: "0.90 \u2192 0.18", label: "detector IoU, synthetic \u2192 real" },
-  { value: "1.8\u00d7", label: "further from the truth where it says Invented" },
-  { value: "0", label: "untouched pixels changed" },
-  { value: "Valid", label: "C2PA receipt" },
-];
+const PIPELINE = ["Detect damage", "Restore × 8 seeds", "Measure disagreement", "Label every pixel", "Sign the receipt"];
 
 export function Home({ demos, demosError, onRetryDemos }: Props) {
-  const hero = demos?.find((d) => d.id === "hero") ?? demos?.[0] ?? null;
+  const hero = demos?.find((d) => d.id === "face_missing") ?? demos?.[0] ?? null;
   const heroResult = useResult(hero?.key);
   const caseHref = hero ? href.result(hero.key, DEFAULT_FIDELITY) : href.restore;
-  // The exploded view needs a case with real invention: the simulated-face demo if present.
-  const apart = demos?.find((d) => d.id === "face_missing") ?? demos?.find((d) => d.id === "backup") ?? hero;
-  const apartResult = useResult(apart?.key);
+  const photoCase = demos?.find((d) => d.id === "backup") ?? hero;
+  const docCase = demos?.find((d) => d.kind === "document") ?? null;
+  const colorCase = demos?.find((d) => d.id === "inferred") ?? null;
 
   return (
-    <div className="space-y-24 sm:space-y-32">
-      {/* 1. Hero */}
-      <section className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
-        <div>
-          <p className="tag">Case file · photo restoration</p>
-          <h1 className="mt-5 font-serif text-5xl leading-[1.05] sm:text-6xl xl:text-7xl">
-            Old photos, restored. Every guess on the record.
-          </h1>
-          <p className="mt-6 max-w-[54ch] text-xl leading-relaxed text-body">
-            AI photo restorers don't recover lost detail; they invent it, and never say where. Cold Case
-            repairs damaged historical photos and labels every pixel Real, Rebuilt or Invented, with a
-            signed receipt inside the file.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link to={href.restore} className={PRIMARY}>
-              Restore a photo
-            </Link>
-            <Link to={caseHref} className={SECONDARY}>
-              See a case
-            </Link>
+    <div className="-mt-12">
+      {/* 1. HERO: the examination table */}
+      <section className="bleed desk on-dark hero-grid relative overflow-hidden">
+        <div aria-hidden className="hero-glow" />
+        <div className="relative mx-auto grid max-w-[110rem] items-center gap-14 px-6 pb-20 pt-12 sm:px-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:pb-24 lg:pt-14">
+          <div>
+            <p className="readout flex items-center gap-3 text-xs text-ground/60">
+              <span className="live-dot" aria-hidden />
+              Forensic photo restoration · Banana Hacks 2026
+            </p>
+            <h1 className="display mt-6 text-[clamp(3rem,6vw,6.4rem)]">
+              Every pixel
+              <br />
+              gets a verdict.
+            </h1>
+            <ul className="mt-8 flex flex-wrap gap-3" aria-label="The three labels">
+              <Verdict cls="observed" label="Real" pct={heroResult?.pixel_summary.observed} />
+              <Verdict cls="inferred" label="Rebuilt" pct={heroResult?.pixel_summary.inferred} />
+              <Verdict cls="invented" label="Invented" pct={heroResult?.pixel_summary.invented} />
+            </ul>
+            <p className="mt-7 max-w-[44ch] text-xl leading-relaxed text-ground/80">
+              AI photo restorers invent what was lost and never say where. Cold Case restores damaged historical
+              photos and documents, labels every pixel, and signs the record into the file.
+            </p>
+            <div className="mt-10 flex flex-wrap gap-4">
+              <Link to={href.restore} className={PRIMARY_DARK}>
+                Restore a photo <span aria-hidden>→</span>
+              </Link>
+              <Link to={caseHref} className={SECONDARY_DARK}>
+                Open this case
+              </Link>
+            </div>
+          </div>
+          <div className="relative">
+            {heroResult ? (
+              <HeroScanner result={heroResult} />
+            ) : (
+              <HeroFallback hero={hero} loading={heroResult === undefined && !demosError} />
+            )}
           </div>
         </div>
-        <HeroExhibit hero={hero} heroResult={heroResult} demos={demos} demosError={demosError} />
+        <a href="#problem" className="scroll-cue readout" aria-label="Scroll to the problem">
+          Scroll
+        </a>
       </section>
 
-      {/* 1b. Take it apart: the exploded evidence stack */}
-      {apartResult && <ExplodedView result={apartResult} />}
-
-      {/* 1c. The answer key: true face vs the AI's three guesses */}
-      <TrueFaceExhibit />
-
-      {/* 1d. Typical restorer vs Cold Case */}
-      <Comparison />
-
-      {/* 2. The problem */}
-      <section>
-        <SectionHead label="The problem">A plausible face is not the original</SectionHead>
-        <p className="mt-6 max-w-[62ch] text-xl leading-relaxed text-body">
-          When a damaged photo is missing part of a face, AI restorers fill the gap with a plausible face
-          and present it as the original. For a family album that is a curiosity; for a public archive it
-          is a falsified record.
-        </p>
-        <ul className="mt-12 grid gap-6 lg:grid-cols-3">
-          {QUOTES.map((q) => (
-            <li key={q.url}>
-              <figure className="flex h-full flex-col justify-between gap-6 border-l-4 border-invented bg-surface p-6 sm:p-8">
-                {q.quoted ? (
-                  <blockquote cite={q.url} className="font-serif text-2xl leading-snug">
-                    &ldquo;{q.text}&rdquo;
-                  </blockquote>
-                ) : (
-                  <p className="text-lg leading-relaxed text-ink">{q.text}</p>
-                )}
-                <figcaption className="text-sm text-muted">
-                  <a href={q.url} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-ink">
-                    {q.source}
-                    <span className="sr-only"> (opens in a new tab)</span>
-                  </a>
-                  <span aria-hidden> ↗</span>
-                </figcaption>
-              </figure>
-            </li>
+      {/* 2. Proof ticker */}
+      <div className="bleed ticker" aria-label="Measured results">
+        <div className="ticker-track">
+          {[0, 1].map((copy) => (
+            <ul key={copy} className="ticker-row" aria-hidden={copy === 1}>
+              {TICKER.map((t) => (
+                <li key={t}>
+                  <span className="ticker-mark" aria-hidden>
+                    ◆
+                  </span>
+                  {t}
+                </li>
+              ))}
+            </ul>
           ))}
-        </ul>
-        <div className="mt-16 border-y border-line py-12 sm:py-16">
-          <p className="font-serif text-6xl leading-none sm:text-8xl">21,588</p>
-          <p className="mt-4 font-serif text-2xl sm:text-3xl">history organizations in the US alone</p>
-          <p className="case-label mt-3">Source: AASLH 2022 census</p>
-          <p className="mt-10 max-w-[40ch] text-xl text-body">
-            Once an invented face is published, it becomes history.
-          </p>
         </div>
-      </section>
+      </div>
 
-      {/* 3. Three labels */}
-      <section>
-        <SectionHead label="Three labels">Every pixel is one of three things</SectionHead>
-        <ul className="mt-10 grid gap-6 md:grid-cols-3">
-          {CLASSES.map((c) => (
-            <li key={c} className="bg-surface p-6 sm:p-8">
-              <Swatch cls={c} className="h-12 w-12" />
-              <p className="mt-5 font-serif text-3xl">{CLASS_LABEL[c]}</p>
-              <p className="mt-2 text-lg text-body">{CLASS_MEANING[c]}</p>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-8 text-lg text-body">Rebuilt means the attempts agreed, not that they're right.</p>
-      </section>
-
-      {/* 4. One photo, three faces */}
-      <section>
-        <p className="tag">The faces</p>
-        <p className="mt-5 font-serif text-4xl leading-tight sm:text-5xl">
-          One photo. <span className="text-invented">Three faces.</span>
-        </p>
-        <p className="mt-3 text-xl text-body">The AI was equally sure of all three.</p>
-        {heroResult && heroResult.faces.length > 0 && (
-          <ul className="mt-10 flex flex-wrap gap-8">
-            {heroResult.faces.slice(0, 3).map((f, i) => (
-              <li key={f.file}>
-                <img
-                  src={fileUrl(heroResult.key, f.file)}
-                  alt={`Possible face ${i + 1}`}
-                  crossOrigin="anonymous"
-                  className="exhibit-frame h-32 w-auto object-contain sm:h-44"
-                />
-              </li>
+      <div className="mt-24 space-y-28 sm:mt-32 sm:space-y-36">
+        {/* 3. The problem, in one line */}
+        <section id="problem" className="scroll-mt-24">
+          <p className="tag">The problem</p>
+          <figure className="mt-8">
+            <blockquote cite={LEAD_QUOTE.url} className="display max-w-[18ch] text-[clamp(2.8rem,6vw,6rem)]">
+              AI &ldquo;restoration&rdquo; <span className="strike-red">{LEAD_QUOTE.text}</span>.
+            </blockquote>
+            <figcaption className="mt-6 text-muted">
+              Quoting{" "}
+              <a href={LEAD_QUOTE.url} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-ink">
+                {LEAD_QUOTE.source}
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </figcaption>
+          </figure>
+          <div className="mt-14 grid gap-10 border-t border-line pt-10 md:grid-cols-3">
+            <div>
+              <p className="font-serif text-6xl leading-none">
+                <CountUp text="21,588" />
+              </p>
+              <p className="mt-3 text-body">history organizations in the US alone hold photos like these (AASLH 2022)</p>
+            </div>
+            {MORE_QUOTES.map((q) => (
+              <div key={q.url}>
+                <p className="text-lg leading-relaxed">{q.text}</p>
+                <a href={q.url} target="_blank" rel="noreferrer" className="mt-2 inline-block text-sm text-muted underline underline-offset-4 hover:text-ink">
+                  {q.source}
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </div>
             ))}
-          </ul>
-        )}
-        {hero && (
-          <Link to={caseHref} className="mt-8 inline-block text-lg underline underline-offset-4 hover:text-body">
-            See the three faces in {hero.title}
+          </div>
+        </section>
+
+        {/* 4. The answer key */}
+        <TrueFaceExhibit />
+
+        {/* 5. Take it apart */}
+        {heroResult && <ExplodedView result={heroResult} />}
+
+        {/* 6. Three kinds of evidence */}
+        <section>
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p className="tag">What it handles</p>
+              <h2 className="mt-5 font-serif text-4xl leading-tight sm:text-6xl">
+                Photos, documents, color.
+                <br />
+                <span className="text-invented">Same honesty.</span>
+              </h2>
+            </div>
+            <ol className="pipeline readout" aria-label="The pipeline">
+              {PIPELINE.map((s, i) => (
+                <li key={s}>
+                  <span className="text-faint">{String(i + 1).padStart(2, "0")}</span> {s}
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div className="mt-12 grid gap-8 lg:grid-cols-3">
+            <ModeCard
+              demo={photoCase}
+              eyebrow="Photo mode"
+              title="Restored, then labeled"
+              text="Our detector finds the damage, diffusion restores it 8 times, and where the attempts disagree the pixels are marked Invented."
+              before={photoCase ? "f070/original.png" : null}
+              after={photoCase ? "f070/restored.png" : null}
+              overlay={photoCase ? "f070/map.png" : null}
+              stat={useSummaryStat(photoCase?.key)}
+            />
+            <ModeCard
+              demo={docCase}
+              eyebrow="Document mode"
+              title="Paper repaired, words never written"
+              text="No diffusion model touches a document. Gaps are filled from the paper around them, and any gap that touched writing is flagged as lost text."
+              before={docCase ? "f070/original.png" : null}
+              after={docCase ? "f070/restored.png" : null}
+              overlay={docCase ? "f070/map.png" : null}
+              stat="0 letters generated"
+            />
+            <ModeCard
+              demo={colorCase}
+              eyebrow="Color mode"
+              title="Color, marked as a guess"
+              text="A black-and-white photo holds no color. Two color models paint it; where they disagree, the color is labeled a guess. Brightness stays the scan's own."
+              before={colorCase ? "f070/restored.png" : null}
+              after={colorCase ? "f070/color/colorized.png" : null}
+              overlay={colorCase ? "f070/color/map.png" : null}
+              stat={useColorStat(colorCase?.key)}
+            />
+          </div>
+          <Link to={href.howItWorks} className="mt-10 inline-block text-lg underline underline-offset-4 hover:text-body">
+            Read how it works
           </Link>
-        )}
-      </section>
+        </section>
 
-      {/* 5. How it works */}
-      <section>
-        <SectionHead label="How it works">Five steps, all on the record</SectionHead>
-        <ol className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
-          {STEPS.map((s, i) => (
-            <li key={s.title} className="border-t-2 border-ink pt-5">
-              <p className="case-label">Step {String(i + 1).padStart(2, "0")}</p>
-              <p className="mt-2 font-serif text-2xl">{s.title}</p>
-              <p className="mt-2 text-body">{s.text}</p>
-            </li>
-          ))}
-        </ol>
-        <Link to={href.howItWorks} className="mt-10 inline-block text-lg underline underline-offset-4 hover:text-body">
-          Read how it works
-        </Link>
-      </section>
+        {/* 7. Typical restorer vs Cold Case */}
+        <Comparison />
 
-      {/* 6. Cases */}
-      <section>
-        <SectionHead label="Cases">Open a case</SectionHead>
-        {demosError && <ErrorNote message={demosError} onRetry={onRetryDemos} className="mt-6" />}
-        {!demos && !demosError && (
-          <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 xl:grid-cols-4" aria-label="Loading the cases">
-            {[0, 1, 2, 3].map((i) => (
-              <li key={i}>
-                <DemoCardSkeleton />
-              </li>
-            ))}
-          </ul>
-        )}
-        {demos?.length === 0 && <p className="mt-6 text-muted">No demo photos on the server yet.</p>}
-        <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 xl:grid-cols-4">
-          {(demos ?? []).map((d) => (
-            <li key={d.id}>
-              <Link to={href.result(d.key, DEFAULT_FIDELITY)} className="group block" aria-label={`Open the case ${d.title}`}>
-                <div className="exhibit-frame aspect-[4/5]">
-                  <img
-                    src={fileUrl(d.key, d.thumb)}
-                    alt=""
-                    crossOrigin="anonymous"
-                    className="h-full w-full object-contain group-hover:opacity-85"
-                  />
-                </div>
-                <p className="case-label mt-7">Case {d.key.slice(0, 8)}</p>
-                <p className="mt-1 font-serif text-2xl group-hover:underline">{d.title}</p>
-              </Link>
-              <DemoCredit demo={d} className="mt-2" />
-            </li>
-          ))}
-        </ul>
-      </section>
+        {/* 8. Cases */}
+        <section className="bleed desk on-dark hero-grid">
+          <div className="mx-auto max-w-[110rem] px-6 py-20 sm:px-10 sm:py-24">
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <p className="readout text-xs text-ground/60">Case files · all public domain</p>
+                <h2 className="mt-4 font-serif text-4xl leading-tight sm:text-6xl">Open a case</h2>
+              </div>
+              <p className="max-w-[48ch] text-ground/70">
+                Portraits, crowds, glass plates and handwritten documents. Every case is a real restoration with its
+                labels, alternatives and signed receipt.
+              </p>
+            </div>
+            {demosError && <ErrorNote message={demosError} onRetry={onRetryDemos} className="mt-8" />}
+            {!demos && !demosError && (
+              <ul className="mt-12 grid grid-cols-2 gap-6 lg:grid-cols-4" aria-label="Loading the cases">
+                {[0, 1, 2, 3].map((i) => (
+                  <li key={i}>
+                    <DemoCardSkeleton />
+                  </li>
+                ))}
+              </ul>
+            )}
+            {demos?.length === 0 && <p className="mt-8 text-ground/70">No demo photos on the server yet.</p>}
+            <ul className="mt-12 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+              {(demos ?? []).map((d, i) => (
+                <li key={d.id}>
+                  <Link to={href.result(d.key, DEFAULT_FIDELITY)} className="group block" aria-label={`Open the case ${d.title}`}>
+                    <div className="case-card relative aspect-[4/5] overflow-hidden">
+                      <img
+                        src={fileUrl(d.key, d.thumb)}
+                        alt=""
+                        crossOrigin="anonymous"
+                        className="h-full w-full object-contain p-4 transition duration-500 group-hover:scale-[1.03]"
+                      />
+                      <span className="readout absolute left-3 top-3 text-[0.65rem] text-ground/60">
+                        No. {String(i + 1).padStart(3, "0")}
+                      </span>
+                      {d.kind === "document" && <span className="scanner-chip bottom-3 left-3">Document</span>}
+                    </div>
+                    <p className="mt-4 text-lg font-semibold leading-snug text-ground group-hover:underline">
+                      {d.title.replace(/^Document: /, "")}
+                    </p>
+                  </Link>
+                  <DemoCredit demo={d} className="mt-1 !text-ground/55 [&_a]:!text-ground/55" />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
 
-      {/* 7. Numbers */}
-      <section className="on-dark bg-mat px-6 py-12 text-ground sm:px-12 sm:py-16">
-        <p className="tag">The numbers</p>
-        <ul className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          {NUMBERS.map((n) => (
-            <li key={n.label}>
-              <p className="font-serif text-4xl sm:text-5xl"><CountUp text={n.value} /></p>
-              <p className="mt-2 text-lg text-ground/80">{n.label}</p>
-            </li>
-          ))}
-        </ul>
-        <Link to={href.evidence} className="mt-12 inline-block text-lg underline underline-offset-4 hover:text-tag">
-          See the evidence behind these numbers
-        </Link>
-      </section>
-
-      {/* 8. Call to action */}
-      <section className="py-8 text-center">
-        <span className="stamp text-lg">Open case</span>
-        <h2 className="mx-auto mt-8 max-w-[18ch] font-serif text-4xl leading-tight sm:text-6xl">
-          Got a damaged photo? See what's real.
-        </h2>
-        <Link to={href.restore} className={`mt-10 ${PRIMARY}`}>
-          Restore a photo
-        </Link>
-      </section>
+        {/* 9. The way in */}
+        <section className="pb-8 text-center">
+          <p className="readout text-xs text-muted">Free · open source · every result signed</p>
+          <h2 className="display mx-auto mt-6 max-w-[20ch] text-[clamp(3rem,7vw,7rem)]">
+            Got a damaged photo? <span className="text-invented">See what's real.</span>
+          </h2>
+          <div className="mt-12 flex flex-wrap justify-center gap-4">
+            <Link
+              to={href.restore}
+              className="inline-flex items-center gap-3 rounded-full bg-ink px-8 py-4 text-xl font-semibold text-ground transition hover:bg-ink/85"
+            >
+              Restore a photo <span aria-hidden>→</span>
+            </Link>
+            <Link to={href.evidence} className="inline-flex items-center rounded-full border border-ink/30 px-8 py-4 text-xl font-semibold hover:bg-tag">
+              See the evidence
+            </Link>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
 
-function SectionHead({ label, children }: { label: string; children: ReactNode }) {
+function Verdict({ cls, label, pct }: { cls: keyof Summary; label: string; pct?: number }) {
   return (
+    <li className={`verdict verdict-${cls}`}>
+      <span className="verdict-swatch" aria-hidden />
+      <span className="font-semibold">{label}</span>
+      <span className="readout tabular-nums text-ground/70">
+        {pct === undefined ? "··.·%" : `${(pct * 100).toFixed(1)}%`}
+      </span>
+    </li>
+  );
+}
+
+/** A before/after card that wipes back and forth on its own, with the label map on hover. */
+function ModeCard(props: {
+  demo: Demo | null;
+  eyebrow: string;
+  title: string;
+  text: string;
+  before: string | null;
+  after: string | null;
+  overlay: string | null;
+  stat: string | null;
+}) {
+  const { demo, eyebrow, title, text, before, after, overlay, stat } = props;
+  const [showMap, setShowMap] = useState(false);
+  const body = (
     <>
-      <p className="tag">{label}</p>
-      <h2 className="mt-5 font-serif text-4xl leading-tight sm:text-5xl">{children}</h2>
+      <div
+        className="mode-stage relative aspect-square overflow-hidden bg-mat"
+        onMouseEnter={() => setShowMap(true)}
+        onMouseLeave={() => setShowMap(false)}
+      >
+        {demo && before && after ? (
+          <>
+            <img src={fileUrl(demo.key, after)} alt="" crossOrigin="anonymous" className="absolute inset-0 h-full w-full object-contain" />
+            <img src={fileUrl(demo.key, before)} alt="" crossOrigin="anonymous" className="wipe absolute inset-0 h-full w-full object-contain" />
+            <span aria-hidden className="wipe-line" />
+            {overlay && (
+              <img
+                src={fileUrl(demo.key, overlay)}
+                alt=""
+                crossOrigin="anonymous"
+                className="absolute inset-0 h-full w-full object-contain transition-opacity duration-300"
+                style={{ opacity: showMap ? 0.8 : 0 }}
+              />
+            )}
+
+            <span className="readout absolute left-3 top-3 text-[0.65rem] text-ground/70">Before</span>
+            <span className="readout absolute right-3 top-3 text-[0.65rem] text-ground/70">
+              {showMap ? "After + labels" : "After"}
+            </span>
+          </>
+        ) : (
+          <span className="absolute inset-0 animate-pulse bg-ground/5" />
+        )}
+      </div>
+      <div className="p-6">
+        <p className="readout text-xs text-muted">{eyebrow}</p>
+        <h3 className="mt-2 font-serif text-3xl leading-tight">{title}</h3>
+        <p className="mt-3 text-body">{text}</p>
+        {stat && <p className="readout mt-5 inline-block bg-tag px-2 py-1 text-xs text-ink">{stat}</p>}
+      </div>
     </>
+  );
+  return demo ? (
+    <Link to={href.result(demo.key, DEFAULT_FIDELITY)} className="mode-card group block" aria-label={`${eyebrow}: open the case`}>
+      {body}
+    </Link>
+  ) : (
+    <div className="mode-card">{body}</div>
+  );
+}
+
+function useSummaryStat(key: string | undefined): string | null {
+  const r = useResult(key);
+  if (!r) return null;
+  const s = r.pixel_summary;
+  return `${(s.observed * 100).toFixed(1)}% real · ${(s.inferred * 100).toFixed(1)}% rebuilt · ${(s.invented * 100).toFixed(1)}% invented`;
+}
+
+function useColorStat(key: string | undefined): string | null {
+  const [c, setC] = useState<ColorResult | null>(null);
+  useEffect(() => {
+    if (!key) return;
+    let live = true;
+    fetch(fileUrl(key, "f070/color/color.json"))
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => live && setC(j))
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, [key]);
+  if (!c) return null;
+  return `0% real color · ${(c.pixel_summary.invented * 100).toFixed(0)}% marked a guess`;
+}
+
+function HeroFallback({ hero, loading }: { hero: Demo | null; loading: boolean }) {
+  return (
+    <div className="lightbox mx-auto grid aspect-[4/5] w-full max-w-lg place-items-center overflow-hidden">
+      {hero ? (
+        <img src={fileUrl(hero.key, hero.thumb)} alt="" crossOrigin="anonymous" className="h-full w-full object-contain opacity-70" />
+      ) : (
+        <p className="p-8 text-center text-ink">
+          {loading ? "Laying out the case…" : "The demo case isn't available right now. You can still restore your own photo."}
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -309,125 +430,31 @@ function useResult(key: string | undefined): Result | null | undefined {
   return state && state.key === key ? state.result : undefined;
 }
 
-function HeroExhibit({
-  hero,
-  heroResult,
-  demos,
-  demosError,
-}: {
-  hero: Demo | null;
-  heroResult: Result | null | undefined;
-  demos: Demo[] | null;
-  demosError: string | null;
-}) {
-  const [thumbFailed, setThumbFailed] = useState(false);
-  const [showLabels, setShowLabels] = useState(false);
-
-  if (heroResult) {
-    return (
-      <figure>
-        <PhotoStage result={heroResult} showMap={showLabels} opacity={0.75} onHover={() => {}} />
-        <p className="readout mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
-          <span><span className="blink text-invented">●</span> Case {heroResult.key.slice(0, 6)}</span>
-          <span>{(heroResult as Result & { seeds?: number }).seeds ?? 8} seeds</span>
-          <span>{(100 * heroResult.pixel_summary.observed).toFixed(1)}% real</span>
-          <span>{(100 * heroResult.pixel_summary.inferred).toFixed(1)}% rebuilt</span>
-          <span>{(100 * heroResult.pixel_summary.invented).toFixed(1)}% invented</span>
-          <span>C2PA signed</span>
-        </p>
-        <figcaption className="mt-8 space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <p className="text-body">
-              Drag the handle to compare the damaged scan with the {showLabels ? "labelled " : ""}restoration.
-            </p>
-            <button
-              type="button"
-              aria-pressed={showLabels}
-              onClick={() => setShowLabels((v) => !v)}
-              className={`rounded-sm border px-4 py-2 font-semibold ${
-                showLabels ? "border-ink bg-ink text-ground" : "border-line bg-surface hover:bg-tag"
-              }`}
-            >
-              {showLabels ? "Hide the labels" : "Show what was invented"}
-            </button>
-          </div>
-          <ul className={`flex flex-wrap gap-x-6 gap-y-2 ${showLabels ? "" : "opacity-50"}`}>
-            {CLASSES.map((c) => (
-              <li key={c} className="flex items-center gap-2">
-                <Swatch cls={c} />
-                {CLASS_LABEL[c]}
-              </li>
-            ))}
-          </ul>
-        </figcaption>
-      </figure>
-    );
-  }
-
-  if (hero && !thumbFailed) {
-    return (
-      <figure>
-        <div className="exhibit-frame relative mx-auto aspect-[4/5] w-full max-w-md">
-          <img
-            src={fileUrl(hero.key, hero.thumb)}
-            alt={`${hero.title}, the original scan`}
-            crossOrigin="anonymous"
-            onError={() => setThumbFailed(true)}
-            className="h-full w-full object-contain"
-          />
-          <span className="tag absolute left-3 top-3">Original scan</span>
-        </div>
-        <figcaption className="mx-auto mt-8 max-w-md text-body">
-          {heroResult === undefined
-            ? `${hero.title}. Loading the labels…`
-            : `${hero.title}. The labelled restoration isn't ready yet; it will appear on the case page.`}
-        </figcaption>
-      </figure>
-    );
-  }
-
-  const message = demosError || thumbFailed || demos?.length === 0
-    ? "The demo photo isn't available right now. You can still restore one of your own."
-    : "Loading the case file…";
-  return (
-    <div className="exhibit-frame mx-auto grid aspect-[4/5] w-full max-w-md place-items-center p-8 text-center text-ground">
-      <div>
-        <span className="stamp text-xl">Cold Case</span>
-        <p className="mt-6 text-lg">{message}</p>
-        <ul className="mt-6 space-y-2 text-left">
-          {CLASSES.map((c) => (
-            <li key={c} className="flex items-center gap-3">
-              <Swatch cls={c} />
-              <span className="font-semibold">{CLASS_LABEL[c]}</span>
-              <span className="text-sm text-ground/75">{CLASS_MEANING[c]}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-/** Animates the first number in `text` from 0 when it scrolls into view; the rest of the text stays. */
+/** Animates the first number in `text` from 0 when it scrolls into view. */
 function CountUp({ text }: { text: string }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const m = text.match(/\d+(\.\d+)?/);
-  const [shown, setShown] = useState(m ? text.replace(m[0], "0") : text);
+  const [shown, setShown] = useState(text);
   useEffect(() => {
+    const m = text.match(/[\d,]+(\.\d+)?/);
     if (!m || !ref.current) return;
-    const target = parseFloat(m[0]); const dec = (m[1] ?? "").length - (m[1] ? 1 : 0);
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) { setShown(text); return; }
-    const io = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting) return;
-      io.disconnect();
-      const t0 = performance.now();
-      const tick = (t: number) => {
-        const k = Math.min(1, (t - t0) / 1200); const v = target * (1 - Math.pow(1 - k, 3));
-        setShown(text.replace(m[0], v.toFixed(dec)));
-        if (k < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    }, { threshold: 0.4 });
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    const target = parseFloat(m[0].replace(/,/g, ""));
+    const dec = (m[1] ?? "").length ? m[1]!.length - 1 : 0;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        const t0 = performance.now();
+        const tick = (t: number) => {
+          const k = Math.min(1, (t - t0) / 1400);
+          const v = target * (1 - Math.pow(1 - k, 3));
+          setShown(text.replace(m[0], v.toLocaleString("en-US", { maximumFractionDigits: dec, minimumFractionDigits: dec })));
+          if (k < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      },
+      { threshold: 0.4 },
+    );
     io.observe(ref.current);
     return () => io.disconnect();
   }, [text]);

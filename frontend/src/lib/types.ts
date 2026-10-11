@@ -68,6 +68,7 @@ export interface Demo {
   key: string;
   thumb: string;
   ready: number[];
+  kind?: "photo" | "document";
 }
 
 export interface Metrics {
