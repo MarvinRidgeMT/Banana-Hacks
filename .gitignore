@@ -15,3 +15,6 @@ demo/
 .DS_Store
 node_modules/
 frontend/dist/
+backend/weights
+backend/third_party
+real_eval.zip

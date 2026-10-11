@@ -1,0 +1,32 @@
+{
+  "photo": "study (Bj\u00f8rnson group)",
+  "fidelity": 0.7,
+  "seeds": [
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "rule": "a square 'contains AI-made-up parts' if >= 1% of its pixels are Invented",
+  "grid": "A-C left to right, 1-3 top to bottom",
+  "invented_share_per_square": {
+    "A1": 0.0,
+    "B1": 0.0,
+    "C1": 0.0,
+    "A2": 0.0409,
+    "B2": 0.0372,
+    "C2": 0.0,
+    "A3": 0.0392,
+    "B3": 0.0,
+    "C3": 0.0
+  },
+  "ground_truth_squares": [
+    "A2",
+    "A3",
+    "B2"
+  ]
+}
