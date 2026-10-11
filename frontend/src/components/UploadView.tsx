@@ -35,13 +35,25 @@ export function UploadView({ demos, demosError, onRetryDemos, onOpenDemo, onUplo
     <div className="space-y-16">
       <section className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center">
         <div>
-          <h1 className="font-serif text-5xl leading-[1.08] sm:text-6xl">
-            Old photos, restored. Every guess on the record.
+          <p className="tag">Restore a photo</p>
+          <h1 className="mt-5 font-serif text-4xl leading-[1.08] sm:text-5xl">
+            Bring a damaged photo. Leave with the evidence.
           </h1>
-          <p className="mt-6 max-w-[52ch] text-xl leading-relaxed text-muted">
-            AI restorers don't recover lost detail. They invent it. Cold Case repairs the damage and
-            labels every pixel Real, Rebuilt or Invented.
-          </p>
+          <ol className="mt-8 space-y-4">
+            {[
+              ["Upload a scan", "A JPG, PNG or TIFF of a damaged print or negative."],
+              ["Check the damage mask", "Our detector paints what it thinks is lost. Add what it missed; erase what it got wrong."],
+              ["Get the evidence", "The restoration, every pixel labelled Real, Rebuilt or Invented, and a signed receipt. About 1 to 2 minutes."],
+            ].map(([t, d], i) => (
+              <li key={t} className="flex gap-4">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink font-mono text-sm text-ground">{i + 1}</span>
+                <span>
+                  <span className="block text-lg font-semibold">{t}</span>
+                  <span className="block text-body">{d}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
         </div>
 
         <div>
