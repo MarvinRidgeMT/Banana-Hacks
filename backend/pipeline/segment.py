@@ -2,7 +2,7 @@ import os, cv2, numpy as np, torch
 from pathlib import Path
 import segmentation_models_pytorch as smp
 
-WEIGHTS = Path(os.environ.get("SEG_WEIGHTS", "weights/seg_v3_best.pth"))
+WEIGHTS = Path(os.environ.get("SEG_WEIGHTS", "weights/seg_v4_best.pth"))
 MODEL_NAME = "cv-unet-r34 (ours) " + WEIGHTS.stem.replace("seg_", "").replace("_best", "")
 MEAN = np.array([0.485, 0.456, 0.406], np.float32)
 STD = np.array([0.229, 0.224, 0.225], np.float32)
