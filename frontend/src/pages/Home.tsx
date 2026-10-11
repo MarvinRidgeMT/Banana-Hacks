@@ -6,6 +6,7 @@ import { DemoCardSkeleton, ErrorNote } from "../components/Feedback";
 import { HeroScanner } from "../components/HeroScanner";
 import { Link } from "../components/Link";
 import { TrueFaceExhibit } from "../components/TrueFaceExhibit";
+import { YourCases } from "../components/YourCases";
 import { api, fileUrl } from "../lib/api";
 import { href } from "../lib/router";
 import type { ColorResult, Demo, Result, Summary } from "../lib/types";
@@ -223,6 +224,9 @@ export function Home({ demos, demosError, onRetryDemos }: Props) {
             Read how it works
           </Link>
         </section>
+
+        {/* Returning visitors: their own cases */}
+        <YourCases limit={5} />
 
         {/* 7. Typical restorer vs Cold Case */}
         <Comparison />

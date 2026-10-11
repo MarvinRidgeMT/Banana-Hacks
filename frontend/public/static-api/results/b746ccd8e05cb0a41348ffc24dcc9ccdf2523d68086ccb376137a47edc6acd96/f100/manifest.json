@@ -5,7 +5,7 @@
     "scale": 0.5,
     "resample": "lanczos interpolation, no generative detail"
   },
-  "created": "2026-10-11T10:59:20+00:00",
+  "created": "2026-10-11T22:53:39+00:00",
   "stages": [
     {
       "stage": "damage_segmentation",
@@ -35,7 +35,7 @@
       "dilation_px": 4,
       "thin_px": 13348,
       "thick_px": 16387,
-      "pixels_changed": 29307
+      "pixels_changed": 29300
     },
     {
       "stage": "face_restoration",
@@ -44,7 +44,7 @@
       "strict_mode": true,
       "faces": 1,
       "face_boxes_source": "provided",
-      "pixels_changed": 16848
+      "pixels_changed": 17251
     }
   ],
   "invention_map": {
@@ -60,8 +60,8 @@
   },
   "pixel_summary": {
     "observed": 0.9637,
-    "inferred": 0.0253,
-    "invented": 0.011
+    "inferred": 0.0262,
+    "invented": 0.0101
   },
   "regions": [
     {
@@ -98,21 +98,21 @@
       ],
       "kind": "damage",
       "pixels": 17337,
-      "confidence": 0.482
+      "confidence": 0.522
     },
     {
       "id": "face-1",
       "bbox": [
-        253,
-        347,
-        261,
-        333
+        257,
+        349,
+        256,
+        331
       ],
       "kind": "face",
-      "detector_score": 0.912,
-      "pixels_changed": 17312,
-      "invented_fraction": 0.103,
-      "confidence": 0.482
+      "detector_score": 0.915,
+      "pixels_changed": 17228,
+      "invented_fraction": 0.098,
+      "confidence": 0.519
     }
   ],
   "untouched_pixel_check": "pass",
@@ -124,13 +124,13 @@
     "human_edited_mask": true,
     "pixel_summary": {
       "observed": 0.963702,
-      "inferred": 0.025342,
-      "invented": 0.010956
+      "inferred": 0.026173,
+      "invented": 0.010125
     },
     "pipeline_pixel_summary": {
       "observed": 0.9637,
-      "inferred": 0.0253,
-      "invented": 0.011
+      "inferred": 0.0262,
+      "invented": 0.0101
     },
     "regions": [
       {
@@ -142,12 +142,12 @@
           577
         ],
         "area_px": 17337,
-        "inferred_px": 8362,
-        "invented_px": 8975,
+        "inferred_px": 9043,
+        "invented_px": 8294,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.482,
-        "confidence_computed": 0.4823,
+        "confidence": 0.522,
+        "confidence_computed": 0.5216,
         "pipeline_region_id": 3
       },
       {
@@ -187,8 +187,8 @@
     ],
     "displayed_seed": 14,
     "seeds": 8,
-    "seconds": 1.4,
-    "generated_at": "2026-10-11T10:59:20+00:00",
+    "seconds": 4.79,
+    "generated_at": "2026-10-11T22:53:39+00:00",
     "warnings": []
   }
 }

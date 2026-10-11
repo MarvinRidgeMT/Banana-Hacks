@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { fileUrl } from "../lib/api";
 import type { Demo } from "../lib/types";
+import { YourCases } from "./YourCases";
 import { DemoCredit } from "./DemoCredit";
 import { DemoCardSkeleton, ErrorNote } from "./Feedback";
 
@@ -123,6 +124,8 @@ export function UploadView({ demos, demosError, onRetryDemos, onOpenDemo, onUplo
           </div>
         </div>
       </section>
+
+      <YourCases />
 
       <section>
         <h2 className="font-serif text-3xl">Or start with one of these</h2>

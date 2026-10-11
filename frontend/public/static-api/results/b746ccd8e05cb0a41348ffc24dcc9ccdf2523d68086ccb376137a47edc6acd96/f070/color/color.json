@@ -7,8 +7,8 @@
   },
   "pixel_summary": {
     "observed": 0.0,
-    "inferred": 0.706552,
-    "invented": 0.293448
+    "inferred": 0.69432,
+    "invented": 0.30568
   },
   "lightness_check": {
     "mean_abs_diff_L": 0.095,

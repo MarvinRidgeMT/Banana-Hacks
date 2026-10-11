@@ -6625,6 +6625,7 @@
   "seeds": null,
   "pipeline": "real",
   "kind": "document",
+  "render_version": 6,
   "seconds": 0.24,
   "warnings": [],
   "manifest": {
@@ -13278,7 +13279,7 @@
       "displayed_seed": null,
       "seeds": null,
       "seconds": 0.24,
-      "generated_at": "2026-10-11T21:54:37+00:00",
+      "generated_at": "2026-10-11T22:54:00+00:00",
       "warnings": []
     }
   }

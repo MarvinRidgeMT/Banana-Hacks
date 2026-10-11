@@ -5,7 +5,7 @@
     "scale": 1.628,
     "resample": "lanczos interpolation, no generative detail"
   },
-  "created": "2026-10-11T10:56:19+00:00",
+  "created": "2026-10-11T23:13:48+00:00",
   "stages": [
     {
       "stage": "damage_segmentation",
@@ -35,7 +35,7 @@
       "dilation_px": 4,
       "thin_px": 7024,
       "thick_px": 87224,
-      "pixels_changed": 92819
+      "pixels_changed": 92701
     },
     {
       "stage": "face_restoration",
@@ -44,7 +44,7 @@
       "strict_mode": true,
       "faces": 1,
       "face_boxes_source": "provided",
-      "pixels_changed": 5980
+      "pixels_changed": 5709
     }
   ],
   "invention_map": {
@@ -60,8 +60,8 @@
   },
   "pixel_summary": {
     "observed": 0.8789,
-    "inferred": 0.0787,
-    "invented": 0.0424
+    "inferred": 0.0816,
+    "invented": 0.0395
   },
   "regions": [
     {
@@ -86,7 +86,7 @@
       ],
       "kind": "damage",
       "pixels": 5629,
-      "confidence": 0.559
+      "confidence": 0.545
     },
     {
       "id": 3,
@@ -122,7 +122,7 @@
       ],
       "kind": "damage",
       "pixels": 5894,
-      "confidence": 0.313
+      "confidence": 0.325
     },
     {
       "id": 6,
@@ -158,7 +158,7 @@
       ],
       "kind": "damage",
       "pixels": 57076,
-      "confidence": 0.754
+      "confidence": 0.791
     },
     {
       "id": 9,
@@ -182,7 +182,7 @@
       ],
       "kind": "damage",
       "pixels": 1396,
-      "confidence": 0.029
+      "confidence": 0.057
     },
     {
       "id": 11,
@@ -194,7 +194,7 @@
       ],
       "kind": "damage",
       "pixels": 3906,
-      "confidence": 0.098
+      "confidence": 0.091
     },
     {
       "id": 12,
@@ -266,7 +266,7 @@
       ],
       "kind": "damage",
       "pixels": 1548,
-      "confidence": 0.278
+      "confidence": 0.269
     },
     {
       "id": 18,
@@ -314,7 +314,7 @@
       ],
       "kind": "damage",
       "pixels": 4006,
-      "confidence": 0.499
+      "confidence": 0.561
     },
     {
       "id": 22,
@@ -338,7 +338,7 @@
       ],
       "kind": "damage",
       "pixels": 2044,
-      "confidence": 0.9
+      "confidence": 0.807
     },
     {
       "id": 24,
@@ -350,7 +350,7 @@
       ],
       "kind": "damage",
       "pixels": 4839,
-      "confidence": 0.132
+      "confidence": 0.142
     },
     {
       "id": 25,
@@ -373,10 +373,10 @@
         144
       ],
       "kind": "face",
-      "detector_score": 0.901,
+      "detector_score": 0.9,
       "pixels_changed": 2834,
-      "invented_fraction": 0.057,
-      "confidence": 0.649
+      "invented_fraction": 0.043,
+      "confidence": 0.733
     }
   ],
   "untouched_pixel_check": "pass",
@@ -388,13 +388,13 @@
     "human_edited_mask": true,
     "pixel_summary": {
       "observed": 0.878896,
-      "inferred": 0.078747,
-      "invented": 0.042357
+      "inferred": 0.081556,
+      "invented": 0.039548
     },
     "pipeline_pixel_summary": {
       "observed": 0.8789,
-      "inferred": 0.0787,
-      "invented": 0.0424
+      "inferred": 0.0816,
+      "invented": 0.0395
     },
     "regions": [
       {
@@ -406,12 +406,12 @@
           885
         ],
         "area_px": 57076,
-        "inferred_px": 43052,
-        "invented_px": 14024,
+        "inferred_px": 45141,
+        "invented_px": 11935,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.754,
-        "confidence_computed": 0.7543,
+        "confidence": 0.791,
+        "confidence_computed": 0.7909,
         "pipeline_region_id": 8
       },
       {
@@ -423,12 +423,12 @@
           100
         ],
         "area_px": 5894,
-        "inferred_px": 1844,
-        "invented_px": 4050,
+        "inferred_px": 1915,
+        "invented_px": 3979,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.313,
-        "confidence_computed": 0.3129,
+        "confidence": 0.325,
+        "confidence_computed": 0.3249,
         "pipeline_region_id": 5
       },
       {
@@ -440,12 +440,12 @@
           248
         ],
         "area_px": 5629,
-        "inferred_px": 3147,
-        "invented_px": 2482,
+        "inferred_px": 3068,
+        "invented_px": 2561,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.559,
-        "confidence_computed": 0.5591,
+        "confidence": 0.545,
+        "confidence_computed": 0.545,
         "pipeline_region_id": 2
       },
       {
@@ -457,12 +457,12 @@
           1024
         ],
         "area_px": 4839,
-        "inferred_px": 638,
-        "invented_px": 4201,
+        "inferred_px": 688,
+        "invented_px": 4151,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.132,
-        "confidence_computed": 0.1318,
+        "confidence": 0.142,
+        "confidence_computed": 0.1422,
         "pipeline_region_id": 24
       },
       {
@@ -474,12 +474,12 @@
           922
         ],
         "area_px": 4006,
-        "inferred_px": 1998,
-        "invented_px": 2008,
+        "inferred_px": 2246,
+        "invented_px": 1760,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.499,
-        "confidence_computed": 0.4988,
+        "confidence": 0.561,
+        "confidence_computed": 0.5607,
         "pipeline_region_id": 21
       },
       {
@@ -491,12 +491,12 @@
           769
         ],
         "area_px": 3906,
-        "inferred_px": 384,
-        "invented_px": 3522,
+        "inferred_px": 357,
+        "invented_px": 3549,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.098,
-        "confidence_computed": 0.0983,
+        "confidence": 0.091,
+        "confidence_computed": 0.0914,
         "pipeline_region_id": 11
       },
       {
@@ -508,12 +508,12 @@
           968
         ],
         "area_px": 2044,
-        "inferred_px": 1839,
-        "invented_px": 205,
+        "inferred_px": 1650,
+        "invented_px": 394,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.9,
-        "confidence_computed": 0.8997,
+        "confidence": 0.807,
+        "confidence_computed": 0.8072,
         "pipeline_region_id": 23
       },
       {
@@ -525,12 +525,12 @@
           839
         ],
         "area_px": 1548,
-        "inferred_px": 431,
-        "invented_px": 1117,
+        "inferred_px": 416,
+        "invented_px": 1132,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.754,
-        "confidence_computed": 0.2784,
+        "confidence": 0.791,
+        "confidence_computed": 0.2687,
         "pipeline_region_id": 8
       },
       {
@@ -542,12 +542,12 @@
           574
         ],
         "area_px": 1396,
-        "inferred_px": 41,
-        "invented_px": 1355,
+        "inferred_px": 79,
+        "invented_px": 1317,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.029,
-        "confidence_computed": 0.0294,
+        "confidence": 0.057,
+        "confidence_computed": 0.0566,
         "pipeline_region_id": 10
       },
       {
@@ -614,7 +614,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.754,
+        "confidence": 0.791,
         "confidence_computed": 1.0,
         "pipeline_region_id": 8
       },
@@ -648,7 +648,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.754,
+        "confidence": 0.791,
         "confidence_computed": 1.0,
         "pipeline_region_id": 8
       },
@@ -699,7 +699,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.754,
+        "confidence": 0.791,
         "confidence_computed": 1.0,
         "pipeline_region_id": 8
       },
@@ -716,7 +716,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.754,
+        "confidence": 0.791,
         "confidence_computed": 1.0,
         "pipeline_region_id": 8
       },
@@ -750,7 +750,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.098,
+        "confidence": 0.091,
         "confidence_computed": 1.0,
         "pipeline_region_id": 11
       },
@@ -876,8 +876,8 @@
     ],
     "displayed_seed": 15,
     "seeds": 8,
-    "seconds": 1.44,
-    "generated_at": "2026-10-11T10:56:19+00:00",
+    "seconds": 2.45,
+    "generated_at": "2026-10-11T23:13:48+00:00",
     "warnings": []
   }
 }

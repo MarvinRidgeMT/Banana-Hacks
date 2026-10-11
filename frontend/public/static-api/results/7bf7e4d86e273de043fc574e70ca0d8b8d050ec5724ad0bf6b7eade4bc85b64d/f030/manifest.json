@@ -5,7 +5,7 @@
     "scale": 0.5,
     "resample": "lanczos interpolation, no generative detail"
   },
-  "created": "2026-10-11T10:34:35+00:00",
+  "created": "2026-10-11T22:51:03+00:00",
   "stages": [
     {
       "stage": "damage_segmentation",
@@ -44,7 +44,7 @@
       "strict_mode": true,
       "faces": 1,
       "face_boxes_source": "provided",
-      "pixels_changed": 984
+      "pixels_changed": 1057
     }
   ],
   "invention_map": {
@@ -158,8 +158,8 @@
     ],
     "displayed_seed": 11,
     "seeds": 8,
-    "seconds": 2.18,
-    "generated_at": "2026-10-11T10:34:35+00:00",
+    "seconds": 5.19,
+    "generated_at": "2026-10-11T22:51:03+00:00",
     "warnings": []
   }
 }

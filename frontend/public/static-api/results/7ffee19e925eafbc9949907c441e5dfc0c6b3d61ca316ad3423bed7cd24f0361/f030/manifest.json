@@ -5,7 +5,7 @@
     "scale": 0.691,
     "resample": "lanczos interpolation, no generative detail"
   },
-  "created": "2026-10-11T10:37:05+00:00",
+  "created": "2026-10-11T22:56:23+00:00",
   "stages": [
     {
       "stage": "damage_segmentation",
@@ -35,7 +35,7 @@
       "dilation_px": 4,
       "thin_px": 1139,
       "thick_px": 48403,
-      "pixels_changed": 33289
+      "pixels_changed": 48882
     },
     {
       "stage": "face_restoration",
@@ -60,8 +60,8 @@
   },
   "pixel_summary": {
     "observed": 0.9351,
-    "inferred": 0.0144,
-    "invented": 0.0505
+    "inferred": 0.0087,
+    "invented": 0.0561
   },
   "regions": [
     {
@@ -74,7 +74,7 @@
       ],
       "kind": "damage",
       "pixels": 48403,
-      "confidence": 0.203
+      "confidence": 0.114
     },
     {
       "id": 2,
@@ -238,13 +238,13 @@
     "human_edited_mask": true,
     "pixel_summary": {
       "observed": 0.935146,
-      "inferred": 0.014384,
-      "invented": 0.05047
+      "inferred": 0.008704,
+      "invented": 0.05615
     },
     "pipeline_pixel_summary": {
       "observed": 0.9351,
-      "inferred": 0.0144,
-      "invented": 0.0505
+      "inferred": 0.0087,
+      "invented": 0.0561
     },
     "regions": [
       {
@@ -256,12 +256,12 @@
           280
         ],
         "area_px": 48403,
-        "inferred_px": 9849,
-        "invented_px": 38554,
+        "inferred_px": 5510,
+        "invented_px": 42893,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.203,
-        "confidence_computed": 0.2035,
+        "confidence": 0.114,
+        "confidence_computed": 0.1138,
         "pipeline_region_id": 1
       },
       {
@@ -420,8 +420,8 @@
     ],
     "displayed_seed": 14,
     "seeds": 8,
-    "seconds": 147.03,
-    "generated_at": "2026-10-11T10:37:05+00:00",
+    "seconds": 142.55,
+    "generated_at": "2026-10-11T22:56:23+00:00",
     "warnings": []
   }
 }

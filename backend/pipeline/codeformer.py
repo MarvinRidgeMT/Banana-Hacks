@@ -71,5 +71,5 @@ def face_pass(img, orig, boxes, damaged, fidelity=0.5, strict=True, pad=0.15):
         full = out.copy()
         full[y0:y1, x0:x1] = fixed
         out[region] = full[region]
-        _blend_in(out, orig, region, damaged)
+        _blend_in(out, orig, region, damaged, src=full)
     return out

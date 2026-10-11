@@ -4687,7 +4687,8 @@
   "seeds": null,
   "pipeline": "real",
   "kind": "document",
-  "seconds": 0.46,
+  "render_version": 6,
+  "seconds": 0.43,
   "warnings": [],
   "manifest": {
     "tool": "Cold Case, document mode",
@@ -9401,8 +9402,8 @@
       ],
       "displayed_seed": null,
       "seeds": null,
-      "seconds": 0.46,
-      "generated_at": "2026-10-11T21:54:34+00:00",
+      "seconds": 0.43,
+      "generated_at": "2026-10-11T22:53:57+00:00",
       "warnings": []
     }
   }

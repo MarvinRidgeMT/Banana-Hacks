@@ -62,7 +62,9 @@
   "human_edited_mask": true,
   "seeds": 8,
   "pipeline": "real",
-  "seconds": 1.39,
+  "kind": "photo",
+  "render_version": 6,
+  "seconds": 2.08,
   "warnings": [],
   "manifest": {
     "source_sha256": "7d700ef2ebbc17f9ee9e3781cb414d3e49a3270550f78b27058f81e5f77a3200",
@@ -71,7 +73,7 @@
       "scale": 0.5,
       "resample": "lanczos interpolation, no generative detail"
     },
-    "created": "2026-10-11T10:34:38+00:00",
+    "created": "2026-10-11T22:51:07+00:00",
     "stages": [
       {
         "stage": "damage_segmentation",
@@ -110,7 +112,7 @@
         "strict_mode": true,
         "faces": 1,
         "face_boxes_source": "provided",
-        "pixels_changed": 973
+        "pixels_changed": 1074
       }
     ],
     "invention_map": {
@@ -224,8 +226,8 @@
       ],
       "displayed_seed": 11,
       "seeds": 8,
-      "seconds": 1.39,
-      "generated_at": "2026-10-11T10:34:38+00:00",
+      "seconds": 2.08,
+      "generated_at": "2026-10-11T22:51:08+00:00",
       "warnings": []
     }
   }

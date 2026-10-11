@@ -19,8 +19,8 @@
   "face_original": null,
   "pixel_summary": {
     "observed": 0.5946797810628742,
-    "inferred": 0.39224334534056887,
-    "invented": 0.013076873596556886
+    "inferred": 0.3902054289857784,
+    "invented": 0.015114789951347305
   },
   "regions": [
     {
@@ -32,12 +32,12 @@
         653
       ],
       "area_px": 209919,
-      "inferred_px": 200974,
-      "invented_px": 8945,
+      "inferred_px": 199580,
+      "invented_px": 10339,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
-      "confidence_computed": 0.9574,
+      "confidence": 0.951,
+      "confidence_computed": 0.9507,
       "pipeline_region_id": 6
     },
     {
@@ -53,7 +53,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -70,7 +70,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -87,7 +87,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -121,7 +121,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -155,7 +155,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -172,7 +172,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -206,7 +206,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -240,7 +240,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -257,7 +257,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -274,7 +274,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -291,7 +291,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -325,7 +325,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -342,7 +342,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -359,7 +359,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -376,7 +376,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -410,7 +410,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -444,7 +444,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -478,7 +478,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -495,7 +495,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -512,7 +512,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -529,7 +529,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -563,7 +563,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -580,7 +580,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -614,7 +614,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -631,7 +631,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -648,7 +648,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -682,7 +682,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -716,7 +716,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -733,7 +733,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -750,7 +750,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -767,7 +767,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -784,7 +784,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -801,7 +801,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -818,7 +818,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -835,7 +835,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -852,7 +852,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -869,7 +869,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -920,7 +920,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -937,7 +937,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -971,7 +971,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1022,7 +1022,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1039,7 +1039,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1056,7 +1056,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1090,7 +1090,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1124,7 +1124,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1158,7 +1158,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1192,7 +1192,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1226,7 +1226,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1277,7 +1277,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1294,7 +1294,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1362,7 +1362,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1379,7 +1379,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1413,7 +1413,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1447,7 +1447,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1481,7 +1481,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1515,7 +1515,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1549,7 +1549,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1566,7 +1566,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1583,7 +1583,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1617,7 +1617,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1634,7 +1634,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1668,7 +1668,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1685,7 +1685,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1702,7 +1702,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1719,7 +1719,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1736,7 +1736,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1753,7 +1753,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1770,7 +1770,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1787,7 +1787,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1821,7 +1821,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1838,7 +1838,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1889,7 +1889,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1906,7 +1906,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1923,7 +1923,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1957,7 +1957,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1974,7 +1974,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -1991,7 +1991,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2008,7 +2008,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2025,7 +2025,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2042,7 +2042,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2076,7 +2076,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2093,7 +2093,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2110,7 +2110,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2127,7 +2127,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2144,7 +2144,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2161,7 +2161,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2178,7 +2178,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2195,7 +2195,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2229,7 +2229,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2280,7 +2280,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2297,7 +2297,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2314,7 +2314,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2331,7 +2331,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2348,7 +2348,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2382,7 +2382,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2399,7 +2399,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2450,7 +2450,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2467,7 +2467,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2501,7 +2501,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2518,7 +2518,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2586,7 +2586,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2603,7 +2603,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2637,7 +2637,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2654,7 +2654,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2671,7 +2671,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2705,7 +2705,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2722,7 +2722,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2773,7 +2773,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2807,7 +2807,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2841,7 +2841,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2858,7 +2858,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2892,7 +2892,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2909,7 +2909,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2926,7 +2926,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2943,7 +2943,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2960,7 +2960,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2977,7 +2977,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -2994,7 +2994,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3045,7 +3045,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3064,7 +3064,7 @@
       "stage": "face_restoration",
       "confidence": 1.0,
       "confidence_computed": 1.0,
-      "pipeline_region_id": "face-6"
+      "pipeline_region_id": "face-5"
     },
     {
       "id": 180,
@@ -3079,7 +3079,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3096,7 +3096,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3113,7 +3113,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3130,7 +3130,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3147,7 +3147,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3164,7 +3164,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3181,7 +3181,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3198,7 +3198,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3232,7 +3232,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3249,7 +3249,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3283,7 +3283,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3300,7 +3300,7 @@
       "invented_px": 0,
       "kind": "damage",
       "stage": "inpainting",
-      "confidence": 0.957,
+      "confidence": 0.951,
       "confidence_computed": 1.0,
       "pipeline_region_id": 6
     },
@@ -3343,7 +3343,9 @@
   "human_edited_mask": true,
   "seeds": 8,
   "pipeline": "real",
-  "seconds": 14.36,
+  "kind": "photo",
+  "render_version": 6,
+  "seconds": 25.65,
   "warnings": [],
   "manifest": {
     "source_sha256": "67b52eef7528ff07cac787c13dc055f1aea13ece20e94226bd77ef192e9191b9",
@@ -3352,7 +3354,7 @@
       "scale": 0.5,
       "resample": "lanczos interpolation, no generative detail"
     },
-    "created": "2026-10-11T10:34:17+00:00",
+    "created": "2026-10-11T23:21:09+00:00",
     "stages": [
       {
         "stage": "damage_segmentation",
@@ -3377,12 +3379,12 @@
           17,
           18
         ],
-        "displayed_seed": 12,
+        "displayed_seed": 15,
         "steps": 20,
         "dilation_px": 4,
         "thin_px": 261850,
         "thick_px": 15402,
-        "pixels_changed": 276859
+        "pixels_changed": 276864
       },
       {
         "stage": "face_restoration",
@@ -3391,7 +3393,7 @@
         "strict_mode": true,
         "faces": 13,
         "face_boxes_source": "provided",
-        "pixels_changed": 18159
+        "pixels_changed": 19186
       }
     ],
     "invention_map": {
@@ -3407,8 +3409,8 @@
     },
     "pixel_summary": {
       "observed": 0.5947,
-      "inferred": 0.3922,
-      "invented": 0.0131
+      "inferred": 0.3902,
+      "invented": 0.0151
     },
     "regions": [
       {
@@ -3481,7 +3483,7 @@
         ],
         "kind": "damage",
         "pixels": 209919,
-        "confidence": 0.957
+        "confidence": 0.951
       },
       {
         "id": 7,
@@ -4464,7 +4466,7 @@
           56
         ],
         "kind": "face",
-        "detector_score": 0.858,
+        "detector_score": 0.855,
         "pixels_changed": 263,
         "invented_fraction": 0.0,
         "confidence": 1.0
@@ -4478,7 +4480,7 @@
           60
         ],
         "kind": "face",
-        "detector_score": 0.822,
+        "detector_score": 0.832,
         "pixels_changed": 250,
         "invented_fraction": 0.0,
         "confidence": 1.0
@@ -4486,14 +4488,14 @@
       {
         "id": "face-3",
         "bbox": [
-          341,
-          164,
-          34,
-          42
+          339,
+          162,
+          37,
+          46
         ],
         "kind": "face",
-        "detector_score": 0.699,
-        "pixels_changed": 248,
+        "detector_score": 0.808,
+        "pixels_changed": 303,
         "invented_fraction": 0.0,
         "confidence": 1.0
       },
@@ -4501,41 +4503,27 @@
         "id": "face-4",
         "bbox": [
           771,
-          179,
+          180,
           44,
-          55
+          54
         ],
         "kind": "face",
-        "detector_score": 0.669,
-        "pixels_changed": 696,
+        "detector_score": 0.704,
+        "pixels_changed": 684,
         "invented_fraction": 0.0,
         "confidence": 1.0
       },
       {
         "id": "face-5",
         "bbox": [
-          479,
-          178,
-          22,
-          29
-        ],
-        "kind": "face",
-        "detector_score": 0.653,
-        "pixels_changed": 548,
-        "invented_fraction": 0.0,
-        "confidence": 1.0
-      },
-      {
-        "id": "face-6",
-        "bbox": [
           265,
-          173,
-          42,
-          60
+          172,
+          43,
+          61
         ],
         "kind": "face",
-        "detector_score": 0.517,
-        "pixels_changed": 608,
+        "detector_score": 0.51,
+        "pixels_changed": 618,
         "invented_fraction": 0.0,
         "confidence": 1.0
       }
@@ -4549,13 +4537,13 @@
       "human_edited_mask": true,
       "pixel_summary": {
         "observed": 0.59468,
-        "inferred": 0.392243,
-        "invented": 0.013077
+        "inferred": 0.390205,
+        "invented": 0.015115
       },
       "pipeline_pixel_summary": {
         "observed": 0.5947,
-        "inferred": 0.3922,
-        "invented": 0.0131
+        "inferred": 0.3902,
+        "invented": 0.0151
       },
       "regions": [
         {
@@ -4567,12 +4555,12 @@
             653
           ],
           "area_px": 209919,
-          "inferred_px": 200974,
-          "invented_px": 8945,
+          "inferred_px": 199580,
+          "invented_px": 10339,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
-          "confidence_computed": 0.9574,
+          "confidence": 0.951,
+          "confidence_computed": 0.9507,
           "pipeline_region_id": 6
         },
         {
@@ -4588,7 +4576,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4605,7 +4593,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4622,7 +4610,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4656,7 +4644,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4690,7 +4678,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4707,7 +4695,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4741,7 +4729,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4775,7 +4763,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4792,7 +4780,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4809,7 +4797,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4826,7 +4814,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4860,7 +4848,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4877,7 +4865,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4894,7 +4882,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4911,7 +4899,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4945,7 +4933,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -4979,7 +4967,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5013,7 +5001,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5030,7 +5018,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5047,7 +5035,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5064,7 +5052,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5098,7 +5086,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5115,7 +5103,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5149,7 +5137,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5166,7 +5154,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5183,7 +5171,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5217,7 +5205,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5251,7 +5239,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5268,7 +5256,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5285,7 +5273,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5302,7 +5290,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5319,7 +5307,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5336,7 +5324,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5353,7 +5341,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5370,7 +5358,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5387,7 +5375,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5404,7 +5392,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5455,7 +5443,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5472,7 +5460,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5506,7 +5494,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5557,7 +5545,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5574,7 +5562,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5591,7 +5579,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5625,7 +5613,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5659,7 +5647,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5693,7 +5681,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5727,7 +5715,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5761,7 +5749,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5812,7 +5800,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5829,7 +5817,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5897,7 +5885,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5914,7 +5902,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5948,7 +5936,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -5982,7 +5970,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6016,7 +6004,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6050,7 +6038,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6084,7 +6072,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6101,7 +6089,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6118,7 +6106,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6152,7 +6140,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6169,7 +6157,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6203,7 +6191,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6220,7 +6208,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6237,7 +6225,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6254,7 +6242,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6271,7 +6259,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6288,7 +6276,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6305,7 +6293,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6322,7 +6310,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6356,7 +6344,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6373,7 +6361,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6424,7 +6412,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6441,7 +6429,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6458,7 +6446,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6492,7 +6480,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6509,7 +6497,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6526,7 +6514,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6543,7 +6531,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6560,7 +6548,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6577,7 +6565,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6611,7 +6599,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6628,7 +6616,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6645,7 +6633,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6662,7 +6650,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6679,7 +6667,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6696,7 +6684,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6713,7 +6701,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6730,7 +6718,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6764,7 +6752,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6815,7 +6803,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6832,7 +6820,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6849,7 +6837,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6866,7 +6854,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6883,7 +6871,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6917,7 +6905,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6934,7 +6922,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -6985,7 +6973,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7002,7 +6990,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7036,7 +7024,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7053,7 +7041,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7121,7 +7109,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7138,7 +7126,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7172,7 +7160,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7189,7 +7177,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7206,7 +7194,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7240,7 +7228,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7257,7 +7245,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7308,7 +7296,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7342,7 +7330,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7376,7 +7364,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7393,7 +7381,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7427,7 +7415,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7444,7 +7432,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7461,7 +7449,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7478,7 +7466,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7495,7 +7483,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7512,7 +7500,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7529,7 +7517,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7580,7 +7568,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7599,7 +7587,7 @@
           "stage": "face_restoration",
           "confidence": 1.0,
           "confidence_computed": 1.0,
-          "pipeline_region_id": "face-6"
+          "pipeline_region_id": "face-5"
         },
         {
           "id": 180,
@@ -7614,7 +7602,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7631,7 +7619,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7648,7 +7636,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7665,7 +7653,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7682,7 +7670,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7699,7 +7687,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7716,7 +7704,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7733,7 +7721,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7767,7 +7755,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7784,7 +7772,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7818,7 +7806,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7835,7 +7823,7 @@
           "invented_px": 0,
           "kind": "damage",
           "stage": "inpainting",
-          "confidence": 0.957,
+          "confidence": 0.951,
           "confidence_computed": 1.0,
           "pipeline_region_id": 6
         },
@@ -7874,10 +7862,10 @@
           "pipeline_region_id": null
         }
       ],
-      "displayed_seed": 12,
+      "displayed_seed": 15,
       "seeds": 8,
-      "seconds": 14.36,
-      "generated_at": "2026-10-11T10:34:18+00:00",
+      "seconds": 25.65,
+      "generated_at": "2026-10-11T23:21:09+00:00",
       "warnings": []
     }
   }

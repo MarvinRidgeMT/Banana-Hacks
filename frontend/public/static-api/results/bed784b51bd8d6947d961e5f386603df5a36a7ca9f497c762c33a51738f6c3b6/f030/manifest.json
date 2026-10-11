@@ -5,7 +5,7 @@
     "scale": 0.5,
     "resample": "lanczos interpolation, no generative detail"
   },
-  "created": "2026-10-11T10:34:03+00:00",
+  "created": "2026-10-11T23:20:43+00:00",
   "stages": [
     {
       "stage": "damage_segmentation",
@@ -30,12 +30,12 @@
         17,
         18
       ],
-      "displayed_seed": 12,
+      "displayed_seed": 15,
       "steps": 20,
       "dilation_px": 4,
       "thin_px": 261850,
       "thick_px": 15402,
-      "pixels_changed": 276859
+      "pixels_changed": 276864
     },
     {
       "stage": "face_restoration",
@@ -44,7 +44,7 @@
       "strict_mode": true,
       "faces": 13,
       "face_boxes_source": "provided",
-      "pixels_changed": 18159
+      "pixels_changed": 19271
     }
   ],
   "invention_map": {
@@ -60,8 +60,8 @@
   },
   "pixel_summary": {
     "observed": 0.5947,
-    "inferred": 0.3922,
-    "invented": 0.0131
+    "inferred": 0.3902,
+    "invented": 0.0151
   },
   "regions": [
     {
@@ -134,7 +134,7 @@
       ],
       "kind": "damage",
       "pixels": 209919,
-      "confidence": 0.957
+      "confidence": 0.951
     },
     {
       "id": 7,
@@ -1114,10 +1114,10 @@
         137,
         121,
         46,
-        56
+        55
       ],
       "kind": "face",
-      "detector_score": 0.856,
+      "detector_score": 0.854,
       "pixels_changed": 263,
       "invented_fraction": 0.0,
       "confidence": 1.0
@@ -1131,7 +1131,7 @@
         60
       ],
       "kind": "face",
-      "detector_score": 0.83,
+      "detector_score": 0.838,
       "pixels_changed": 250,
       "invented_fraction": 0.0,
       "confidence": 1.0
@@ -1139,56 +1139,42 @@
     {
       "id": "face-3",
       "bbox": [
-        340,
-        163,
-        34,
-        42
+        339,
+        162,
+        38,
+        46
       ],
       "kind": "face",
-      "detector_score": 0.719,
-      "pixels_changed": 274,
+      "detector_score": 0.82,
+      "pixels_changed": 303,
       "invented_fraction": 0.0,
       "confidence": 1.0
     },
     {
       "id": "face-4",
       "bbox": [
-        478,
-        178,
-        26,
-        34
+        773,
+        180,
+        42,
+        52
       ],
       "kind": "face",
-      "detector_score": 0.665,
-      "pixels_changed": 738,
+      "detector_score": 0.699,
+      "pixels_changed": 661,
       "invented_fraction": 0.0,
       "confidence": 1.0
     },
     {
       "id": "face-5",
       "bbox": [
-        772,
-        180,
-        43,
-        53
-      ],
-      "kind": "face",
-      "detector_score": 0.609,
-      "pixels_changed": 671,
-      "invented_fraction": 0.0,
-      "confidence": 1.0
-    },
-    {
-      "id": "face-6",
-      "bbox": [
-        266,
+        265,
         173,
-        41,
+        42,
         59
       ],
       "kind": "face",
-      "detector_score": 0.539,
-      "pixels_changed": 577,
+      "detector_score": 0.553,
+      "pixels_changed": 597,
       "invented_fraction": 0.0,
       "confidence": 1.0
     }
@@ -1202,13 +1188,13 @@
     "human_edited_mask": true,
     "pixel_summary": {
       "observed": 0.59468,
-      "inferred": 0.392243,
-      "invented": 0.013077
+      "inferred": 0.390205,
+      "invented": 0.015115
     },
     "pipeline_pixel_summary": {
       "observed": 0.5947,
-      "inferred": 0.3922,
-      "invented": 0.0131
+      "inferred": 0.3902,
+      "invented": 0.0151
     },
     "regions": [
       {
@@ -1220,12 +1206,12 @@
           653
         ],
         "area_px": 209919,
-        "inferred_px": 200974,
-        "invented_px": 8945,
+        "inferred_px": 199580,
+        "invented_px": 10339,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
-        "confidence_computed": 0.9574,
+        "confidence": 0.951,
+        "confidence_computed": 0.9507,
         "pipeline_region_id": 6
       },
       {
@@ -1241,7 +1227,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1258,7 +1244,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1275,7 +1261,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1309,7 +1295,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1343,7 +1329,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1360,7 +1346,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1394,7 +1380,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1428,7 +1414,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1445,7 +1431,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1462,7 +1448,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1479,7 +1465,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1513,7 +1499,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1530,7 +1516,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1547,7 +1533,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1564,7 +1550,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1598,7 +1584,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1632,7 +1618,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1666,7 +1652,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1683,7 +1669,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1700,7 +1686,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1717,7 +1703,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1751,7 +1737,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1768,7 +1754,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1802,7 +1788,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1819,7 +1805,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1836,7 +1822,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1870,7 +1856,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1904,7 +1890,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1921,7 +1907,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1938,7 +1924,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1955,7 +1941,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1972,7 +1958,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -1989,7 +1975,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2006,7 +1992,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2023,7 +2009,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2040,7 +2026,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2057,7 +2043,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2108,7 +2094,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2125,7 +2111,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2159,7 +2145,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2210,7 +2196,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2227,7 +2213,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2244,7 +2230,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2278,7 +2264,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2312,7 +2298,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2346,7 +2332,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2380,7 +2366,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2414,7 +2400,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2465,7 +2451,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2482,7 +2468,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2550,7 +2536,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2567,7 +2553,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2601,7 +2587,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2635,7 +2621,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2669,7 +2655,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2703,7 +2689,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2737,7 +2723,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2754,7 +2740,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2771,7 +2757,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2805,7 +2791,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2822,7 +2808,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2856,7 +2842,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2873,7 +2859,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2890,7 +2876,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2907,7 +2893,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2924,7 +2910,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2941,7 +2927,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2958,7 +2944,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -2975,7 +2961,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3009,7 +2995,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3026,7 +3012,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3062,7 +3048,7 @@
         "stage": "face_restoration",
         "confidence": 1.0,
         "confidence_computed": 1.0,
-        "pipeline_region_id": "face-5"
+        "pipeline_region_id": "face-4"
       },
       {
         "id": 110,
@@ -3077,7 +3063,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3094,7 +3080,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3111,7 +3097,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3145,7 +3131,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3162,7 +3148,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3179,7 +3165,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3196,7 +3182,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3213,7 +3199,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3230,7 +3216,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3264,7 +3250,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3281,7 +3267,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3298,7 +3284,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3315,7 +3301,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3332,7 +3318,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3349,7 +3335,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3366,7 +3352,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3383,7 +3369,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3417,7 +3403,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3468,7 +3454,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3485,7 +3471,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3502,7 +3488,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3519,7 +3505,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3536,7 +3522,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3570,7 +3556,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3587,7 +3573,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3638,7 +3624,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3655,7 +3641,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3689,7 +3675,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3706,7 +3692,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3774,7 +3760,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3791,7 +3777,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3825,7 +3811,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3842,7 +3828,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3859,7 +3845,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3893,7 +3879,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3910,7 +3896,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3961,7 +3947,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -3995,7 +3981,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4029,7 +4015,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4046,7 +4032,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4065,7 +4051,7 @@
         "stage": "face_restoration",
         "confidence": 1.0,
         "confidence_computed": 1.0,
-        "pipeline_region_id": "face-5"
+        "pipeline_region_id": "face-4"
       },
       {
         "id": 169,
@@ -4080,7 +4066,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4097,7 +4083,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4114,7 +4100,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4131,7 +4117,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4148,7 +4134,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4165,7 +4151,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4182,7 +4168,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4233,7 +4219,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4252,7 +4238,7 @@
         "stage": "face_restoration",
         "confidence": 1.0,
         "confidence_computed": 1.0,
-        "pipeline_region_id": "face-6"
+        "pipeline_region_id": "face-5"
       },
       {
         "id": 180,
@@ -4267,7 +4253,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4284,7 +4270,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4301,7 +4287,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4318,7 +4304,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4335,7 +4321,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4352,7 +4338,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4369,7 +4355,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4386,7 +4372,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4420,7 +4406,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4437,7 +4423,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4456,7 +4442,7 @@
         "stage": "face_restoration",
         "confidence": 1.0,
         "confidence_computed": 1.0,
-        "pipeline_region_id": "face-5"
+        "pipeline_region_id": "face-4"
       },
       {
         "id": 192,
@@ -4471,7 +4457,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4488,7 +4474,7 @@
         "invented_px": 0,
         "kind": "damage",
         "stage": "inpainting",
-        "confidence": 0.957,
+        "confidence": 0.951,
         "confidence_computed": 1.0,
         "pipeline_region_id": 6
       },
@@ -4527,10 +4513,10 @@
         "pipeline_region_id": null
       }
     ],
-    "displayed_seed": 12,
+    "displayed_seed": 15,
     "seeds": 8,
-    "seconds": 396.06,
-    "generated_at": "2026-10-11T10:34:03+00:00",
+    "seconds": 411.91,
+    "generated_at": "2026-10-11T23:20:43+00:00",
     "warnings": []
   }
 }

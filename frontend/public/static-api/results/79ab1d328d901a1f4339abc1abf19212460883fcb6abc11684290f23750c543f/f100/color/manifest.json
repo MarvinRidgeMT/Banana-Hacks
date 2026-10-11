@@ -22,7 +22,7 @@
     "invented": 0.0
   },
   "lightness_check": {
-    "mean_abs_diff_L": 0.106,
+    "mean_abs_diff_L": 0.108,
     "p99_abs_diff_L": 0.293,
     "scale": "L 0-100"
   }

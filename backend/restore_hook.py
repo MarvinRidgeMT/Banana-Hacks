@@ -61,6 +61,10 @@ MIN_REGION_PX = 20  # specks smaller than this get no region id (class is still 
 _restore_fn = None
 
 
+# Bump when the restoration output changes (6: seamless membrane blending), so cached results re-render.
+RENDER_VERSION = 6
+
+
 def pipeline_name() -> str:
     return "stub" if os.environ.get("CV_PIPELINE") == "stub" else "real"
 
@@ -590,7 +594,7 @@ def run_restore(image_path: Path, fidelity: float, source: dict,
     result_file = out / "result.json"
     if result_file.exists():
         cached = json.loads(result_file.read_text())
-        if cached.get("pipeline", "stub") == pipeline_name():
+        if cached.get("pipeline", "stub") == pipeline_name() and cached.get("render_version") == RENDER_VERSION:
             return cached
         shutil.rmtree(out, ignore_errors=True)  # made by the other pipeline: redo it
 
@@ -760,6 +764,7 @@ def run_restore(image_path: Path, fidelity: float, source: dict,
         "seeds": seeds_used,
         "pipeline": pipeline_name(),
         "kind": source.get("kind", "photo"),
+        "render_version": RENDER_VERSION,
         "seconds": round(seconds, 2),
         "warnings": warnings,
         "manifest": manifest,

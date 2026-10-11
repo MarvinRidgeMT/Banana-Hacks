@@ -308,7 +308,15 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
           ))}
         </div>
         <div role="tabpanel">
-          {tab === "faces" ? <FacesPanel result={shown} /> : <ManifestPanel result={shown} />}
+          {tab === "faces" ? (
+            <FacesPanel result={shown} />
+          ) : (
+            <ManifestPanel
+              result={shown}
+              color={colors[`${shown.key}:${shown.fidelity}`] ?? null}
+              onColor={(c) => setColors((prev) => ({ ...prev, [`${shown.key}:${shown.fidelity}`]: c }))}
+            />
+          )}
         </div>
       </div>
     </div>

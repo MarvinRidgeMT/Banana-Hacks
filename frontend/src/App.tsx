@@ -6,6 +6,7 @@ import { ResultView } from "./components/ResultView";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
 import { UploadView } from "./components/UploadView";
+import { addHistory, loadHistory } from "./lib/history";
 import { api, fileUrl, waitForJob } from "./lib/api";
 import { href, navigate, useRouter, type Route } from "./lib/router";
 import { failure } from "./lib/format";
@@ -45,7 +46,9 @@ export default function App() {
   const [banner, setBanner] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   /** Titles of uploaded photos, by key, so their result page can be named. */
-  const [titles, setTitles] = useState<Record<string, string>>({});
+  const [titles, setTitles] = useState<Record<string, string>>(() =>
+    Object.fromEntries(loadHistory().map((h) => [h.key, h.title])),
+  );
   const jobAbort = useRef<AbortController | null>(null);
   const objectUrl = useRef<string | null>(null);
   const mainRef = useRef<HTMLElement>(null);
@@ -105,6 +108,7 @@ export default function App() {
         const done = await waitForJob(first, (j) => setTask({ name: "job", title, job: j }), ctrl.signal);
         if (done.status === "error") throw new Error(done.error ?? "The restoration failed.");
         setTitles((t) => ({ ...t, [done.key]: title }));
+        addHistory({ key: done.key, title, kind: opts.kind ?? "photo" });
         navigate(href.result(done.key, DEFAULT_FIDELITY));
       } catch (e) {
         if ((e as Error).name === "AbortError") return;

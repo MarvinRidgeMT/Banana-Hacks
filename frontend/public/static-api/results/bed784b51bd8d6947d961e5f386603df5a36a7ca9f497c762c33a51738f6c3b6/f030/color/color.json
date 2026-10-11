@@ -7,11 +7,11 @@
   },
   "pixel_summary": {
     "observed": 0.0,
-    "inferred": 0.993791,
-    "invented": 0.006209
+    "inferred": 0.984758,
+    "invented": 0.015242
   },
   "lightness_check": {
-    "mean_abs_diff_L": 0.099,
+    "mean_abs_diff_L": 0.098,
     "p99_abs_diff_L": 0.281,
     "scale": "L 0-100"
   },
@@ -20,5 +20,5 @@
     "siggraph17"
   ],
   "device": "mps",
-  "seconds": 0.3
+  "seconds": 0.26
 }
