@@ -22,3 +22,5 @@ backend/third_party
 cache_stub/
 real_eval.zip
 backend/sweep_out/
+frontend/.vite/
+training/__pycache__/

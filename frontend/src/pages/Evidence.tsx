@@ -254,6 +254,22 @@ export function Evidence({ metrics }: { metrics: Metrics | null }) {
       cells: ["Receipt", "Valid C2PA Content Credential", "Validates; the only flag is the untrusted test certificate"],
     },
     {
+      key: "steps",
+      cells: [
+        "SDXL steps: 20 vs 30 vs 40",
+        "Under 1.2% apart, so we use 20",
+        "Face ΔE against a known true face (simulated damage): 8.71 / 8.61 / 8.62",
+      ],
+    },
+    {
+      key: "documents",
+      cells: [
+        "Documents (experiment)",
+        "IoU 0.914 vs 0.861; ink wrongly flagged 0.18% vs 0.65%",
+        "A document detector fine-tuned in 40 min on 800 synthetic pages, vs our photo model, on 80 held-out synthetic pages. Not yet tested on real damaged documents, and never used to generate text.",
+      ],
+    },
+    {
       key: "study",
       cells: ["Guesses people spotted", n.userStudy ?? <Pending />, "User study, two Google Forms"],
     },
