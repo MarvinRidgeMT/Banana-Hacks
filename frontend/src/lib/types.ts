@@ -76,9 +76,23 @@ export interface Metrics {
     synthetic_note?: string;
     real_iou?: number | null;
     real_note?: string;
+    real_folds?: number[] | null;
+    real_iou_before_finetune?: number | null;
+    /** "pending" means real_iou is still the pre-fine-tuning number. */
+    real_status?: string;
   };
-  map_calibration?: { text?: string } | null;
-  untouched_pixels?: { text?: string } | null;
+  map_calibration?: {
+    text?: string;
+    invented_de?: number | null;
+    rebuilt_de?: number | null;
+    spearman?: number | null;
+  } | null;
+  untouched_pixels?: {
+    text?: string;
+    changed_px?: number | null;
+    tests_passed?: number | null;
+    tests_total?: number | null;
+  } | null;
   user_study?: { text?: string } | null;
   time_per_photo?: { text?: string } | null;
 }

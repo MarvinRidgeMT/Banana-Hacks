@@ -56,7 +56,7 @@ function FaceImage({ src, alt }: { src: string; alt: string }) {
       src={src}
       alt={alt}
       crossOrigin="anonymous"
-      className="exhibit-frame h-56 w-auto object-contain"
+      className="exhibit-frame h-56 w-auto min-w-40 object-contain"
     />
   );
 }

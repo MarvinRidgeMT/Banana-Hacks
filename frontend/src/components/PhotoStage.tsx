@@ -3,6 +3,7 @@ import { fileUrl } from "../lib/api";
 import { CLASS_LABEL, kindLabel } from "../lib/format";
 import { drawOverlay, loadRegionMap, sampleAt, type RegionMap } from "../lib/regionMap";
 import type { HoverInfo, Region, Result } from "../lib/types";
+import { ErrorNote } from "./Feedback";
 
 interface Props {
   result: Result;
@@ -23,6 +24,9 @@ export function PhotoStage({ result, showMap, opacity, onHover, busy }: Props) {
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [pos, setPos] = useState(50);
   const [mapError, setMapError] = useState<string | null>(null);
+  const [mapLoading, setMapLoading] = useState(true);
+  const [mapAttempt, setMapAttempt] = useState(0);
+  const [photoLoaded, setPhotoLoaded] = useState(false);
   const [tip, setTip] = useState<{ x: number; y: number; info: HoverInfo } | null>(null);
 
   const regionsById = useMemo(() => {
@@ -55,17 +59,19 @@ export function PhotoStage({ result, showMap, opacity, onHover, busy }: Props) {
   useEffect(() => {
     let cancelled = false;
     setMapError(null);
+    setMapLoading(true);
     loadRegionMap(fileUrl(result.key, result.files.regions))
       .then((map) => {
         if (cancelled) return;
         mapRef.current = map;
         if (canvasRef.current) drawOverlay(map, canvasRef.current);
       })
-      .catch(() => !cancelled && setMapError("The pixel labels didn't load. Reload the page to try again."));
+      .catch(() => !cancelled && setMapError("The pixel labels didn't load, so the photo is shown without them."))
+      .finally(() => !cancelled && setMapLoading(false));
     return () => {
       cancelled = true;
     };
-  }, [result.key, result.files.regions]);
+  }, [result.key, result.files.regions, mapAttempt]);
 
   const setFromClientX = (clientX: number) => {
     const rect = stageRef.current?.getBoundingClientRect();
@@ -117,18 +123,20 @@ export function PhotoStage({ result, showMap, opacity, onHover, busy }: Props) {
     <div ref={frameRef} className="w-full">
       <div
         ref={stageRef}
-        className="exhibit-frame relative mx-auto select-none overflow-hidden"
-        style={{ width: size.w, height: size.h, touchAction: "none" }}
+        className="exhibit-frame on-dark relative mx-auto select-none overflow-hidden"
+        style={{ width: size.w, height: size.h, touchAction: "pan-y" }}
         onPointerMove={handleMove}
         onPointerLeave={clearHover}
         onPointerUp={() => (draggingRef.current = false)}
       >
+        {!photoLoaded && <span aria-hidden className="absolute inset-0 animate-pulse bg-ground/5" />}
         <img
           src={src(result.files.restored)}
           crossOrigin="anonymous"
           alt="Restored photo"
           className="absolute inset-0 h-full w-full"
           draggable={false}
+          onLoad={() => setPhotoLoaded(true)}
         />
         <canvas
           ref={canvasRef}
@@ -147,7 +155,7 @@ export function PhotoStage({ result, showMap, opacity, onHover, busy }: Props) {
 
         <span className="tag pointer-events-none absolute left-3 top-3">Original</span>
         <span className="tag pointer-events-none absolute right-3 top-3">
-          Restored{showMap ? " + labels" : ""}
+          Restored{showMap && !mapError ? (mapLoading ? " · loading labels…" : " + labels") : ""}
         </span>
 
         {/* the slider handle */}
@@ -172,7 +180,7 @@ export function PhotoStage({ result, showMap, opacity, onHover, busy }: Props) {
           onPointerMove={(e) => draggingRef.current && setFromClientX(e.clientX)}
           onPointerUp={() => (draggingRef.current = false)}
           className="absolute top-1/2 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize place-items-center rounded-full border-2 border-ground bg-ink/85 text-lg text-ground"
-          style={{ left: `${pos}%` }}
+          style={{ left: `${pos}%`, touchAction: "none" }}
         >
           <span aria-hidden>⇆</span>
         </button>
@@ -185,7 +193,7 @@ export function PhotoStage({ result, showMap, opacity, onHover, busy }: Props) {
           </div>
         )}
       </div>
-      {mapError && <p className="mt-4 text-invented">{mapError}</p>}
+      {mapError && <ErrorNote message={mapError} onRetry={() => setMapAttempt((a) => a + 1)} className="mt-6" />}
     </div>
   );
 }

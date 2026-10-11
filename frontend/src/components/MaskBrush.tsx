@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { ErrorNote, PhotoSkeleton } from "./Feedback";
 
 interface Props {
   imageUrl: string;
@@ -27,6 +28,8 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
   const [undoCount, setUndoCount] = useState(0);
   const [painted, setPainted] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
+  const [note, setNote] = useState<string | null>(null);
 
   // Reads back pixels for undo and export, so ask for a readback-friendly context.
   const ctx2d = () => canvasRef.current!.getContext("2d", { willReadFrequently: true })!;
@@ -34,6 +37,7 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
   // Load the photo (for its size) and any existing mask.
   useEffect(() => {
     let cancelled = false;
+    setLoadError(null);
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.src = imageUrl;
@@ -73,11 +77,11 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
           setPainted(true);
         }
       })
-      .catch(() => !cancelled && setLoadError("The photo or its mask didn't load."));
+      .catch(() => !cancelled && setLoadError("The photo or its damage mask didn't load."));
     return () => {
       cancelled = true;
     };
-  }, [imageUrl, initialMaskUrl]);
+  }, [imageUrl, initialMaskUrl, attempt]);
 
   useLayoutEffect(() => {
     const el = frameRef.current;
@@ -189,10 +193,10 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
       img.data[i + 3] = 255;
     }
     if (!any) {
-      setLoadError("Paint at least one damaged area first.");
+      setNote("Paint at least one damaged area first.");
       return;
     }
-    setLoadError(null);
+    setNote(null);
     octx.putImageData(img, 0, 0);
     out.toBlob((b) => b && onSubmit(b), "image/png");
   };
@@ -204,7 +208,7 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
           <button onClick={onCancel} className="text-muted underline-offset-4 hover:underline">
             ← Cancel
           </button>
-          <h2 className="mt-1 font-serif text-4xl">Mark the damage on {title}</h2>
+          <h1 className="mt-1 font-serif text-4xl break-words">Mark the damage on {title}</h1>
           <p className="mt-2 max-w-[60ch] text-muted">
             Paint over every spot where the original picture is gone: tears, missing emulsion, deep
             scratches. Leave fading and stains unpainted; only lost content counts. The manifest will
@@ -215,8 +219,9 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
 
       <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_20rem]">
         <div ref={frameRef} className="w-full">
+          {!natural && !loadError && <PhotoSkeleton>Loading the photo…</PhotoSkeleton>}
           <div
-            className="exhibit-frame relative"
+            className={`exhibit-frame relative ${natural ? "" : "hidden"}`}
             style={{ width: display.w, height: display.h }}
           >
             <img
@@ -250,7 +255,10 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
               />
             )}
           </div>
-          {loadError && <p className="mt-4 text-invented">{loadError}</p>}
+          {loadError && (
+            <ErrorNote message={loadError} onRetry={() => setAttempt((a) => a + 1)} className={natural ? "mt-6" : ""} />
+          )}
+          {note && <p className="mt-4 text-invented">{note}</p>}
         </div>
 
         <aside className="space-y-6">

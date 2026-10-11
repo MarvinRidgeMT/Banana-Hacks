@@ -1,14 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, waitForJob } from "../lib/api";
-import { fidelityLabel, seconds } from "../lib/format";
+import { failure, fidelityLabel, seconds } from "../lib/format";
+import { href } from "../lib/router";
 import type { HoverInfo, Job, Metrics, Result } from "../lib/types";
 import { FIDELITY_STEPS } from "../lib/types";
+import { CopyLink } from "./CopyLink";
 import { EvidenceNotes } from "./EvidenceNotes";
 import { FacesPanel } from "./FacesPanel";
+import { Bone, ErrorNote, LegendSkeleton, PhotoSkeleton } from "./Feedback";
 import { FidelityControl } from "./FidelityControl";
+import { Link } from "./Link";
 import { ManifestPanel } from "./ManifestPanel";
 import { MapLegend } from "./MapLegend";
 import { PhotoStage } from "./PhotoStage";
+import { ReadingHint } from "./ReadingHint";
 import { RegionReadout } from "./RegionReadout";
 
 interface Props {
@@ -18,7 +23,6 @@ interface Props {
   metrics: Metrics | null;
   onFixMask: (r: Result) => void;
   onFidelity: (f: number) => void;
-  onBack: () => void;
 }
 
 function jobMessage(j: Job, f: number) {
@@ -28,12 +32,13 @@ function jobMessage(j: Job, f: number) {
   return what;
 }
 
-export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMask, onFidelity, onBack }: Props) {
+export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMask, onFidelity }: Props) {
   const [fidelity, setFidelity] = useState(initialFidelity);
   const [results, setResults] = useState<Record<string, Result>>({});
   const [shown, setShown] = useState<Result | null>(null);
-  const [busy, setBusy] = useState<string | null>("Loading…");
+  const [busy, setBusy] = useState<string | null>("Loading the case…");
   const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
   const [showMap, setShowMap] = useState(true);
   const [opacity, setOpacity] = useState(0.75);
   const [hover, setHover] = useState<HoverInfo | null>(null);
@@ -43,6 +48,11 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
   const store = useCallback((r: Result) => {
     setResults((prev) => ({ ...prev, [String(r.fidelity)]: r }));
   }, []);
+
+  const retry = () => {
+    setError(null);
+    setAttempt((a) => a + 1);
+  };
 
   // Show the requested fidelity: from memory, the cache, or a new job.
   useEffect(() => {
@@ -73,13 +83,13 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
       } catch (e) {
         if ((e as Error).name === "AbortError") return;
         setBusy(null);
-        setError((e as Error).message);
+        setError(failure(`Couldn't load the ${fidelityLabel(fidelity)} version of this photo`, e));
       }
     })();
     return () => ctrl.abort();
     // `results` is read but not a dependency: re-running on every store would loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [photoKey, fidelity, store]);
+  }, [photoKey, fidelity, store, attempt]);
 
   // Quietly pick up the other fidelity steps as the queue finishes them.
   useEffect(() => {
@@ -105,18 +115,70 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
 
   const ready = FIDELITY_STEPS.filter((f) => results[String(f)]);
 
+  const header = (
+    <div className="mb-8">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <nav aria-label="Breadcrumb" className="case-label">
+          <ol className="flex flex-wrap items-center">
+            <li>
+              <Link to={href.restore} className="underline-offset-4 hover:text-ink hover:underline">
+                Cases
+              </Link>
+            </li>
+            <li>
+              <span aria-hidden className="mx-2">
+                /
+              </span>
+              <span aria-current="page" className="text-ink">
+                Case {photoKey.slice(0, 8)}
+              </span>
+            </li>
+          </ol>
+        </nav>
+        <CopyLink />
+      </div>
+      <div className="mt-4 flex flex-wrap items-baseline justify-between gap-4">
+        <h1 className="font-serif text-4xl sm:text-5xl">{title}</h1>
+        {shown ? (
+          <p className="text-muted">
+            Restored in {seconds(shown.seconds)}
+            {!shown.fidelity_applied && " (this pipeline ignores the fidelity setting)"}
+          </p>
+        ) : (
+          !error && <Bone className="h-5 w-40" />
+        )}
+      </div>
+    </div>
+  );
+
   if (!shown) {
     return (
-      <div className="py-24 text-center text-xl">
+      <div>
+        {header}
         {error ? (
-          <>
-            <p className="text-invented">{error}</p>
-            <button onClick={onBack} className="mt-6 underline">
-              Back to photos
-            </button>
-          </>
+          <ErrorNote message={error} onRetry={retry} className="py-12" />
         ) : (
-          <p>{busy}</p>
+          <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_24rem]">
+            <div className="space-y-6">
+              <ReadingHint />
+              <PhotoSkeleton>{busy}</PhotoSkeleton>
+            </div>
+            <aside className="space-y-8" aria-hidden>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Bone className="h-7 w-48" />
+                  <Bone className="h-6 w-11 rounded-full" />
+                </div>
+                <Bone className="h-2 w-full" />
+                <LegendSkeleton />
+              </div>
+              <Bone className="h-36 w-full" />
+              <div className="space-y-3">
+                <Bone className="h-5 w-32" />
+                <Bone className="h-16 w-full" />
+              </div>
+            </aside>
+          </div>
         )}
       </div>
     );
@@ -124,22 +186,13 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-baseline justify-between gap-4">
-        <div>
-          <button onClick={onBack} className="text-muted underline-offset-4 hover:underline">
-            ← All photos
-          </button>
-          <p className="case-label mt-4">Case {photoKey.slice(0, 8)} · the evidence</p>
-          <h2 className="mt-1 font-serif text-5xl">{title}</h2>
-        </div>
-        <p className="text-muted">
-          Restored in {seconds(shown.seconds)}
-          {!shown.fidelity_applied && " (this pipeline ignores the fidelity setting)"}
-        </p>
-      </div>
+      {header}
 
       <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_24rem]">
-        <PhotoStage result={shown} showMap={showMap} opacity={opacity} onHover={setHover} busy={busy} />
+        <div className="space-y-6">
+          <ReadingHint />
+          <PhotoStage result={shown} showMap={showMap} opacity={opacity} onHover={setHover} busy={busy} />
+        </div>
 
         <aside className="space-y-8">
           <section className="space-y-4">
@@ -190,7 +243,7 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
             </button>
           </div>
 
-          {error && <p className="text-invented">{error}</p>}
+          {error && <ErrorNote message={error} onRetry={retry} />}
           {shown.warnings.length > 0 && (
             <details className="text-sm text-muted">
               <summary className="cursor-pointer">Pipeline notes ({shown.warnings.length})</summary>

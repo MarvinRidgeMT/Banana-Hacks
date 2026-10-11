@@ -1,4 +1,4 @@
-import type { ClassName, Summary } from "./types";
+import type { ClassName, Demo, Summary } from "./types";
 
 export const CLASSES: ClassName[] = ["observed", "inferred", "invented"];
 
@@ -63,6 +63,32 @@ export const FIDELITY_LABEL: Record<string, string> = {
 
 export function fidelityLabel(f: number): string {
   return FIDELITY_LABEL[String(f)] ?? `w = ${f}`;
+}
+
+/** demos.json holds "FILL IN", "Source to confirm", "To confirm…" until a credit is checked. */
+export function isPlaceholder(s: string | null | undefined): boolean {
+  const t = (s ?? "").trim();
+  return t === "" || /^(fill in|source to confirm|to confirm)/i.test(t);
+}
+
+/** The public credit for a demo, or null while it's still a placeholder. */
+export function demoCredit(d: Pick<Demo, "credit" | "source_url" | "license">) {
+  if (isPlaceholder(d.credit)) return null;
+  return {
+    credit: d.credit,
+    license: isPlaceholder(d.license) ? null : d.license,
+    url: /^https?:\/\//.test(d.source_url) ? d.source_url : null,
+  };
+}
+
+/** One plain sentence for a failure: what didn't happen, then the first
+ * sentence of the reason ("Couldn't load this case: the server answered 404."). */
+export function failure(what: string, e: unknown): string {
+  const raw = (e instanceof Error ? e.message : String(e ?? "")).trim();
+  const first = raw.split(/(?<=[.!?])\s/)[0].replace(/[.!?]+$/, "");
+  if (!first) return `${what}.`;
+  const reason = /^[A-Z][a-z]/.test(first) ? first[0].toLowerCase() + first.slice(1) : first;
+  return `${what}: ${reason}.`;
 }
 
 export function seconds(s: number): string {

@@ -12,7 +12,7 @@ export function JobProgress({ job, name, onCancel }: { job: Job | null; name: st
   }
   return (
     <div className="mx-auto max-w-2xl py-24 text-center">
-      <h2 className="font-serif text-4xl">{name}</h2>
+      <h1 className="font-serif text-4xl break-words">{name}</h1>
       <p className="mt-6 text-xl" aria-live="polite">
         {line}
       </p>

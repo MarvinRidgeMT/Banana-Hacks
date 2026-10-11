@@ -47,15 +47,22 @@ body {
   outline: 3px solid var(--color-inferred);
   outline-offset: 2px;
 }
+/* Blue is under 3:1 against the dark frames, so focus turns amber there. */
+.on-dark :focus-visible {
+  outline-color: var(--color-warn);
+}
 
 input[type="range"] {
   accent-color: var(--color-inferred);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation: none !important;
     transition: none !important;
+    scroll-behavior: auto !important;
   }
 }
 
@@ -83,6 +90,9 @@ input[type="range"] {
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+.tag-warn {
+  background: var(--color-warn);
 }
 .case-label {
   font-family: var(--font-mono);

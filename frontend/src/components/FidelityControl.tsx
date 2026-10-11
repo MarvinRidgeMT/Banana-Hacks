@@ -26,12 +26,12 @@ export function FidelityControl({ value, ready, onChange }: Props) {
               role="radio"
               aria-checked={active}
               onClick={() => onChange(f)}
-              className={`border-line px-2 py-2 text-center not-last:border-r ${
+              className={`group border-line px-2 py-2 text-center not-last:border-r ${
                 active ? "bg-ink text-ground" : "bg-surface text-ink hover:bg-tag"
               }`}
             >
               <span className="block font-semibold">{fidelityLabel(f)}</span>
-              <span className={`block text-sm tabular-nums ${active ? "text-ground/70" : "text-muted"}`}>
+              <span className={`block text-sm tabular-nums ${active ? "text-ground/70" : "text-muted group-hover:text-body"}`}>
                 w = {f.toFixed(1)}
                 {!isReady && " (preparing)"}
               </span>
