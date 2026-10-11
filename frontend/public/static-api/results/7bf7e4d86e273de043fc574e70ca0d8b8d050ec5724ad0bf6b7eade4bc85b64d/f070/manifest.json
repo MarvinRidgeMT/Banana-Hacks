@@ -5,7 +5,7 @@
     "scale": 0.5,
     "resample": "lanczos interpolation, no generative detail"
   },
-  "created": "2026-10-11T22:51:05+00:00",
+  "created": "2026-10-11T23:54:21+00:00",
   "stages": [
     {
       "stage": "damage_segmentation",
@@ -158,8 +158,8 @@
     ],
     "displayed_seed": 11,
     "seeds": 8,
-    "seconds": 2.07,
-    "generated_at": "2026-10-11T22:51:05+00:00",
+    "seconds": 2.09,
+    "generated_at": "2026-10-11T23:54:21+00:00",
     "warnings": []
   }
 }

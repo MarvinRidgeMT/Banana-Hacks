@@ -199,8 +199,8 @@
   "seeds": 8,
   "pipeline": "real",
   "kind": "photo",
-  "render_version": 6,
-  "seconds": 10.19,
+  "render_version": 7,
+  "seconds": 10.22,
   "warnings": [],
   "manifest": {
     "source_sha256": "d31db475e9e105052896debdfc1c53778e4db7501956f32b74c5c85b83b7d51e",
@@ -209,7 +209,7 @@
       "scale": 0.691,
       "resample": "lanczos interpolation, no generative detail"
     },
-    "created": "2026-10-11T22:56:44+00:00",
+    "created": "2026-10-11T23:55:31+00:00",
     "stages": [
       {
         "stage": "damage_segmentation",
@@ -624,8 +624,8 @@
       ],
       "displayed_seed": 14,
       "seeds": 8,
-      "seconds": 10.19,
-      "generated_at": "2026-10-11T22:56:44+00:00",
+      "seconds": 10.22,
+      "generated_at": "2026-10-11T23:55:31+00:00",
       "warnings": []
     }
   }

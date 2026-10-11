@@ -3344,7 +3344,7 @@
   "seeds": 8,
   "pipeline": "real",
   "kind": "photo",
-  "render_version": 6,
+  "render_version": 7,
   "seconds": 25.65,
   "warnings": [],
   "manifest": {
@@ -3354,7 +3354,7 @@
       "scale": 0.5,
       "resample": "lanczos interpolation, no generative detail"
     },
-    "created": "2026-10-11T23:21:09+00:00",
+    "created": "2026-10-11T23:56:31+00:00",
     "stages": [
       {
         "stage": "damage_segmentation",
@@ -7865,7 +7865,7 @@
       "displayed_seed": 15,
       "seeds": 8,
       "seconds": 25.65,
-      "generated_at": "2026-10-11T23:21:09+00:00",
+      "generated_at": "2026-10-11T23:56:31+00:00",
       "warnings": []
     }
   }

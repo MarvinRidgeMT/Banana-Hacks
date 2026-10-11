@@ -20,5 +20,5 @@
     "siggraph17"
   ],
   "device": "mps",
-  "seconds": 0.41
+  "seconds": 0.32
 }
