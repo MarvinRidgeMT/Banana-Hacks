@@ -33,7 +33,7 @@ def restore(path, seeds=(11, 12, 13, 14), steps=20, fidelity=0.5, strict_faces=T
     img = d["image"]
     mask, mask_source = get_mask(path, img)
     log = EditLog(img)
-    hints = load_face_hints(path)
+    hints = [tuple(int(round(v * d["scale"])) for v in b[:4]) + (b[4],) for b in load_face_hints(path)]
     fboxes = hints or detect_faces_damaged(img, mask)
     key = _cache_key(d["sha256"], mask, seeds, steps)
     if key.exists():   # same photo + mask + settings: skip SDXL entirely
@@ -57,7 +57,7 @@ def restore(path, seeds=(11, 12, 13, 14), steps=20, fidelity=0.5, strict_faces=T
             o[ch] = np.repeat(g, 3, 1)
     k = medoid(outs, thick)
     out = outs[k]
-    label, delta, sigma = invention_map(img, outs, out, used)
+    label, delta, sigma = invention_map(img, pre, out, used)   # disagreement measured BEFORE face restoration, which would hide it
     faces = face_report(out, label, fboxes)
     log.record("inpainting", img, pre[k], {
         "mask_source": mask_source,
@@ -68,11 +68,11 @@ def restore(path, seeds=(11, 12, 13, 14), steps=20, fidelity=0.5, strict_faces=T
         log.record("face_restoration", pre[k], out, {
             "model": "codeformer v0.1.0", "fidelity_w": fidelity, "strict_mode": strict_faces,
             "faces": len(fboxes), "face_boxes_source": "provided" if hints else "detected (yunet)"})
-    return {"sha256": d["sha256"], "original": img, "restored": out, "seed_outputs": outs,
+    return {"sha256": d["sha256"], "original": img, "restored": out, "seed_outputs": outs, "pre_face_outputs": pre,
             "displayed_seed": seeds[k], "damage_mask": mask, "mask_source": mask_source,
             "mask": used, "thin": thin, "thick": thick,
             "label": label, "sigma": sigma, "pixel_summary": summary(label),
-            "regions": regions(label, used), "face_regions": faces, "fidelity": fidelity, "log": log}
+            "regions": regions(label, used), "face_regions": faces, "fidelity": fidelity, "scale": d["scale"], "log": log}
 
 if __name__ == "__main__":
     import sys
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     if r["face_regions"]:
         fr = max(r["face_regions"], key=lambda f: f["invented_fraction"])
         if fr["invented_fraction"] > 0:
-            grid, idx = faces_that_could_have_been(r["seed_outputs"], fr["bbox"])
+            grid, idx = faces_that_could_have_been(r["pre_face_outputs"], fr["bbox"])
             if grid is not None:
                 Image.fromarray(grid).save(out / f"{stem}_faces.png")
                 print(f"faces that could have been: {fr['id']}, seeds {idx}, "

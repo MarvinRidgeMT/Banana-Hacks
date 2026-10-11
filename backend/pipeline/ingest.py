@@ -9,8 +9,8 @@ def ingest(path):
     sha = hashlib.sha256(raw).hexdigest()              # cache key for every later stage
     img = ImageOps.exif_transpose(Image.open(io.BytesIO(raw))).convert("RGB")
     W, H = img.size
-    scale = min(1.0, WORK / max(W, H))
-    if scale < 1:
+    scale = WORK / max(W, H)   # small photos enlarged with Lanczos (interpolation only) so the models have room
+    if scale != 1:
         img = img.resize((round(W * scale), round(H * scale)), Image.LANCZOS)
     arr = np.asarray(img).copy()
     spread = np.abs(arr.astype(np.int16) - arr.mean(2, keepdims=True)).mean()

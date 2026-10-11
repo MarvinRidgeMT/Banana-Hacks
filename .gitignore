@@ -11,3 +11,4 @@ __pycache__/
 cache/
 weights/
 third_party/
+demo/

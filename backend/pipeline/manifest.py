@@ -11,6 +11,7 @@ def build_manifest(r):
     return {
         "source_sha256": r["sha256"],
         "tool": TOOL,
+        "working_copy": {"scale": round(float(r.get("scale", 1.0)), 3), "resample": "lanczos interpolation, no generative detail"},
         "created": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "stages": [
             {"stage": "damage_segmentation", "model": r["mask_source"], "threshold": 0.5,
