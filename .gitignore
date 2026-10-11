@@ -13,3 +13,5 @@ weights/
 third_party/
 demo/
 .DS_Store
+node_modules/
+frontend/dist/

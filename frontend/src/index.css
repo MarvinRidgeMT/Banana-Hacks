@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@theme {
+  /* From the Cold Case deck */
+  --color-ground: #f1eadb;   /* paper */
+  --color-surface: #faf6ec;  /* cards */
+  --color-tag: #e3d8c1;      /* exhibit tags */
+  --color-line: #d9cfbb;
+  --color-mat: #1f1b16;      /* photo frames */
+  --color-ink: #1f1b16;
+  --color-body: #4a4338;
+  --color-muted: #6b6255;
+  --color-faint: #9a9282;
+  --color-observed: #9a9282; /* Real */
+  --color-inferred: #2c5aa0; /* Rebuilt */
+  --color-invented: #b3261e; /* Invented, and the stamp red */
+  --color-pink: #e7b7b1;
+  --color-warn: #d9a441;
+
+  --font-serif: "DM Serif Display", Georgia, serif;
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+html {
+  font-size: 18px; /* readable from the back of a room */
+}
+
+body {
+  background: var(--color-ground);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Invented is never colour alone: always hatched, everywhere it appears. */
+.hatch-invented {
+  background-color: var(--color-invented);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-pink) 0 3px,
+    transparent 3px 10px
+  );
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-inferred);
+  outline-offset: 2px;
+}
+
+input[type="range"] {
+  accent-color: var(--color-inferred);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* The rubber stamp from the deck: red outline, mono caps, slightly crooked. */
+.stamp {
+  display: inline-block;
+  border: 3px solid var(--color-invented);
+  border-radius: 4px;
+  padding: 0.1em 0.5em;
+  color: var(--color-invented);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transform: rotate(-4deg);
+}
+
+/* Exhibit tags and case labels from the deck. */
+.tag {
+  display: inline-block;
+  background: var(--color-tag);
+  color: var(--color-ink);
+  padding: 0.15em 0.6em;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.case-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* Photos sit in dark frames with a dashed edge, like the deck's exhibits. */
+.exhibit-frame {
+  background: var(--color-mat);
+  box-shadow: 0 0 0 10px var(--color-mat);
+  outline: 1px dashed var(--color-faint);
+  outline-offset: 10px;
+}

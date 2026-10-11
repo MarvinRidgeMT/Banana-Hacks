@@ -1,0 +1,38 @@
+[
+  {
+    "id": "hero",
+    "file": "hero.png",
+    "title": "Torn across the eye",
+    "blurb": "Missing emulsion over one eye. The face has to be partly invented.",
+    "credit": "Source to confirm",
+    "source_url": "",
+    "license": "To confirm before the demo"
+  },
+  {
+    "id": "inferred",
+    "file": "inferred.png",
+    "title": "Cracks through clothing",
+    "blurb": "Damage crosses fabric and background, which the surroundings constrain.",
+    "credit": "FILL IN",
+    "source_url": "FILL IN",
+    "license": "FILL IN"
+  },
+  {
+    "id": "light",
+    "file": "light.png",
+    "title": "Barely damaged",
+    "blurb": "Worn edges only. Almost every pixel is original.",
+    "credit": "FILL IN",
+    "source_url": "FILL IN",
+    "license": "FILL IN"
+  },
+  {
+    "id": "backup",
+    "file": "backup.png",
+    "title": "Crack network",
+    "blurb": "Cracks run across the face and the background.",
+    "credit": "FILL IN",
+    "source_url": "FILL IN",
+    "license": "FILL IN"
+  }
+]

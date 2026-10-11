@@ -1,0 +1,8 @@
+# Web API only. Person A's pipeline has its own requirements.
+starlette>=0.40,<2
+uvicorn>=0.30
+python-multipart>=0.0.9
+numpy
+pillow
+scipy
+requests  # only for tests/smoke_test.py
