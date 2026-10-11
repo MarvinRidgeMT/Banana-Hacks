@@ -39,7 +39,7 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
   const [busy, setBusy] = useState<string | null>("Loading the case…");
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
-  const [showMap, setShowMap] = useState(true);
+  const [showMap, setShowMap] = useState(false);
   const [opacity, setOpacity] = useState(0.75);
   const [hover, setHover] = useState<HoverInfo | null>(null);
   const [tab, setTab] = useState<"faces" | "manifest">("faces");
