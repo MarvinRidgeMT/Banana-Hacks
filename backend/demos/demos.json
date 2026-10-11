@@ -11,28 +11,37 @@
   {
     "id": "inferred",
     "file": "inferred.png",
-    "title": "Cracks through clothing",
-    "blurb": "Damage crosses fabric and background, which the surroundings constrain.",
-    "credit": "FILL IN",
-    "source_url": "FILL IN",
-    "license": "FILL IN"
+    "title": "Crack across the plate",
+    "blurb": "Lincoln's glass negative cracked in 1865. The break crosses hair and background, which the surroundings constrain.",
+    "credit": "Alexander Gardner, Feb 5, 1865 (print at the National Portrait Gallery, photographed by PatDavid). Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:%22Cracked_Plate%22_Abraham_Lincoln.png",
+    "license": "Public domain"
   },
   {
     "id": "light",
     "file": "light.png",
     "title": "Barely damaged",
-    "blurb": "Worn edges only. Almost every pixel is original.",
-    "credit": "FILL IN",
-    "source_url": "FILL IN",
-    "license": "FILL IN"
+    "blurb": "Only the top-left corner of the glass plate is broken. Almost every pixel is original.",
+    "credit": "Visconde de Vale Paraíso, Tennis group, Funchal, c. 1905. Arquipélagos / Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Grupo_de_t%C3%A9nis,_Funchal,_c._1905_-_Image_209245.jpg",
+    "license": "Public domain"
   },
   {
     "id": "backup",
     "file": "backup.png",
     "title": "Crack network",
-    "blurb": "Cracks run across the face and the background.",
-    "credit": "FILL IN",
-    "source_url": "FILL IN",
-    "license": "FILL IN"
+    "blurb": "Scratches run across the face and the background.",
+    "credit": "Portrait of a man, Fonds Trutat, Bibliothèque de Toulouse. Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Homme,_connu_par_Eug%C3%A8ne_Trutat_(5387431848).jpg",
+    "license": "No known copyright restrictions (Bibliothèque de Toulouse, Flickr Commons)"
+  },
+  {
+    "id": "study",
+    "file": "study.png",
+    "title": "Faces lost to damage",
+    "blurb": "Heavy emulsion loss across a group portrait. Much of what's restored on these faces has to be invented.",
+    "credit": "Group portrait including Bjørnstjerne Bjørnson, photographer unknown. National Library of Norway / Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Gruppebilde_med_blant_annet_Bj%C3%B8rnstjerne_Bj%C3%B8rnson_sterkt_skadet_-_no-nb_digifoto_20160609_00068_bldsa_BB1802.jpg",
+    "license": "Public domain"
   }
 ]
