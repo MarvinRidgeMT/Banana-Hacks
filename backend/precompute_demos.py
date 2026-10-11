@@ -29,7 +29,7 @@ for demo in api.DEMO_INDEX:
             shutil.rmtree(out, ignore_errors=True)
         t0 = time.time()
         try:
-            r = hook.run_restore(folder / "input.png", fid, source)
+            r = hook.run_restore(folder / "input.png", fid, source, seeds=hook.DEMO_SEEDS)
             s = r["pixel_summary"]
             print(f"{demo['id']:<10} w={fid:<4} {time.time() - t0:6.1f}s  "
                   f"observed {s['observed']:.0%} · inferred {s['inferred']:.0%} · invented {s['invented']:.0%}"

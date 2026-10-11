@@ -223,7 +223,9 @@ def worker() -> None:
         try:
             folder = CACHE / job.key
             source = json.loads((folder / "source.json").read_text())
-            hook.run_restore(folder / "input.png", job.fidelity, source)
+            is_demo = any(d["key"] == job.key for d in DEMO_INDEX)
+            hook.run_restore(folder / "input.png", job.fidelity, source,
+                             seeds=hook.DEMO_SEEDS if is_demo else None)
             job.status = "done"
         except Exception as e:  # report it to the page instead of killing the worker
             job.status = "error"

@@ -38,6 +38,10 @@ from PIL import Image
 from scipy import ndimage
 
 OBSERVED, INFERRED, INVENTED = 0, 1, 2
+
+# Demo photos are rendered with 8 seeds (as in training/render_demo.py);
+# live uploads use restore()'s own default (4 seeds, about 3-4 min per photo).
+DEMO_SEEDS = (11, 12, 13, 14, 15, 16, 17, 18)
 CLASS_NAMES = {OBSERVED: "observed", INFERRED: "inferred", INVENTED: "invented"}
 
 # Colours for the downloadable map.png (the deck's Real / Rebuilt / Invented).
@@ -204,7 +208,7 @@ def detect_bbox_format(boxes: list[list[float]], size_wh: tuple[int, int]) -> tu
     for b in boxes:
         if b[0] + b[2] > w + 1 or b[1] + b[3] > h + 1:
             return "xyxy", "a box's x + w would run off the image"
-    return "xyxy", "no box settled it; assumed xyxy"
+    return "xywh", "no box settled it; assumed xywh (Person A confirmed [x, y, w, h])"
 
 
 def _bbox_xyxy(b: list[float] | None, size_wh: tuple[int, int], fmt: str) -> list[int] | None:
@@ -234,7 +238,7 @@ def normalise_pipeline_regions(result: dict, size_wh: tuple[int, int],
     boxes = [b for *_, r in raw if (b := _box4(r.get("bbox") or r.get("box"))) is not None]
     fmt, why = detect_bbox_format(boxes, size_wh)
     if warnings is not None and boxes and why.startswith("no box"):
-        warnings.append("bbox format not provable from these boxes; assumed [x0, y0, x1, y1] (set CV_BBOX=xywh if wrong)")
+        warnings.append("bbox format not provable from these boxes; assumed [x, y, w, h] as Person A specified (set CV_BBOX=xyxy if wrong)")
 
     out: list[dict] = []
     for source_key, default_kind, i, r in raw:
@@ -488,7 +492,8 @@ def _save_mask(x: Any, path: Path) -> None:
     Image.fromarray(m.astype(np.uint8) * 255, mode="L").save(path)
 
 
-def run_restore(image_path: Path, fidelity: float, source: dict) -> dict:
+def run_restore(image_path: Path, fidelity: float, source: dict,
+                seeds: tuple[int, ...] | None = None) -> dict:
     """Run restore() once for this image and fidelity, write every artifact the
     site needs into the cache, and return the result JSON (also saved to disk).
 
@@ -502,12 +507,14 @@ def run_restore(image_path: Path, fidelity: float, source: dict) -> dict:
 
     restore = get_restore()
     t0 = time.perf_counter()
-    if "fidelity" in inspect.signature(restore).parameters:
-        result = restore(str(image_path), fidelity=fidelity)
-        fidelity_applied = True
-    else:
-        result = restore(str(image_path))
-        fidelity_applied = False
+    params = inspect.signature(restore).parameters
+    kwargs: dict[str, Any] = {}
+    fidelity_applied = "fidelity" in params
+    if fidelity_applied:
+        kwargs["fidelity"] = fidelity
+    if seeds and "seeds" in params:
+        kwargs["seeds"] = tuple(seeds)
+    result = restore(str(image_path), **kwargs)
     seconds = time.perf_counter() - t0
 
     if not isinstance(result, dict):
@@ -516,6 +523,7 @@ def run_restore(image_path: Path, fidelity: float, source: dict) -> dict:
         raise KeyError(f"restore() result has no 'restored' key (keys: {sorted(result)})")
 
     warnings: list[str] = []
+    seeds_used = len(kwargs["seeds"]) if "seeds" in kwargs else (len(result.get("seed_outputs") or []) or None)
     if not fidelity_applied:
         warnings.append("restore() has no fidelity argument; all fidelity steps are the same image")
 
@@ -626,6 +634,7 @@ def run_restore(image_path: Path, fidelity: float, source: dict) -> dict:
         "pipeline_pixel_summary": pipeline_summary,
         "regions": regions,
         "displayed_seed": to_json_safe(result.get("displayed_seed")),
+        "seeds": seeds_used,
         "seconds": round(seconds, 2),
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "warnings": warnings,
@@ -655,6 +664,7 @@ def run_restore(image_path: Path, fidelity: float, source: dict) -> dict:
         "regions": regions,
         "mask_source": source.get("mask_source", "segmenter"),
         "human_edited_mask": human_mask,
+        "seeds": seeds_used,
         "seconds": round(seconds, 2),
         "warnings": warnings,
         "manifest": manifest,
