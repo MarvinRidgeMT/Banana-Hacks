@@ -1,0 +1,138 @@
+{
+  "v1": {
+    "pooled_iou": 0.005,
+    "mean_iou": 0.004,
+    "precision": 0.618,
+    "recall": 0.005,
+    "per_photo": [
+      {
+        "photo": "picture1.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture10.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture11.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture12.png",
+        "iou": 0.026
+      },
+      {
+        "photo": "picture13.png",
+        "iou": 0.001
+      },
+      {
+        "photo": "picture14.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture15.png",
+        "iou": 0.013
+      },
+      {
+        "photo": "picture16.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture2.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture4.png",
+        "iou": 0.01
+      },
+      {
+        "photo": "picture5.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture6.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture7.png",
+        "iou": 0.016
+      },
+      {
+        "photo": "picture8.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture9.png",
+        "iou": 0.001
+      }
+    ]
+  },
+  "v3": {
+    "pooled_iou": 0.007,
+    "mean_iou": 0.007,
+    "precision": 0.6,
+    "recall": 0.007,
+    "per_photo": [
+      {
+        "photo": "picture1.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture10.png",
+        "iou": 0.001
+      },
+      {
+        "photo": "picture11.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture12.png",
+        "iou": 0.008
+      },
+      {
+        "photo": "picture13.png",
+        "iou": 0.029
+      },
+      {
+        "photo": "picture14.png",
+        "iou": 0.001
+      },
+      {
+        "photo": "picture15.png",
+        "iou": 0.018
+      },
+      {
+        "photo": "picture16.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture2.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture4.png",
+        "iou": 0.005
+      },
+      {
+        "photo": "picture5.png",
+        "iou": 0.017
+      },
+      {
+        "photo": "picture6.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture7.png",
+        "iou": 0.008
+      },
+      {
+        "photo": "picture8.png",
+        "iou": 0.0
+      },
+      {
+        "photo": "picture9.png",
+        "iou": 0.014
+      }
+    ]
+  }
+}
