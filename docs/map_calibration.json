@@ -1,0 +1,252 @@
+{
+  "photos": 6,
+  "pixels_sampled": 161846,
+  "tau_current": 5.0,
+  "at_current_tau": {
+    "tau": 5.0,
+    "err_inferred": 7.301449775695801,
+    "err_invented": 13.415657043457031,
+    "frac_invented": 0.16796831555923533
+  },
+  "spearman_spread_vs_error_in_generated": 0.2905218857044177,
+  "sweep": [
+    {
+      "tau": 1.0,
+      "err_inferred": 6.0842180252075195,
+      "err_invented": 9.779483795166016,
+      "frac_invented": 0.6073242465059377
+    },
+    {
+      "tau": 1.5,
+      "err_inferred": 6.286195755004883,
+      "err_invented": 10.404993057250977,
+      "frac_invented": 0.4958355473721933
+    },
+    {
+      "tau": 2.0,
+      "err_inferred": 6.596729755401611,
+      "err_invented": 10.884969711303711,
+      "frac_invented": 0.4038283306352953
+    },
+    {
+      "tau": 2.5,
+      "err_inferred": 6.822793483734131,
+      "err_invented": 11.277534484863281,
+      "frac_invented": 0.3379879638668858
+    },
+    {
+      "tau": 3.0,
+      "err_inferred": 6.928711414337158,
+      "err_invented": 11.777408599853516,
+      "frac_invented": 0.2886818333477503
+    },
+    {
+      "tau": 3.5,
+      "err_inferred": 7.031185150146484,
+      "err_invented": 12.2785062789917,
+      "frac_invented": 0.2472226684626126
+    },
+    {
+      "tau": 4.0,
+      "err_inferred": 7.117030143737793,
+      "err_invented": 12.727143287658691,
+      "frac_invented": 0.21593366533618377
+    },
+    {
+      "tau": 4.5,
+      "err_inferred": 7.209707260131836,
+      "err_invented": 13.07922077178955,
+      "frac_invented": 0.19060094163587607
+    },
+    {
+      "tau": 5.0,
+      "err_inferred": 7.301449775695801,
+      "err_invented": 13.415657043457031,
+      "frac_invented": 0.16796831555923533
+    },
+    {
+      "tau": 5.5,
+      "err_inferred": 7.381685256958008,
+      "err_invented": 13.726301193237305,
+      "frac_invented": 0.14922210002100764
+    },
+    {
+      "tau": 6.0,
+      "err_inferred": 7.449103355407715,
+      "err_invented": 14.062369346618652,
+      "frac_invented": 0.13296590586112725
+    },
+    {
+      "tau": 6.5,
+      "err_inferred": 7.5126166343688965,
+      "err_invented": 14.3267822265625,
+      "frac_invented": 0.11972492369289324
+    },
+    {
+      "tau": 7.0,
+      "err_inferred": 7.572399616241455,
+      "err_invented": 14.620525360107422,
+      "frac_invented": 0.10726863808805902
+    },
+    {
+      "tau": 7.5,
+      "err_inferred": 7.625878810882568,
+      "err_invented": 14.916204452514648,
+      "frac_invented": 0.09636938818382908
+    },
+    {
+      "tau": 8.0,
+      "err_inferred": 7.674443244934082,
+      "err_invented": 15.269129753112793,
+      "frac_invented": 0.08611272444175327
+    },
+    {
+      "tau": 8.5,
+      "err_inferred": 7.720697402954102,
+      "err_invented": 15.550127029418945,
+      "frac_invented": 0.07762317264560137
+    },
+    {
+      "tau": 9.0,
+      "err_inferred": 7.771006107330322,
+      "err_invented": 15.826973915100098,
+      "frac_invented": 0.06919540798042584
+    },
+    {
+      "tau": 9.5,
+      "err_inferred": 7.8211350440979,
+      "err_invented": 15.976245880126953,
+      "frac_invented": 0.0622072834669995
+    },
+    {
+      "tau": 10.0,
+      "err_inferred": 7.8740410804748535,
+      "err_invented": 16.100339889526367,
+      "frac_invented": 0.05523769509286606
+    },
+    {
+      "tau": 10.5,
+      "err_inferred": 7.923618793487549,
+      "err_invented": 16.208784103393555,
+      "frac_invented": 0.04886126317610568
+    },
+    {
+      "tau": 11.0,
+      "err_inferred": 7.96744441986084,
+      "err_invented": 16.35595703125,
+      "frac_invented": 0.04303473672503491
+    },
+    {
+      "tau": 11.5,
+      "err_inferred": 8.010628700256348,
+      "err_invented": 16.393423080444336,
+      "frac_invented": 0.03791258356709465
+    },
+    {
+      "tau": 12.0,
+      "err_inferred": 8.046876907348633,
+      "err_invented": 16.55830955505371,
+      "frac_invented": 0.033080829924743274
+    },
+    {
+      "tau": 12.5,
+      "err_inferred": 8.086050033569336,
+      "err_invented": 16.683486938476562,
+      "frac_invented": 0.02819346786451318
+    },
+    {
+      "tau": 13.0,
+      "err_inferred": 8.126381874084473,
+      "err_invented": 16.78704071044922,
+      "frac_invented": 0.023330820656673627
+    },
+    {
+      "tau": 13.5,
+      "err_inferred": 8.168392181396484,
+      "err_invented": 16.554134368896484,
+      "frac_invented": 0.019086044758597678
+    },
+    {
+      "tau": 14.0,
+      "err_inferred": 8.199623107910156,
+      "err_invented": 16.489456176757812,
+      "frac_invented": 0.015539463440554601
+    },
+    {
+      "tau": 14.5,
+      "err_inferred": 8.229574203491211,
+      "err_invented": 16.15099334716797,
+      "frac_invented": 0.01248100045722477
+    },
+    {
+      "tau": 15.0,
+      "err_inferred": 8.25639820098877,
+      "err_invented": 15.749937057495117,
+      "frac_invented": 0.009614077579921654
+    },
+    {
+      "tau": 15.5,
+      "err_inferred": 8.276130676269531,
+      "err_invented": 15.165040969848633,
+      "frac_invented": 0.007593638396994674
+    },
+    {
+      "tau": 16.0,
+      "err_inferred": 8.293221473693848,
+      "err_invented": 14.262097358703613,
+      "frac_invented": 0.005900671008242403
+    }
+  ],
+  "error_by_spread_decile": [
+    {
+      "spread_lo": 0.22409939765930176,
+      "spread_hi": 1.044093370437622,
+      "mean_error": 6.068507194519043
+    },
+    {
+      "spread_lo": 1.044093370437622,
+      "spread_hi": 1.3328606367111206,
+      "mean_error": 6.926370620727539
+    },
+    {
+      "spread_lo": 1.3328606367111206,
+      "spread_hi": 1.6793541669845584,
+      "mean_error": 7.7571306228637695
+    },
+    {
+      "spread_lo": 1.6793541669845584,
+      "spread_hi": 2.052515411376953,
+      "mean_error": 8.57619857788086
+    },
+    {
+      "spread_lo": 2.052515411376953,
+      "spread_hi": 2.58537220954895,
+      "mean_error": 8.805756568908691
+    },
+    {
+      "spread_lo": 2.58537220954895,
+      "spread_hi": 3.278791046142578,
+      "mean_error": 8.461197853088379
+    },
+    {
+      "spread_lo": 3.278791046142578,
+      "spread_hi": 4.356276607513428,
+      "mean_error": 9.369681358337402
+    },
+    {
+      "spread_lo": 4.356276607513428,
+      "spread_hi": 6.0392985343933105,
+      "mean_error": 10.747285842895508
+    },
+    {
+      "spread_lo": 6.0392985343933105,
+      "spread_hi": 9.226117706298828,
+      "mean_error": 12.298481941223145
+    },
+    {
+      "spread_lo": 9.226117706298828,
+      "spread_hi": 22.776708602905273,
+      "mean_error": 15.891429901123047
+    }
+  ]
+}

@@ -12,3 +12,4 @@ cache/
 weights/
 third_party/
 demo/
+.DS_Store
