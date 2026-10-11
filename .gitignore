@@ -24,3 +24,4 @@ real_eval.zip
 backend/sweep_out/
 frontend/.vite/
 training/__pycache__/
+frontend/tsconfig.tsbuildinfo

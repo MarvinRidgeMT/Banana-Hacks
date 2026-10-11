@@ -27,15 +27,6 @@
     "license": "Public domain"
   },
   {
-    "id": "vehicle",
-    "file": "vehicle.png",
-    "title": "A race car, 1921",
-    "blurb": "Roscoe Sarles at the Tacoma Speedway. Emulsion damage across the car and the stands: objects and machinery, not just faces.",
-    "credit": "Marvin D. Boland, 1921. Tacoma Public Library / Wikimedia Commons",
-    "source_url": "https://commons.wikimedia.org/wiki/File:1921_Tacoma_Speedway_Roscoe_Sarles_Marvin_D_Boland_Collection_G511123.jpg",
-    "license": "Public domain"
-  },
-  {
     "id": "doc_letter",
     "file": "doc_letter.png",
     "kind": "document",

@@ -31,6 +31,10 @@ for d in api.DEMO_INDEX:
         files.update(f["file"] for f in r["faces"])
         if r.get("face_original"):
             files.add(r["face_original"])
+        cj = rf.parent / "color" / "color.json"
+        if cj.exists():  # colour mode, if precomputed (colorize_demos.py)
+            files.add(str(cj.relative_to(folder)))
+            files.update(v for v in json.loads(cj.read_text())["files"].values() if v)
     if not ok:
         continue
     for rel in files:

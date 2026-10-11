@@ -1,9 +1,9 @@
 import { CLASSES, CLASS_LABEL, CLASS_MEANING, percentages } from "../lib/format";
-import type { Summary } from "../lib/types";
+import type { ClassName, Summary } from "../lib/types";
 import { Swatch } from "./PhotoStage";
 
 /** The share of the photo in each class, as a bar you can read across a room. */
-export function MapLegend({ summary }: { summary: Summary }) {
+export function MapLegend({ summary, meanings }: { summary: Summary; meanings?: Partial<Record<ClassName, string>> }) {
   const pct = percentages(summary);
   return (
     <figure>
@@ -26,7 +26,7 @@ export function MapLegend({ summary }: { summary: Summary }) {
             <Swatch cls={c} className="h-4 w-4 translate-y-0.5" />
             <span className="font-semibold">{CLASS_LABEL[c]}</span>
             <span className="text-right text-xl font-semibold tabular-nums">{pct[c]}</span>
-            <span className="text-sm text-muted">{CLASS_MEANING[c]}</span>
+            <span className="text-sm text-muted">{meanings?.[c] ?? CLASS_MEANING[c]}</span>
           </div>
         ))}
       </figcaption>

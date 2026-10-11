@@ -1,0 +1,29 @@
+{
+  "tool": "Cold Case, colour mode",
+  "input": "restored.png",
+  "stages": [
+    {
+      "stage": "colourise",
+      "models": [
+        "Zhang et al. ECCV 2016",
+        "Zhang et al. SIGGRAPH 2017"
+      ],
+      "colour_used": "average of both models",
+      "channels_changed": "Lab a/b only; lightness from the input"
+    },
+    {
+      "stage": "labels",
+      "rule": "models agree (a/b distance <= 24.0) = Rebuilt; disagree = Invented; no pixel is Real because no colour was in the scan"
+    }
+  ],
+  "pixel_summary": {
+    "observed": 0.0,
+    "inferred": 0.993791,
+    "invented": 0.006209
+  },
+  "lightness_check": {
+    "mean_abs_diff_L": 0.099,
+    "p99_abs_diff_L": 0.281,
+    "scale": "L 0-100"
+  }
+}

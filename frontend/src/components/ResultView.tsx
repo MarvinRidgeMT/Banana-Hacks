@@ -2,8 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { api, waitForJob } from "../lib/api";
 import { failure, fidelityLabel, seconds } from "../lib/format";
 import { href } from "../lib/router";
-import type { HoverInfo, Job, Metrics, Result } from "../lib/types";
+import type { ColorResult, HoverInfo, Job, Metrics, Result } from "../lib/types";
 import { FIDELITY_STEPS } from "../lib/types";
+import { ColorPanel } from "./ColorPanel";
 import { CopyLink } from "./CopyLink";
 import { EvidenceNotes } from "./EvidenceNotes";
 import { FacesPanel } from "./FacesPanel";
@@ -43,6 +44,8 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
   const [opacity, setOpacity] = useState(0.75);
   const [hover, setHover] = useState<HoverInfo | null>(null);
   const [tab, setTab] = useState<"faces" | "manifest">("faces");
+  const [colors, setColors] = useState<Record<string, ColorResult>>({});
+  const [colorOn, setColorOn] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
   const store = useCallback((r: Result) => {
@@ -199,7 +202,15 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
           ) : (
             <ReadingHint />
           )}
-          <PhotoStage result={shown} showMap={showMap} opacity={opacity} onHover={setHover} busy={busy} />
+          <PhotoStage
+            result={shown}
+            showMap={showMap}
+            opacity={opacity}
+            onHover={setHover}
+            busy={busy}
+            colorFile={colorOn ? colors[`${shown.key}:${shown.fidelity}`]?.files.colorized : null}
+            colorMapFile={colorOn ? colors[`${shown.key}:${shown.fidelity}`]?.files.map : null}
+          />
         </div>
 
         <aside className="space-y-8">
@@ -229,6 +240,16 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
             </label>
             <MapLegend summary={shown.pixel_summary} />
           </section>
+
+          {shown.kind !== "document" && (
+            <ColorPanel
+              result={shown}
+              color={colors[`${shown.key}:${shown.fidelity}`] ?? null}
+              on={colorOn}
+              onColor={(c) => c && setColors((prev) => ({ ...prev, [`${shown.key}:${shown.fidelity}`]: c }))}
+              onToggle={setColorOn}
+            />
+          )}
 
           <RegionReadout hover={hover} />
 

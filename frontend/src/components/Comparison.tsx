@@ -4,6 +4,7 @@ const ROWS: [string, string, string][] = [
   ["A damaged face", "One confident face", "When the attempts disagree, all three are shown and the face is marked Invented"],
   ["Undamaged areas", "Can be smoothed or regenerated along with the damage", "Copied byte for byte: 0 pixels changed outside the damage, tested"],
   ["Finding the damage", "Hidden, generic", "Our own trained detector proposes it; a person checks it; the receipt says who"],
+  ["Adding color", "Colors presented as if they were real", "Brightness kept from the scan; where two color models disagree, the color is marked a guess"],
   ["Proof afterwards", "None", "A signed C2PA receipt inside the file: every stage, setting and region"],
   ["Is the warning real?", "Not measured", "Measured: Invented pixels are 1.8× further from the truth than Rebuilt ones"],
 ];

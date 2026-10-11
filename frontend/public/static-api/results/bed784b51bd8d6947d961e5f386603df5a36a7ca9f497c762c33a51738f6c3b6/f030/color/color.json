@@ -1,0 +1,24 @@
+{
+  "files": {
+    "colorized": "f030/color/colorized.png",
+    "map": "f030/color/map.png",
+    "manifest": "f030/color/manifest.json",
+    "signed": "f030/color/colorized_c2pa.png"
+  },
+  "pixel_summary": {
+    "observed": 0.0,
+    "inferred": 0.993791,
+    "invented": 0.006209
+  },
+  "lightness_check": {
+    "mean_abs_diff_L": 0.099,
+    "p99_abs_diff_L": 0.281,
+    "scale": "L 0-100"
+  },
+  "models": [
+    "eccv16",
+    "siggraph17"
+  ],
+  "device": "mps",
+  "seconds": 0.3
+}

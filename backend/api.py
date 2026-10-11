@@ -13,6 +13,7 @@ Routes
   GET  /metrics                        segmenter IoU etc. from metrics.json
   GET  /demos                          the preloaded demo photos
   POST /restore                        file (or key) [+ mask] [+ fidelity] -> job
+  POST /colorize                      key [+ fidelity] -> colour version + guess map
   GET  /jobs/{id}                      job status; includes the result when done
   GET  /results/{key}?fidelity=0.7     result JSON if it is cached, else 404
   GET  /results/{key}/{artifact}       any cached file (add ?download=1 to save it)
@@ -443,13 +444,44 @@ async def artifact_route(request: Request):
     return FileResponse(path, headers=headers)
 
 
+async def colorize_route(request: Request):
+    """Colour mode: add colour to a cached restoration (POST key, fidelity). Takes ~2 s."""
+    try:
+        form = await request.form(max_files=0, max_fields=4)
+    except Exception as e:
+        return error(400, f"Couldn't read the request: {e}")
+    key = str(form.get("key", ""))
+    if not valid_key(key) or not (CACHE / key).is_dir():
+        return error(404, "Unknown photo key.")
+    try:
+        fidelity = parse_fidelity(form.get("fidelity", DEFAULT_FIDELITY))
+    except ValueError as e:
+        return error(400, str(e))
+    folder = hook.fidelity_dir(CACHE / key, fidelity)
+    src = folder / "restored.png"
+    if not src.is_file():
+        return error(409, "Restore the photo first; colour is added to the restoration.")
+    try:
+        import colorize
+        meta = await run_in_threadpool(colorize.colorize_file, src, folder / "color",
+                                       hook.sign_c2pa if hook.pipeline_name() == "real" else None,
+                                       hook.map_png)
+    except ValueError as e:
+        return error(422, str(e))
+    except Exception as e:
+        traceback.print_exc()
+        return error(500, f"Colouring failed: {type(e).__name__}: {e}")
+    return JSONResponse(meta)
+
+
 def preload_models() -> None:
     """Load the segmenter, SDXL and CodeFormer once at startup, so the first visitor's
     upload doesn't wait 20-40 s for model loading. Failures are logged, not fatal."""
     t0 = time.time()
     for name, load in (("segmenter", "pipeline.segment:get_model"),
                        ("SDXL", "pipeline.inpaint:get_pipe"),
-                       ("CodeFormer", "pipeline.codeformer:get_net")):
+                       ("CodeFormer", "pipeline.codeformer:get_net"),
+                       ("colorizers", "colorize:get_models")):
         try:
             mod, fn = load.split(":")
             getattr(__import__(mod, fromlist=[fn]), fn)()
@@ -475,6 +507,7 @@ routes = [
     Route("/demos", demos),
     Route("/restore", restore_route, methods=["POST"]),
     Route("/propose", propose_route, methods=["POST"]),
+    Route("/colorize", colorize_route, methods=["POST"]),
     Route("/jobs/{job_id}", job_route),
     Route("/results/{key}", result_route),
     Route("/results/{key}/{artifact:path}", artifact_route),

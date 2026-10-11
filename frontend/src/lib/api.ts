@@ -1,4 +1,4 @@
-import type { Demo, Job, Metrics, Result } from "./types";
+import type { ColorResult, Demo, Job, Metrics, Result } from "./types";
 
 /** Empty when the site is served by the backend or the Vite dev proxy;
  * the Cloudflare Tunnel URL when the site is on Vercel. */
@@ -101,6 +101,19 @@ export const api = {
     form.append("file", file);
     form.append("kind", kind);
     return call<{ key: string; original: string; mask: string | null }>("/propose", { method: "POST", body: form });
+  },
+
+  /** Colour mode: add colour to a restoration (about 2 s). */
+  async colorize(key: string, fidelity: number): Promise<ColorResult> {
+    if ((await apiMode()) === "static") {
+      const r = await fetch(`${STATIC_BASE}/results/${key}/${fidelityDir(fidelity)}/color/color.json`);
+      if (!r.ok) throw new ApiError(OFFLINE_MSG);
+      return json<ColorResult>(r);
+    }
+    const form = new FormData();
+    form.append("key", key);
+    form.append("fidelity", String(fidelity));
+    return call<ColorResult>("/colorize", { method: "POST", body: form });
   },
 
   restore(opts: { file?: File; key?: string; mask?: Blob; kind?: "photo" | "document"; fidelity: number; allFidelities?: boolean }) {

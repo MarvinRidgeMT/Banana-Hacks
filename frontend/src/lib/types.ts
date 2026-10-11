@@ -109,3 +109,12 @@ export interface HoverInfo {
 
 export const FIDELITY_STEPS = [0.3, 0.7, 1.0] as const;
 export const DEFAULT_FIDELITY = 0.7;
+
+/** Colour mode (POST /colorize): a colour version of the restoration and where the colour is a guess. */
+export interface ColorResult {
+  files: { colorized: string; map: string | null; manifest: string; signed: string | null };
+  pixel_summary: Summary;
+  lightness_check: { mean_abs_diff_L: number; p99_abs_diff_L: number; scale: string };
+  models: string[];
+  seconds: number;
+}

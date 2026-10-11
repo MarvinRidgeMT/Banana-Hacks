@@ -11,10 +11,13 @@ interface Props {
   opacity: number;
   onHover: (h: HoverInfo | null) => void;
   busy?: string | null;
+  /** Colour mode: show this file on the restored side, and this guess map as the overlay. */
+  colorFile?: string | null;
+  colorMapFile?: string | null;
 }
 
 /** Before/after slider with the Invention Map over the restored side. */
-export function PhotoStage({ result, showMap, opacity, onHover, busy }: Props) {
+export function PhotoStage({ result, showMap, opacity, onHover, busy, colorFile, colorMapFile }: Props) {
   const frameRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -131,7 +134,7 @@ export function PhotoStage({ result, showMap, opacity, onHover, busy }: Props) {
       >
         {!photoLoaded && <span aria-hidden className="absolute inset-0 animate-pulse bg-ground/5" />}
         <img
-          src={src(result.files.restored)}
+          src={src(colorFile ?? result.files.restored)}
           crossOrigin="anonymous"
           alt="Restored photo"
           className="absolute inset-0 h-full w-full"
@@ -142,8 +145,18 @@ export function PhotoStage({ result, showMap, opacity, onHover, busy }: Props) {
           ref={canvasRef}
           aria-hidden
           className="pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-200"
-          style={{ opacity: showMap ? opacity : 0 }}
+          style={{ opacity: showMap && !colorMapFile ? opacity : 0 }}
         />
+        {colorMapFile && (
+          <img
+            src={src(colorMapFile)}
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-200"
+            style={{ opacity: showMap ? opacity : 0 }}
+            draggable={false}
+          />
+        )}
         <img
           src={src(result.files.original)}
           crossOrigin="anonymous"
@@ -158,7 +171,7 @@ export function PhotoStage({ result, showMap, opacity, onHover, busy }: Props) {
         <span className="hud-corner bl" aria-hidden /><span className="hud-corner br" aria-hidden />
         <span className="tag pointer-events-none absolute left-3 top-3">Original</span>
         <span className="tag pointer-events-none absolute right-3 top-3">
-          Restored{showMap && !mapError ? (mapLoading ? " · loading labels…" : " + labels") : ""}
+          {colorFile ? "Restored + color (guessed)" : "Restored"}{showMap && !mapError ? (mapLoading ? " · loading labels…" : " + labels") : ""}
         </span>
 
         {/* the slider handle */}
@@ -188,7 +201,7 @@ export function PhotoStage({ result, showMap, opacity, onHover, busy }: Props) {
           <span aria-hidden>⇆</span>
         </button>
 
-        {tip && <Tip {...tip} stageW={size.w} showMap={showMap} />}
+        {tip && !colorFile && <Tip {...tip} stageW={size.w} showMap={showMap} />}
 
         {busy && (
           <div className="absolute inset-0 grid place-items-center bg-ground/70 text-center text-lg">
