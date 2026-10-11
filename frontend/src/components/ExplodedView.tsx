@@ -90,28 +90,30 @@ export function ExplodedView({ result }: { result: Result }) {
   const step = layers ? Math.min(layers.length - 1, Math.floor(Math.max(0, progress - 0.3) / 0.7 * layers.length)) : 0;
   const active = progress < 0.3 ? -1 : step;
   const aspect = result.width / result.height;
+  const ghost = fileUrl(result.key, result.files.original);
 
   return (
     <div ref={sectionRef} style={{ height: reduce ? "auto" : "320vh" }} className="relative">
-      <div className={`${reduce ? "" : "sticky top-0"} flex min-h-screen items-center`}>
-        <div className="grid w-full items-center gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+      <div className={`${reduce ? "" : "sticky top-0"} flex min-h-screen items-center py-6`}>
+        <div className="grid w-full items-center gap-10 overflow-hidden rounded-md bg-mat px-6 py-10 text-ground shadow-[0_30px_80px_rgba(31,27,22,0.35)] sm:px-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"
+          style={{ backgroundImage: "radial-gradient(ellipse at 70% 45%, rgba(250,246,236,0.10), transparent 60%)" }}>
           <div>
-            <p className="tag">Take it apart</p>
+            <p className="tag !bg-ground/10 !text-ground/80">Take it apart</p>
             <h2 className="mt-5 font-serif text-4xl leading-tight sm:text-5xl">
-              One restoration. <span className="text-invented">Five layers of evidence.</span>
+              One restoration. <span className="text-[#E7B7B1]">Five layers of evidence.</span>
             </h2>
-            <p className="mt-4 max-w-[52ch] text-lg text-muted">
+            <p className="mt-4 max-w-[52ch] text-lg text-ground/70">
               A real case from our pipeline, separated into what it's made of. Scroll to take it apart.
             </p>
             <ol className="mt-8 space-y-3">
               {(layers ?? []).map((l, i) => (
                 <li key={l.key}
                   className={`flex gap-4 rounded-sm border px-4 py-3 transition-all duration-300 ${
-                    active === i ? "border-ink bg-surface shadow-sm" : "border-transparent opacity-55"}`}>
-                  <span className="font-mono text-sm text-muted">{String(i + 1).padStart(2, "0")}</span>
+                    active === i ? "border-ground/40 bg-ground/10" : "border-transparent opacity-50"}`}>
+                  <span className="font-mono text-sm text-ground/60">{String(i + 1).padStart(2, "0")}</span>
                   <span>
                     <span className="block font-semibold">{l.title}</span>
-                    <span className="block text-body">{l.body}</span>
+                    <span className="block text-ground/75">{l.body}</span>
                   </span>
                 </li>
               ))}
@@ -132,14 +134,22 @@ export function ExplodedView({ result }: { result: Result }) {
                   <div key={l.key} className="absolute inset-0"
                     style={{ transform: `translateZ(${z}px)`, transformStyle: "preserve-3d",
                       transition: "opacity 300ms, transform 80ms linear", opacity: dim ? 0.35 : 1 }}>
-                    <div className={`absolute inset-0 ${l.src ? "" : "border border-line"}`}
-                      style={{ background: l.src ? undefined : `rgba(250,246,236,${0.25 + 0.35 * ease})`,
-                        boxShadow: ease > 0.05 ? "0 18px 40px rgba(31,27,22,0.18)" : undefined }}>
+                    <div className={`absolute inset-0 overflow-hidden ${l.src ? "" : "border border-ground/25"}`}
+                      style={{ background: l.src ? undefined : `rgba(250,246,236,${0.04 + 0.06 * ease})`,
+                        boxShadow: ease > 0.05 ? "0 24px 60px rgba(0,0,0,0.45)" : undefined }}>
                       {l.src && <img src={l.src} alt="" crossOrigin="anonymous" className="h-full w-full object-cover" draggable={false} />}
-                      {l.canvas && <CanvasLayer canvas={l.canvas} />}
+                      {!l.src && ghost && (
+                        <img src={ghost} alt="" crossOrigin="anonymous" draggable={false}
+                          className="absolute inset-0 h-full w-full object-cover opacity-[0.16] grayscale" />
+                      )}
+                      {l.canvas && (
+                        <div className="absolute inset-0" style={{ filter: "drop-shadow(0 0 6px rgba(255,255,255,0.35))" }}>
+                          <CanvasLayer canvas={l.canvas} />
+                        </div>
+                      )}
                     </div>
                     {ease > 0.6 && (
-                      <span className="tag absolute -right-3 top-2 translate-x-full whitespace-nowrap"
+                      <span className="tag absolute -right-3 top-2 translate-x-full whitespace-nowrap !bg-ground/15 !text-ground"
                         style={{ opacity: (ease - 0.6) / 0.4 }}>
                         {String(i + 1).padStart(2, "0")} · {l.key}
                       </span>
