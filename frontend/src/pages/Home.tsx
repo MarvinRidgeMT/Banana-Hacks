@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { DemoCredit } from "../components/DemoCredit";
+import { ExplodedView } from "../components/ExplodedView";
 import { DemoCardSkeleton, ErrorNote } from "../components/Feedback";
 import { Link } from "../components/Link";
 import { PhotoStage, Swatch } from "../components/PhotoStage";
@@ -75,6 +76,9 @@ export function Home({ demos, demosError, onRetryDemos }: Props) {
   const hero = demos?.find((d) => d.id === "hero") ?? demos?.[0] ?? null;
   const heroResult = useResult(hero?.key);
   const caseHref = hero ? href.result(hero.key, DEFAULT_FIDELITY) : href.restore;
+  // The exploded view needs a case with real invention: the simulated-face demo if present.
+  const apart = demos?.find((d) => d.id === "face_missing") ?? demos?.find((d) => d.id === "backup") ?? hero;
+  const apartResult = useResult(apart?.key);
 
   return (
     <div className="space-y-24 sm:space-y-32">
@@ -101,6 +105,9 @@ export function Home({ demos, demosError, onRetryDemos }: Props) {
         </div>
         <HeroExhibit hero={hero} heroResult={heroResult} demos={demos} demosError={demosError} />
       </section>
+
+      {/* 1b. Take it apart: the exploded evidence stack */}
+      {apartResult && <ExplodedView result={apartResult} />}
 
       {/* 2. The problem */}
       <section>
