@@ -19,3 +19,4 @@ frontend/dist/
 # links to the root weights/ and third_party/ so the API (run from backend/) finds the models
 backend/weights
 backend/third_party
+cache_stub/
