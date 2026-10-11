@@ -449,6 +449,29 @@ def alternate_faces(result: dict, regions: list[dict], warnings: list[str]) -> t
     return faces, best["bbox"]
 
 
+def propose_mask(image_path: Path) -> Path:
+    """Run only the damage segmenter on an uploaded photo, so a person can review and
+    correct the mask before restoring (the mask is the biggest quality lever).
+    Segments a 1024 px copy, like the pipeline, then widens the result by 2 px so
+    thin cracks are fully covered. Saved as proposed_mask.png next to the photo."""
+    out = image_path.parent / "proposed_mask.png"
+    if out.exists():
+        return out
+    img = Image.open(image_path).convert("RGB")
+    W, H = img.size
+    if pipeline_name() == "stub":
+        m = np.zeros((H, W), bool)
+    else:
+        from pipeline.segment import segment
+        k = min(1.0, 1024 / max(W, H))
+        small = img.resize((max(1, round(W * k)), max(1, round(H * k))), Image.LANCZOS) if k < 1 else img
+        ms, _ = segment(np.asarray(small))
+        ms = ndimage.binary_dilation(ms, iterations=2)
+        m = np.asarray(Image.fromarray(ms.astype(np.uint8) * 255, mode="L").resize((W, H), Image.NEAREST)) > 127
+    Image.fromarray(m.astype(np.uint8) * 255, mode="L").save(out)
+    return out
+
+
 def load_manifest(result: dict) -> dict | None:
     m = result.get("manifest")
     if isinstance(m, dict):

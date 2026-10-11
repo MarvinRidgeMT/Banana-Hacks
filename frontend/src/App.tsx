@@ -116,11 +116,25 @@ export default function App() {
     [],
   );
 
-  const onUpload = (file: File, markMyself: boolean) => {
+  const onUpload = async (file: File, markMyself: boolean) => {
     if (markMyself) {
-      if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
-      objectUrl.current = URL.createObjectURL(file);
-      setTask({ name: "brush", title: file.name, imageUrl: objectUrl.current, file });
+      // Show the segmenter's proposed mask in the brush so a person can fix it before restoring.
+      setBanner(null);
+      setTask({ name: "job", title: file.name, job: null });
+      try {
+        const p = await api.propose(file);
+        setTask({
+          name: "brush",
+          title: file.name,
+          key: p.key,
+          imageUrl: fileUrl(p.key, p.original),
+          maskUrl: p.mask ? fileUrl(p.key, p.mask) : null,
+        });
+      } catch {
+        if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
+        objectUrl.current = URL.createObjectURL(file);
+        setTask({ name: "brush", title: file.name, imageUrl: objectUrl.current, file });
+      }
     } else {
       runJob(file.name, { file });
     }

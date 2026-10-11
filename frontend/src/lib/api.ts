@@ -51,6 +51,13 @@ export const api = {
     return json<Result>(res);
   },
 
+  /** Upload a photo and get the segmenter's proposed damage mask to review. */
+  propose(file: File) {
+    const form = new FormData();
+    form.append("file", file);
+    return call<{ key: string; original: string; mask: string | null }>("/propose", { method: "POST", body: form });
+  },
+
   restore(opts: { file?: File; key?: string; mask?: Blob; fidelity: number; allFidelities?: boolean }) {
     const form = new FormData();
     if (opts.file) form.append("file", opts.file);

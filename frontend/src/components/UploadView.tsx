@@ -17,7 +17,7 @@ const ACCEPT = "image/jpeg,image/png,image/tiff,image/webp,image/bmp";
 export function UploadView({ demos, demosError, onRetryDemos, onOpenDemo, onUpload }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
-  const [markMyself, setMarkMyself] = useState(false);
+  const [markMyself, setMarkMyself] = useState(true);
   const [note, setNote] = useState<string | null>(null);
 
   const take = (files: FileList | null) => {
@@ -90,7 +90,7 @@ export function UploadView({ demos, demosError, onRetryDemos, onOpenDemo, onUplo
                 onChange={(e) => setMarkMyself(e.target.checked)}
                 className="h-5 w-5 accent-[var(--color-inferred)]"
               />
-              <span>Let me mark the damage myself first</span>
+              <span>Review the damage mask before restoring (recommended)</span>
             </label>
             {note && <p className="mt-4 text-inferred">{note}</p>}
           </div>

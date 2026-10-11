@@ -392,6 +392,33 @@ async def result_route(request: Request):
     return JSONResponse(result)
 
 
+async def propose_route(request: Request):
+    """Upload a photo and get the segmenter's proposed damage mask, for review in the brush."""
+    try:
+        form = await request.form(max_files=1, max_fields=4, max_part_size=MAX_UPLOAD)
+    except Exception as e:
+        return error(400, f"Couldn't read the upload: {e}")
+    upload = form.get("file")
+    if not hasattr(upload, "read"):
+        return error(400, "Send a photo as 'file'.")
+    data = await upload.read()
+    if not data:
+        return error(400, "The uploaded file is empty.")
+    if len(data) > MAX_UPLOAD:
+        return error(413, "That photo is over 30 MB; please export a smaller copy.")
+    try:
+        key = await run_in_threadpool(ingest, data, filename=upload.filename or "upload")
+    except ValueError as e:
+        return error(400, str(e))
+    try:
+        await run_in_threadpool(hook.propose_mask, CACHE / key / "input.png")
+        mask = "proposed_mask.png"
+    except Exception as e:  # the brush still works from a blank mask
+        print(f"[propose] {key[:8]} failed: {type(e).__name__}: {e}", flush=True)
+        mask = None
+    return JSONResponse({"key": key, "original": "input.png", "mask": mask})
+
+
 async def artifact_route(request: Request):
     key, artifact = request.path_params["key"], request.path_params["artifact"]
     if not valid_key(key):
@@ -422,6 +449,7 @@ routes = [
     Route("/metrics", metrics),
     Route("/demos", demos),
     Route("/restore", restore_route, methods=["POST"]),
+    Route("/propose", propose_route, methods=["POST"]),
     Route("/jobs/{job_id}", job_route),
     Route("/results/{key}", result_route),
     Route("/results/{key}/{artifact:path}", artifact_route),
