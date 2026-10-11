@@ -216,6 +216,11 @@ export default function App() {
       >
         Skip to content
       </a>
+      {pipeline === "static" && (
+        <p className="bg-tag px-6 py-2 text-center text-ink sm:px-10">
+          The restoring server is offline right now. The demo cases below are saved results; uploading a new photo needs the server.
+        </p>
+      )}
       {pipeline === "stub" && (
         <p className="bg-warn px-6 py-2 text-center font-semibold text-ink sm:px-10">
           Test mode: the server is running a fake pipeline. These results are not real restorations.

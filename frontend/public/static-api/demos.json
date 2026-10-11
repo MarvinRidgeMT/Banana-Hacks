@@ -1,0 +1,82 @@
+[
+  {
+    "id": "inferred",
+    "file": "inferred.png",
+    "title": "Crack across the plate",
+    "blurb": "Lincoln's glass negative cracked in 1865. The break crosses hair and background, which the surroundings constrain.",
+    "credit": "Alexander Gardner, Feb 5, 1865 (print at the National Portrait Gallery, photographed by PatDavid). Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:%22Cracked_Plate%22_Abraham_Lincoln.png",
+    "license": "Public domain",
+    "key": "7bf7e4d86e273de043fc574e70ca0d8b8d050ec5724ad0bf6b7eade4bc85b64d",
+    "thumb": "thumb.jpg",
+    "ready": [
+      0.3,
+      0.7,
+      1.0
+    ]
+  },
+  {
+    "id": "face_missing",
+    "file": "face_missing.png",
+    "title": "Faces that could have been (simulated)",
+    "blurb": "Simulated damage: we tore a hole through Lincoln's eye on a public-domain photo, so the true face is known. Every restored eye here is invented, and the seeds disagree.",
+    "credit": "Alexander Gardner, Feb 5, 1865 (print at the National Portrait Gallery, photographed by PatDavid). Wikimedia Commons. Hole added by the ChronoVisage team as a simulated test.",
+    "source_url": "https://commons.wikimedia.org/wiki/File:%22Cracked_Plate%22_Abraham_Lincoln.png",
+    "license": "Public domain (simulated damage added by us)",
+    "key": "b746ccd8e05cb0a41348ffc24dcc9ccdf2523d68086ccb376137a47edc6acd96",
+    "thumb": "thumb.jpg",
+    "ready": [
+      0.3,
+      0.7,
+      1.0
+    ]
+  },
+  {
+    "id": "study",
+    "file": "study.png",
+    "title": "Faces lost to damage",
+    "blurb": "Heavy emulsion loss across a group portrait. Much of what's restored on these faces has to be invented.",
+    "credit": "Group portrait including Bjørnstjerne Bjørnson, photographer unknown. National Library of Norway / Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Gruppebilde_med_blant_annet_Bj%C3%B8rnstjerne_Bj%C3%B8rnson_sterkt_skadet_-_no-nb_digifoto_20160609_00068_bldsa_BB1802.jpg",
+    "license": "Public domain",
+    "key": "bed784b51bd8d6947d961e5f386603df5a36a7ca9f497c762c33a51738f6c3b6",
+    "thumb": "thumb.jpg",
+    "ready": [
+      0.3,
+      0.7,
+      1.0
+    ]
+  },
+  {
+    "id": "light",
+    "file": "light.png",
+    "title": "Barely damaged",
+    "blurb": "Only the top-left corner of the glass plate is broken. Almost every pixel is original.",
+    "credit": "Visconde de Vale Paraíso, Tennis group, Funchal, c. 1905. Arquipélagos / Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Grupo_de_t%C3%A9nis,_Funchal,_c._1905_-_Image_209245.jpg",
+    "license": "Public domain",
+    "key": "7ffee19e925eafbc9949907c441e5dfc0c6b3d61ca316ad3423bed7cd24f0361",
+    "thumb": "thumb.jpg",
+    "ready": [
+      0.3,
+      0.7,
+      1.0
+    ]
+  },
+  {
+    "id": "backup",
+    "file": "backup.png",
+    "title": "Crack network",
+    "blurb": "Scratches run across the face and the background.",
+    "credit": "Portrait of a man, Fonds Trutat, Bibliothèque de Toulouse. Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Homme,_connu_par_Eug%C3%A8ne_Trutat_(5387431848).jpg",
+    "license": "No known copyright restrictions (Bibliothèque de Toulouse, Flickr Commons)",
+    "key": "79ab1d328d901a1f4339abc1abf19212460883fcb6abc11684290f23750c543f",
+    "thumb": "thumb.jpg",
+    "ready": [
+      0.3,
+      0.7,
+      1.0
+    ]
+  }
+]

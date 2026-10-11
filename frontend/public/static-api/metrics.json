@@ -1,0 +1,27 @@
+{
+  "_edit_me": "Numbers shown on the website. Update when Person A has new results; nothing else needs changing.",
+  "segmenter": {
+    "name": "Damage segmenter (U-Net, trained by us)",
+    "synthetic_iou": 0.898,
+    "synthetic_note": "v3 segmenter, held-out photos with realistic synthetic damage",
+    "real_iou": 0.182,
+    "real_note": "v4, fine-tuned on 15 hand-labeled real photos; 3-fold cross-validated on held-out photos",
+    "real_folds": [0.156, 0.252, 0.153],
+    "real_iou_before_finetune": 0.007,
+    "real_status": "done"
+  },
+  "map_calibration": {
+    "text": "Pixels we mark Invented are 1.8x further from the true photo than pixels we mark Rebuilt (13.4 vs 7.3 ΔE).",
+    "invented_de": 13.4,
+    "rebuilt_de": 7.3,
+    "spearman": 0.29
+  },
+  "untouched_pixels": {
+    "text": "0 pixels changed outside the damage mask (automated test).",
+    "changed_px": 0,
+    "tests_passed": 8,
+    "tests_total": 8
+  },
+  "user_study": null,
+  "time_per_photo": null
+}

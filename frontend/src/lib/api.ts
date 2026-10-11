@@ -4,7 +4,41 @@ import type { Demo, Job, Metrics, Result } from "./types";
  * the Cloudflare Tunnel URL when the site is on Vercel. */
 export const API_BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 
+/** Copies of the demo results shipped with the site (see backend/export_static_demos.py),
+ * used when the restoring server can't be reached, so the demo cases always work. */
+const STATIC_BASE = "/static-api";
+const OFFLINE_MSG =
+  "The restoring server is offline right now, so new photos can't be restored. The demo cases still work.";
+
+let mode: "live" | "static" = "live";
+let modePromise: Promise<"live" | "static"> | null = null;
+
+/** Decide once per page load whether the live server answers (4 s timeout). */
+export function apiMode(): Promise<"live" | "static"> {
+  if (!modePromise) {
+    modePromise = (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(4000) });
+        if (res.ok) return "live" as const;
+      } catch {
+        /* unreachable: fall through */
+      }
+      try {
+        const res = await fetch(`${STATIC_BASE}/demos.json`);
+        if (res.ok) return "static" as const;
+      } catch {
+        /* no static copies either */
+      }
+      return "live" as const;
+    })().then((m) => (mode = m));
+  }
+  return modePromise;
+}
+
+const fidelityDir = (f: number) => `f${String(Math.round(f * 100)).padStart(3, "0")}`;
+
 export function fileUrl(key: string, file: string, download = false): string {
+  if (mode === "static") return `${STATIC_BASE}/results/${key}/${file}`;
   return `${API_BASE}/results/${key}/${file}${download ? "?download=1" : ""}`;
 }
 
@@ -25,6 +59,11 @@ async function json<T>(res: Response): Promise<T> {
 }
 
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
+  if ((await apiMode()) === "static") {
+    if (path === "/health") return { ok: true, pipeline: "static", queued: 0, running: 0 } as T;
+    if (path === "/metrics" || path === "/demos") return json<T>(await fetch(`${STATIC_BASE}${path}.json`));
+    throw new ApiError(OFFLINE_MSG);
+  }
   let res: Response;
   try {
     res = await fetch(`${API_BASE}${path}`, init);
@@ -44,6 +83,11 @@ export const api = {
 
   /** Cached result, or null if this fidelity step hasn't been computed yet. */
   async result(key: string, fidelity: number): Promise<Result | null> {
+    if ((await apiMode()) === "static") {
+      const r = await fetch(`${STATIC_BASE}/results/${key}/${fidelityDir(fidelity)}/result.json`);
+      if (r.status === 404) throw new ApiError(OFFLINE_MSG);
+      return json<Result>(r);
+    }
     const res = await fetch(`${API_BASE}/results/${key}?fidelity=${fidelity}`).catch(() => {
       throw new ApiError("Can't reach the Cold Case server.");
     });

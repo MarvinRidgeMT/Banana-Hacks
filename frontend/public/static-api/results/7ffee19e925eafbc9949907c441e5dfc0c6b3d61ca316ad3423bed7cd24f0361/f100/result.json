@@ -1,0 +1,630 @@
+{
+  "key": "7ffee19e925eafbc9949907c441e5dfc0c6b3d61ca316ad3423bed7cd24f0361",
+  "source_sha256": "677223df3637e47a597890ad2d9b594a8ee75321810ca4a7ca790c6774f6fca9",
+  "fidelity": 1.0,
+  "fidelity_applied": true,
+  "width": 1024,
+  "height": 746,
+  "files": {
+    "original": "f100/original.png",
+    "restored": "f100/restored.png",
+    "map": "f100/map.png",
+    "label": "f100/label.png",
+    "regions": "f100/regions.png",
+    "manifest": "f100/manifest.json",
+    "signed": "f100/restored_c2pa.png",
+    "mask": "f100/mask.png"
+  },
+  "faces": [],
+  "face_original": null,
+  "pixel_summary": {
+    "observed": 0.9351463011058981,
+    "inferred": 0.014384006367292226,
+    "invented": 0.05046969252680965
+  },
+  "regions": [
+    {
+      "id": 1,
+      "bbox": [
+        0,
+        6,
+        294,
+        280
+      ],
+      "area_px": 48403,
+      "inferred_px": 9849,
+      "invented_px": 38554,
+      "kind": "damage",
+      "stage": "inpainting",
+      "confidence": 0.203,
+      "confidence_computed": 0.2035,
+      "pipeline_region_id": 1
+    },
+    {
+      "id": 2,
+      "bbox": [
+        99,
+        468,
+        129,
+        484
+      ],
+      "area_px": 252,
+      "inferred_px": 252,
+      "invented_px": 0,
+      "kind": "damage",
+      "stage": "inpainting",
+      "confidence": 1.0,
+      "confidence_computed": 1.0,
+      "pipeline_region_id": 2
+    },
+    {
+      "id": 3,
+      "bbox": [
+        983,
+        276,
+        997,
+        290
+      ],
+      "area_px": 164,
+      "inferred_px": 164,
+      "invented_px": 0,
+      "kind": "damage",
+      "stage": "inpainting",
+      "confidence": 1.0,
+      "confidence_computed": 1.0,
+      "pipeline_region_id": null
+    },
+    {
+      "id": 4,
+      "bbox": [
+        97,
+        684,
+        110,
+        697
+      ],
+      "area_px": 125,
+      "inferred_px": 125,
+      "invented_px": 0,
+      "kind": "damage",
+      "stage": "inpainting",
+      "confidence": 1.0,
+      "confidence_computed": 1.0,
+      "pipeline_region_id": null
+    },
+    {
+      "id": 5,
+      "bbox": [
+        167,
+        624,
+        180,
+        637
+      ],
+      "area_px": 119,
+      "inferred_px": 119,
+      "invented_px": 0,
+      "kind": "damage",
+      "stage": "inpainting",
+      "confidence": 1.0,
+      "confidence_computed": 1.0,
+      "pipeline_region_id": null
+    },
+    {
+      "id": 6,
+      "bbox": [
+        710,
+        705,
+        722,
+        717
+      ],
+      "area_px": 115,
+      "inferred_px": 115,
+      "invented_px": 0,
+      "kind": "damage",
+      "stage": "inpainting",
+      "confidence": 1.0,
+      "confidence_computed": 1.0,
+      "pipeline_region_id": null
+    },
+    {
+      "id": 7,
+      "bbox": [
+        573,
+        675,
+        585,
+        688
+      ],
+      "area_px": 108,
+      "inferred_px": 108,
+      "invented_px": 0,
+      "kind": "damage",
+      "stage": "inpainting",
+      "confidence": 1.0,
+      "confidence_computed": 1.0,
+      "pipeline_region_id": null
+    },
+    {
+      "id": 8,
+      "bbox": [
+        631,
+        644,
+        643,
+        655
+      ],
+      "area_px": 94,
+      "inferred_px": 94,
+      "invented_px": 0,
+      "kind": "damage",
+      "stage": "inpainting",
+      "confidence": 1.0,
+      "confidence_computed": 1.0,
+      "pipeline_region_id": null
+    },
+    {
+      "id": 9,
+      "bbox": [
+        611,
+        269,
+        622,
+        279
+      ],
+      "area_px": 86,
+      "inferred_px": 86,
+      "invented_px": 0,
+      "kind": "damage",
+      "stage": "inpainting",
+      "confidence": 1.0,
+      "confidence_computed": 1.0,
+      "pipeline_region_id": null
+    },
+    {
+      "id": 10,
+      "bbox": [
+        82,
+        480,
+        92,
+        490
+      ],
+      "area_px": 76,
+      "inferred_px": 76,
+      "invented_px": 0,
+      "kind": "damage",
+      "stage": "inpainting",
+      "confidence": 1.0,
+      "confidence_computed": 1.0,
+      "pipeline_region_id": null
+    }
+  ],
+  "mask_source": "human_file",
+  "human_edited_mask": true,
+  "seeds": 8,
+  "pipeline": "real",
+  "seconds": 10.56,
+  "warnings": [],
+  "manifest": {
+    "source_sha256": "d31db475e9e105052896debdfc1c53778e4db7501956f32b74c5c85b83b7d51e",
+    "tool": "ChronoVisage 0.1",
+    "working_copy": {
+      "scale": 0.691,
+      "resample": "lanczos interpolation, no generative detail"
+    },
+    "created": "2026-10-11T10:37:27+00:00",
+    "stages": [
+      {
+        "stage": "damage_segmentation",
+        "model": "provided mask file",
+        "threshold": 0.5,
+        "dilation_px": 4,
+        "human_edited_mask": true,
+        "damage_pixels": 44675
+      },
+      {
+        "stage": "inpainting",
+        "mask_source": "provided mask file",
+        "model_thick": "sdxl-inpainting-0.1",
+        "model_thin": "opencv-telea",
+        "seeds": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "displayed_seed": 14,
+        "steps": 20,
+        "dilation_px": 4,
+        "thin_px": 1139,
+        "thick_px": 48403,
+        "pixels_changed": 33289
+      },
+      {
+        "stage": "face_restoration",
+        "model": "codeformer v0.1.0",
+        "fidelity_w": 1.0,
+        "strict_mode": true,
+        "faces": 10,
+        "face_boxes_source": "detected (yunet)",
+        "pixels_changed": 0
+      }
+    ],
+    "invention_map": {
+      "method": "per-pixel seed spread in CIELAB lightness, Gaussian-smoothed (2 px)",
+      "epsilon_lab": 2.0,
+      "tau_lightness": 5.0,
+      "classes": {
+        "0": "observed (original pixel, untouched)",
+        "1": "inferred (regenerated, seeds agree)",
+        "2": "invented (regenerated, seeds disagree)"
+      },
+      "caveat": "Seed agreement measures how constrained the model was, not whether it is correct."
+    },
+    "pixel_summary": {
+      "observed": 0.9351,
+      "inferred": 0.0144,
+      "invented": 0.0505
+    },
+    "regions": [
+      {
+        "id": 1,
+        "bbox": [
+          0,
+          6,
+          294,
+          274
+        ],
+        "kind": "damage",
+        "pixels": 48403,
+        "confidence": 0.203
+      },
+      {
+        "id": 2,
+        "bbox": [
+          99,
+          468,
+          30,
+          16
+        ],
+        "kind": "damage",
+        "pixels": 252,
+        "confidence": 1.0
+      },
+      {
+        "id": "face-1",
+        "bbox": [
+          203,
+          342,
+          28,
+          34
+        ],
+        "kind": "face",
+        "detector_score": 0.912,
+        "pixels_changed": 0,
+        "invented_fraction": 0.0,
+        "confidence": 1.0
+      },
+      {
+        "id": "face-2",
+        "bbox": [
+          622,
+          345,
+          22,
+          28
+        ],
+        "kind": "face",
+        "detector_score": 0.903,
+        "pixels_changed": 0,
+        "invented_fraction": 0.0,
+        "confidence": 1.0
+      },
+      {
+        "id": "face-3",
+        "bbox": [
+          801,
+          353,
+          25,
+          31
+        ],
+        "kind": "face",
+        "detector_score": 0.897,
+        "pixels_changed": 0,
+        "invented_fraction": 0.0,
+        "confidence": 1.0
+      },
+      {
+        "id": "face-4",
+        "bbox": [
+          426,
+          356,
+          22,
+          27
+        ],
+        "kind": "face",
+        "detector_score": 0.894,
+        "pixels_changed": 0,
+        "invented_fraction": 0.0,
+        "confidence": 1.0
+      },
+      {
+        "id": "face-5",
+        "bbox": [
+          708,
+          331,
+          22,
+          28
+        ],
+        "kind": "face",
+        "detector_score": 0.893,
+        "pixels_changed": 0,
+        "invented_fraction": 0.0,
+        "confidence": 1.0
+      },
+      {
+        "id": "face-6",
+        "bbox": [
+          339,
+          350,
+          23,
+          30
+        ],
+        "kind": "face",
+        "detector_score": 0.88,
+        "pixels_changed": 0,
+        "invented_fraction": 0.0,
+        "confidence": 1.0
+      },
+      {
+        "id": "face-7",
+        "bbox": [
+          567,
+          363,
+          20,
+          25
+        ],
+        "kind": "face",
+        "detector_score": 0.878,
+        "pixels_changed": 0,
+        "invented_fraction": 0.0,
+        "confidence": 1.0
+      },
+      {
+        "id": "face-8",
+        "bbox": [
+          467,
+          349,
+          21,
+          27
+        ],
+        "kind": "face",
+        "detector_score": 0.846,
+        "pixels_changed": 0,
+        "invented_fraction": 0.0,
+        "confidence": 1.0
+      },
+      {
+        "id": "face-9",
+        "bbox": [
+          529,
+          342,
+          20,
+          25
+        ],
+        "kind": "face",
+        "detector_score": 0.835,
+        "pixels_changed": 0,
+        "invented_fraction": 0.0,
+        "confidence": 1.0
+      },
+      {
+        "id": "face-10",
+        "bbox": [
+          288,
+          338,
+          21,
+          27
+        ],
+        "kind": "face",
+        "detector_score": 0.809,
+        "pixels_changed": 0,
+        "invented_fraction": 0.0,
+        "confidence": 1.0
+      }
+    ],
+    "untouched_pixel_check": "pass",
+    "web": {
+      "fidelity_requested": 1.0,
+      "fidelity_applied": true,
+      "mask_source": "human_file",
+      "pipeline_mask_source": "provided mask file",
+      "human_edited_mask": true,
+      "pixel_summary": {
+        "observed": 0.935146,
+        "inferred": 0.014384,
+        "invented": 0.05047
+      },
+      "pipeline_pixel_summary": {
+        "observed": 0.9351,
+        "inferred": 0.0144,
+        "invented": 0.0505
+      },
+      "regions": [
+        {
+          "id": 1,
+          "bbox": [
+            0,
+            6,
+            294,
+            280
+          ],
+          "area_px": 48403,
+          "inferred_px": 9849,
+          "invented_px": 38554,
+          "kind": "damage",
+          "stage": "inpainting",
+          "confidence": 0.203,
+          "confidence_computed": 0.2035,
+          "pipeline_region_id": 1
+        },
+        {
+          "id": 2,
+          "bbox": [
+            99,
+            468,
+            129,
+            484
+          ],
+          "area_px": 252,
+          "inferred_px": 252,
+          "invented_px": 0,
+          "kind": "damage",
+          "stage": "inpainting",
+          "confidence": 1.0,
+          "confidence_computed": 1.0,
+          "pipeline_region_id": 2
+        },
+        {
+          "id": 3,
+          "bbox": [
+            983,
+            276,
+            997,
+            290
+          ],
+          "area_px": 164,
+          "inferred_px": 164,
+          "invented_px": 0,
+          "kind": "damage",
+          "stage": "inpainting",
+          "confidence": 1.0,
+          "confidence_computed": 1.0,
+          "pipeline_region_id": null
+        },
+        {
+          "id": 4,
+          "bbox": [
+            97,
+            684,
+            110,
+            697
+          ],
+          "area_px": 125,
+          "inferred_px": 125,
+          "invented_px": 0,
+          "kind": "damage",
+          "stage": "inpainting",
+          "confidence": 1.0,
+          "confidence_computed": 1.0,
+          "pipeline_region_id": null
+        },
+        {
+          "id": 5,
+          "bbox": [
+            167,
+            624,
+            180,
+            637
+          ],
+          "area_px": 119,
+          "inferred_px": 119,
+          "invented_px": 0,
+          "kind": "damage",
+          "stage": "inpainting",
+          "confidence": 1.0,
+          "confidence_computed": 1.0,
+          "pipeline_region_id": null
+        },
+        {
+          "id": 6,
+          "bbox": [
+            710,
+            705,
+            722,
+            717
+          ],
+          "area_px": 115,
+          "inferred_px": 115,
+          "invented_px": 0,
+          "kind": "damage",
+          "stage": "inpainting",
+          "confidence": 1.0,
+          "confidence_computed": 1.0,
+          "pipeline_region_id": null
+        },
+        {
+          "id": 7,
+          "bbox": [
+            573,
+            675,
+            585,
+            688
+          ],
+          "area_px": 108,
+          "inferred_px": 108,
+          "invented_px": 0,
+          "kind": "damage",
+          "stage": "inpainting",
+          "confidence": 1.0,
+          "confidence_computed": 1.0,
+          "pipeline_region_id": null
+        },
+        {
+          "id": 8,
+          "bbox": [
+            631,
+            644,
+            643,
+            655
+          ],
+          "area_px": 94,
+          "inferred_px": 94,
+          "invented_px": 0,
+          "kind": "damage",
+          "stage": "inpainting",
+          "confidence": 1.0,
+          "confidence_computed": 1.0,
+          "pipeline_region_id": null
+        },
+        {
+          "id": 9,
+          "bbox": [
+            611,
+            269,
+            622,
+            279
+          ],
+          "area_px": 86,
+          "inferred_px": 86,
+          "invented_px": 0,
+          "kind": "damage",
+          "stage": "inpainting",
+          "confidence": 1.0,
+          "confidence_computed": 1.0,
+          "pipeline_region_id": null
+        },
+        {
+          "id": 10,
+          "bbox": [
+            82,
+            480,
+            92,
+            490
+          ],
+          "area_px": 76,
+          "inferred_px": 76,
+          "invented_px": 0,
+          "kind": "damage",
+          "stage": "inpainting",
+          "confidence": 1.0,
+          "confidence_computed": 1.0,
+          "pipeline_region_id": null
+        }
+      ],
+      "displayed_seed": 14,
+      "seeds": 8,
+      "seconds": 10.56,
+      "generated_at": "2026-10-11T10:37:27+00:00",
+      "warnings": []
+    }
+  }
+}
