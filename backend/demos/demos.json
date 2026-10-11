@@ -1,12 +1,12 @@
 [
   {
-    "id": "hero",
-    "file": "hero.png",
-    "title": "Torn across the eye",
-    "blurb": "Missing emulsion over one eye. The face has to be partly invented.",
-    "credit": "Source to confirm",
-    "source_url": "",
-    "license": "To confirm before the demo"
+    "id": "study",
+    "file": "study.png",
+    "title": "Faces lost to damage",
+    "blurb": "Heavy emulsion loss across a group portrait. Much of what's restored on these faces has to be invented.",
+    "credit": "Group portrait including Bjørnstjerne Bjørnson, photographer unknown. National Library of Norway / Wikimedia Commons",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Gruppebilde_med_blant_annet_Bj%C3%B8rnstjerne_Bj%C3%B8rnson_sterkt_skadet_-_no-nb_digifoto_20160609_00068_bldsa_BB1802.jpg",
+    "license": "Public domain"
   },
   {
     "id": "inferred",
@@ -34,14 +34,5 @@
     "credit": "Portrait of a man, Fonds Trutat, Bibliothèque de Toulouse. Wikimedia Commons",
     "source_url": "https://commons.wikimedia.org/wiki/File:Homme,_connu_par_Eug%C3%A8ne_Trutat_(5387431848).jpg",
     "license": "No known copyright restrictions (Bibliothèque de Toulouse, Flickr Commons)"
-  },
-  {
-    "id": "study",
-    "file": "study.png",
-    "title": "Faces lost to damage",
-    "blurb": "Heavy emulsion loss across a group portrait. Much of what's restored on these faces has to be invented.",
-    "credit": "Group portrait including Bjørnstjerne Bjørnson, photographer unknown. National Library of Norway / Wikimedia Commons",
-    "source_url": "https://commons.wikimedia.org/wiki/File:Gruppebilde_med_blant_annet_Bj%C3%B8rnstjerne_Bj%C3%B8rnson_sterkt_skadet_-_no-nb_digifoto_20160609_00068_bldsa_BB1802.jpg",
-    "license": "Public domain"
   }
 ]

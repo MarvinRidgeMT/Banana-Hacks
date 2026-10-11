@@ -2,10 +2,9 @@ import type { ReactNode } from "react";
 import { isPlaceholder } from "../lib/format";
 import type { Demo } from "../lib/types";
 
-// TODO: confirm full names with Sid and Anish before the demo.
 const TEAM = [
-  { name: "Sid", role: "Pipeline and models" },
-  { name: "Anish", role: "Website, API and evidence" },
+  { name: "Siddharth Tumati", role: "Pipeline and models" },
+  { name: "Anish Meruva", role: "Website, API and evidence" },
 ];
 
 const NEXT = [
