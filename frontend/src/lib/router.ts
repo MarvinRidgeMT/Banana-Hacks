@@ -7,6 +7,7 @@ import { DEFAULT_FIDELITY, FIDELITY_STEPS } from "./types";
 export type Route =
   | { name: "home" }
   | { name: "restore" }
+  | { name: "cases" }
   | { name: "result"; key: string; fidelity: number }
   | { name: "how-it-works" }
   | { name: "evidence" }
@@ -16,6 +17,7 @@ export type Route =
 export const href = {
   home: "#/",
   restore: "#/restore",
+  cases: "#/cases",
   howItWorks: "#/how-it-works",
   evidence: "#/evidence",
   about: "#/about",
@@ -23,6 +25,7 @@ export const href = {
 };
 
 export const NAV_LINKS = [
+  { name: "cases", label: "My cases", to: href.cases },
   { name: "how-it-works", label: "How it works", to: href.howItWorks },
   { name: "evidence", label: "Evidence", to: href.evidence },
   { name: "about", label: "About", to: href.about },
@@ -31,6 +34,7 @@ export const NAV_LINKS = [
 const STATIC: Record<string, Route> = {
   "/": { name: "home" },
   "/restore": { name: "restore" },
+  "/cases": { name: "cases" },
   "/how-it-works": { name: "how-it-works" },
   "/evidence": { name: "evidence" },
   "/about": { name: "about" },

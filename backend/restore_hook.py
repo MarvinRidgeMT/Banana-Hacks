@@ -61,8 +61,8 @@ MIN_REGION_PX = 20  # specks smaller than this get no region id (class is still 
 _restore_fn = None
 
 
-# Bump when the restoration output changes (6: seamless membrane blending), so cached results re-render.
-RENDER_VERSION = 6
+# Bump when the restoration output changes (6: seamless blending; 7: color-photo prompts, keep color), so cached results re-render.
+RENDER_VERSION = 7
 
 
 def pipeline_name() -> str:

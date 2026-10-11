@@ -7,6 +7,7 @@ import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
 import { UploadView } from "./components/UploadView";
 import { addHistory, loadHistory } from "./lib/history";
+import { MyCases } from "./pages/MyCases";
 import { api, fileUrl, waitForJob } from "./lib/api";
 import { href, navigate, useRouter, type Route } from "./lib/router";
 import { failure } from "./lib/format";
@@ -30,6 +31,7 @@ type Task =
 const PAGE_TITLE: Record<Exclude<Route["name"], "result">, string> = {
   home: "Cold Case",
   restore: "Cold Case · Restore a photo",
+  cases: "Cold Case · My cases",
   "how-it-works": "Cold Case · How it works",
   evidence: "Cold Case · Evidence",
   about: "Cold Case · About",
@@ -90,6 +92,13 @@ export default function App() {
     route.name === "result"
       ? (demos?.find((d) => d.key === route.key)?.title ?? titles[route.key] ?? "Restored photo")
       : null;
+
+  useEffect(() => {
+    if (route.name !== "result" || !demos) return;
+    if (demos.some((d) => d.key === route.key)) return;
+    if (loadHistory().some((h) => h.key === route.key)) return;
+    addHistory({ key: route.key, title: titles[route.key] ?? "Restored photo", kind: "photo" });
+  }, [route, demos, titles]);
 
   useEffect(() => {
     document.title = resultTitle ? `Cold Case · ${resultTitle}` : PAGE_TITLE[route.name as keyof typeof PAGE_TITLE];
@@ -187,6 +196,8 @@ export default function App() {
             onUpload={onUpload}
           />
         );
+      case "cases":
+        return <MyCases />;
       case "result":
         return (
           <ResultView

@@ -3,7 +3,7 @@ import numpy as np
 from pathlib import Path
 from PIL import Image
 from .ingest import ingest
-from .inpaint import inpaint, INPAINT_VERSION, add_grain
+from .inpaint import inpaint, INPAINT_VERSION, add_grain, is_color_photo
 from .editlog import EditLog
 from .invention_map import invention_map, medoid, summary, regions, overlay
 from .manifest import write_manifest
@@ -24,9 +24,10 @@ def get_mask(path, img):
     m, _ = segment(img)
     return m, MODEL_NAME
 
-def _cache_key(sha, mask, seeds, steps):
+def _cache_key(sha, mask, seeds, steps, color=False):
     mh = hashlib.sha256(np.packbits(mask).tobytes()).hexdigest()[:12]
-    return CACHE / f"{sha[:16]}_{mh}_s{'-'.join(map(str, seeds))}_n{steps}_v{INPAINT_VERSION}.npz"
+    v = INPAINT_VERSION + ("c" if color else "")
+    return CACHE / f"{sha[:16]}_{mh}_s{'-'.join(map(str, seeds))}_n{steps}_v{v}.npz"
 
 def restore(path, seeds=(11, 12, 13, 14), steps=20, fidelity=0.5, strict_faces=True, face_stage=True):
     d = ingest(path)
@@ -35,7 +36,7 @@ def restore(path, seeds=(11, 12, 13, 14), steps=20, fidelity=0.5, strict_faces=T
     log = EditLog(img)
     hints = [tuple(int(round(v * d["scale"])) for v in b[:4]) + (b[4],) for b in load_face_hints(path)]
     fboxes = hints or detect_faces_damaged(img, mask)
-    key = _cache_key(d["sha256"], mask, seeds, steps)
+    key = _cache_key(d["sha256"], mask, seeds, steps, is_color_photo(img))
     if key.exists():   # same photo + mask + settings: skip SDXL entirely
         z = np.load(key)
         outs, used, thin, thick = list(z["outs"]), z["used"], z["thin"], z["thick"]

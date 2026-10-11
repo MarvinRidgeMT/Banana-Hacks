@@ -2,12 +2,24 @@ import cv2, numpy as np, torch
 from PIL import Image
 from diffusers import StableDiffusionXLInpaintPipeline, AutoencoderKL
 
-INPAINT_VERSION = "6"   # bump this whenever inpainting behavior changes, so old cache entries aren't reused
+INPAINT_VERSION = "6"   # color photos get a "c" suffix in restore._cache_key (color fix)   # bump this whenever inpainting behavior changes, so old cache entries aren't reused
 MODEL = "diffusers/stable-diffusion-xl-1.0-inpainting-0.1"
 PROMPT = "old black and white photograph, film grain, natural lighting"
 FACE_PROMPT = ("old black and white photograph, close-up portrait of a person's face, "
                "detailed eyes, natural skin, film grain")
 NEG = "modern, color, cartoon, painting, deformed, blurry"
+# Color photos get color prompts: asking SDXL for "black and white" on a color print made grey,
+# washed-out patches.
+PROMPT_COLOR = "old color photograph, natural faded colors, film grain, natural lighting, sharp detail"
+FACE_PROMPT_COLOR = ("old color photograph, close-up portrait of a person's face, detailed eyes, "
+                     "natural skin tones, film grain")
+NEG_COLOR = "black and white, monochrome, cartoon, painting, deformed, blurry, text, watermark, oversaturated"
+
+
+def is_color_photo(img):
+    """True when the scan has real color (not B&W, not a uniform sepia/cyanotype tint)."""
+    lab = cv2.cvtColor(img, cv2.COLOR_RGB2LAB).astype(np.float32)
+    return float(lab[..., 1].std() + lab[..., 2].std()) > 9.0
 THIN_HALF_WIDTH = 4   # damage up to ~8 px wide is filled from context, not generated
 MIN_CORE_AREA = 150   # ignore tiny thick bits
 GROUP_PX = 48         # thick regions closer than this share one SDXL crop
@@ -70,11 +82,11 @@ def _crop_box(box, W, H):
     x1, y1 = min(W, x0 + side), min(H, y0 + side)
     return max(0, x1 - side), max(0, y1 - side), x1, y1
 
-def _sdxl(crop, cmask, seed, steps, guidance, prompt):
+def _sdxl(crop, cmask, seed, steps, guidance, prompt, neg=NEG):
     ch, cw = cmask.shape
     s = 1024 / max(ch, cw)   # zoom the crop up so SDXL sees the damage at full detail
     tw, th = max(8, round(cw * s) // 8 * 8), max(8, round(ch * s) // 8 * 8)
-    g = get_pipe()(prompt=prompt, negative_prompt=NEG,
+    g = get_pipe()(prompt=prompt, negative_prompt=neg,
                    image=Image.fromarray(crop).resize((tw, th), Image.LANCZOS),
                    mask_image=Image.fromarray((cmask * 255).astype(np.uint8)).resize((tw, th), Image.NEAREST),
                    height=th, width=tw, num_inference_steps=steps, guidance_scale=guidance,
@@ -125,8 +137,11 @@ def _blend_in(out, orig, region, damaged, src=None):
     lo = cv2.cvtColor(orig, cv2.COLOR_RGB2LAB).astype(np.float32)
     blended = src is not None and _poisson(src, out, region, damaged)
     lab = cv2.cvtColor(out, cv2.COLOR_RGB2LAB).astype(np.float32)
-    for c in (1, 2):
-        lab[..., c][region] = np.median(lo[..., c][ring])
+    # Monochrome or uniformly tinted photo (B&W, sepia): give the fill the photo's single tint.
+    # A real color photo keeps the generated colors (the seamless blend already matched their tone).
+    if lo[..., 1][ring].std() + lo[..., 2][ring].std() < 9.0:
+        for c in (1, 2):
+            lab[..., c][region] = np.median(lo[..., c][ring])
     L, Lo = lab[..., 0], lo[..., 0]
     if not blended:
         band = region & ~(cv2.erode(r8, k) > 0)
@@ -154,7 +169,10 @@ def inpaint(img, mask, seeds=(11,), steps=20, guidance=6.0, dilate_px=4, face_bo
     base = img.copy()
     base[m] = telea[m]
     groups = thick_groups(thick)
+    color = is_color_photo(img)
+    neg = NEG_COLOR if color else NEG
     is_face = [any(_overlaps(box, fb) for fb in face_boxes) for _, box in groups]
+    print(f"color photo: {color}")
     print(f"SDXL regions: {len(groups)} ({sum(is_face)} on faces)  x  seeds: {len(seeds)}  =  {len(groups) * len(seeds)} runs")
     outs = []
     for seed in seeds:
@@ -162,8 +180,11 @@ def inpaint(img, mask, seeds=(11,), steps=20, guidance=6.0, dilate_px=4, face_bo
         for gi, (region, box) in enumerate(groups):
             x0, y0, x1, y1 = _crop_box(box, W, H)
             cm = region[y0:y1, x0:x1]
-            prompt = FACE_PROMPT if is_face[gi] else PROMPT
-            gen = _sdxl(base[y0:y1, x0:x1], cm, seed + 1000 * gi, steps, guidance, prompt)
+            if color:
+                prompt = FACE_PROMPT_COLOR if is_face[gi] else PROMPT_COLOR
+            else:
+                prompt = FACE_PROMPT if is_face[gi] else PROMPT
+            gen = _sdxl(base[y0:y1, x0:x1], cm, seed + 1000 * gi, steps, guidance, prompt, neg)
             src = out.copy()
             src[y0:y1, x0:x1] = gen          # the whole generated crop: its own surroundings, no seam
             out[y0:y1, x0:x1][cm] = gen[cm]
