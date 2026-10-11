@@ -306,14 +306,29 @@ function HeroExhibit({
   demosError: string | null;
 }) {
   const [thumbFailed, setThumbFailed] = useState(false);
+  const [showLabels, setShowLabels] = useState(false);
 
   if (heroResult) {
     return (
       <figure>
-        <PhotoStage result={heroResult} showMap opacity={0.75} onHover={() => {}} />
+        <PhotoStage result={heroResult} showMap={showLabels} opacity={0.75} onHover={() => {}} />
         <figcaption className="mt-8 space-y-3">
-          <p className="text-body">Drag the handle to compare the damaged scan with the labelled restoration.</p>
-          <ul className="flex flex-wrap gap-x-6 gap-y-2">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <p className="text-body">
+              Drag the handle to compare the damaged scan with the {showLabels ? "labelled " : ""}restoration.
+            </p>
+            <button
+              type="button"
+              aria-pressed={showLabels}
+              onClick={() => setShowLabels((v) => !v)}
+              className={`rounded-sm border px-4 py-2 font-semibold ${
+                showLabels ? "border-ink bg-ink text-ground" : "border-line bg-surface hover:bg-tag"
+              }`}
+            >
+              {showLabels ? "Hide the labels" : "Show what was invented"}
+            </button>
+          </div>
+          <ul className={`flex flex-wrap gap-x-6 gap-y-2 ${showLabels ? "" : "opacity-50"}`}>
             {CLASSES.map((c) => (
               <li key={c} className="flex items-center gap-2">
                 <Swatch cls={c} />
