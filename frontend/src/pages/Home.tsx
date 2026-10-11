@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { DemoCredit } from "../components/DemoCredit";
 import { ExplodedView } from "../components/ExplodedView";
+import { TrueFaceExhibit } from "../components/TrueFaceExhibit";
 import { DemoCardSkeleton, ErrorNote } from "../components/Feedback";
 import { Link } from "../components/Link";
 import { PhotoStage, Swatch } from "../components/PhotoStage";
@@ -108,6 +109,9 @@ export function Home({ demos, demosError, onRetryDemos }: Props) {
 
       {/* 1b. Take it apart: the exploded evidence stack */}
       {apartResult && <ExplodedView result={apartResult} />}
+
+      {/* 1c. The answer key: true face vs the AI's three guesses */}
+      <TrueFaceExhibit />
 
       {/* 2. The problem */}
       <section>
