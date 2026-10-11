@@ -48,7 +48,9 @@ from starlette.staticfiles import StaticFiles
 import restore_hook as hook
 
 HERE = Path(__file__).resolve().parent
-CACHE = Path(os.environ.get("CV_CACHE", HERE.parent / "cache")).resolve()
+# Test mode keeps its fake results in a separate folder, so they can never be served as real ones.
+_DEFAULT_CACHE = HERE.parent / ("cache_stub" if os.environ.get("CV_PIPELINE") == "stub" else "cache")
+CACHE = Path(os.environ.get("CV_CACHE", _DEFAULT_CACHE)).resolve()
 DEMOS = Path(os.environ.get("CV_DEMOS", HERE / "demos")).resolve()
 METRICS = HERE / "metrics.json"
 FRONTEND_DIST = Path(os.environ.get("CV_SITE", HERE.parent / "frontend" / "dist")).resolve()

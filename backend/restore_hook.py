@@ -503,7 +503,10 @@ def run_restore(image_path: Path, fidelity: float, source: dict,
     out = fidelity_dir(image_path.parent, fidelity)
     result_file = out / "result.json"
     if result_file.exists():
-        return json.loads(result_file.read_text())
+        cached = json.loads(result_file.read_text())
+        if cached.get("pipeline", "stub") == pipeline_name():
+            return cached
+        shutil.rmtree(out, ignore_errors=True)  # made by the other pipeline: redo it
 
     restore = get_restore()
     t0 = time.perf_counter()
@@ -665,6 +668,7 @@ def run_restore(image_path: Path, fidelity: float, source: dict,
         "mask_source": source.get("mask_source", "segmenter"),
         "human_edited_mask": human_mask,
         "seeds": seeds_used,
+        "pipeline": pipeline_name(),
         "seconds": round(seconds, 2),
         "warnings": warnings,
         "manifest": manifest,
