@@ -435,10 +435,27 @@ async def artifact_route(request: Request):
     return FileResponse(path, headers=headers)
 
 
+def preload_models() -> None:
+    """Load the segmenter, SDXL and CodeFormer once at startup, so the first visitor's
+    upload doesn't wait 20-40 s for model loading. Failures are logged, not fatal."""
+    t0 = time.time()
+    for name, load in (("segmenter", "pipeline.segment:get_model"),
+                       ("SDXL", "pipeline.inpaint:get_pipe"),
+                       ("CodeFormer", "pipeline.codeformer:get_net")):
+        try:
+            mod, fn = load.split(":")
+            getattr(__import__(mod, fromlist=[fn]), fn)()
+        except Exception as e:
+            print(f"[preload] {name} failed: {type(e).__name__}: {e}", flush=True)
+    print(f"[preload] models ready in {time.time() - t0:.0f}s", flush=True)
+
+
 @asynccontextmanager
 async def lifespan(app):
     CACHE.mkdir(parents=True, exist_ok=True)
     threading.Thread(target=worker, name="restore-worker", daemon=True).start()
+    if hook.pipeline_name() == "real" and os.environ.get("CV_PRELOAD", "1") != "0":
+        threading.Thread(target=preload_models, name="preload", daemon=True).start()
     await run_in_threadpool(load_demos, os.environ.get("CV_WARM_DEMOS", "1") != "0")
     print(f"[chronovisage] pipeline={hook.pipeline_name()} cache={CACHE} demos={len(DEMO_INDEX)}", flush=True)
     yield
