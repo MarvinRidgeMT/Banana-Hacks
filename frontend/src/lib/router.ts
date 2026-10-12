@@ -8,6 +8,7 @@ export type Route =
   | { name: "home" }
   | { name: "restore" }
   | { name: "cases" }
+  | { name: "account" }
   | { name: "result"; key: string; fidelity: number }
   | { name: "how-it-works" }
   | { name: "evidence" }
@@ -18,6 +19,7 @@ export const href = {
   home: "#/",
   restore: "#/restore",
   cases: "#/cases",
+  account: "#/account",
   howItWorks: "#/how-it-works",
   evidence: "#/evidence",
   about: "#/about",
@@ -35,6 +37,7 @@ const STATIC: Record<string, Route> = {
   "/": { name: "home" },
   "/restore": { name: "restore" },
   "/cases": { name: "cases" },
+  "/account": { name: "account" },
   "/how-it-works": { name: "how-it-works" },
   "/evidence": { name: "evidence" },
   "/about": { name: "about" },

@@ -46,6 +46,7 @@ from starlette.responses import FileResponse, JSONResponse
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 
+import auth
 import restore_hook as hook
 
 HERE = Path(__file__).resolve().parent
@@ -160,8 +161,14 @@ def valid_key(key: str) -> bool:
 
 
 def cached_result(key: str, fidelity: float) -> dict | None:
+    """The cached result, but only if the current pipeline made it (older renders are redone)."""
     f = hook.fidelity_dir(CACHE / key, fidelity) / "result.json"
-    return json.loads(f.read_text()) if f.exists() else None
+    if not f.exists():
+        return None
+    r = json.loads(f.read_text())
+    if r.get("pipeline", "stub") != hook.pipeline_name() or r.get("render_version") != hook.RENDER_VERSION:
+        return None
+    return r
 
 
 def parse_fidelity(raw) -> float:
@@ -322,6 +329,8 @@ async def demos(request: Request):
 
 
 async def restore_route(request: Request):
+    if not auth.allow(client_ip(request), "upload", 40, 3600):
+        return error(429, "Too many uploads from your network this hour. Try again later.")
     try:
         form = await request.form(max_files=2, max_fields=10, max_part_size=MAX_UPLOAD)
     except Exception as e:
@@ -401,6 +410,8 @@ async def result_route(request: Request):
 
 
 async def propose_route(request: Request):
+    if not auth.allow(client_ip(request), "upload", 40, 3600):
+        return error(429, "Too many uploads from your network this hour. Try again later.")
     """Upload a photo and get the segmenter's proposed damage mask, for review in the brush."""
     try:
         form = await request.form(max_files=1, max_fields=4, max_part_size=MAX_UPLOAD)
@@ -474,6 +485,116 @@ async def colorize_route(request: Request):
     return JSONResponse(meta)
 
 
+# --------------------------------------------------------------------------- #
+# Accounts, per-user cases, rate limits
+# --------------------------------------------------------------------------- #
+def client_ip(request: Request) -> str:
+    # behind the Cloudflare tunnel every request comes from localhost; Cloudflare passes the real IP
+    return request.headers.get("cf-connecting-ip") or (request.client.host if request.client else "?")
+
+
+def bearer(request: Request) -> str | None:
+    h = request.headers.get("authorization", "")
+    return h[7:].strip() if h.lower().startswith("bearer ") else None
+
+
+def current_user(request: Request) -> dict | None:
+    return auth.user_for(bearer(request))
+
+
+async def _json_body(request: Request, limit: int = 4096) -> dict:
+    raw = await request.body()
+    if len(raw) > limit:
+        raise ValueError("Request too large.")
+    try:
+        body = json.loads(raw or b"{}")
+    except ValueError:
+        raise ValueError("Send JSON.")
+    if not isinstance(body, dict):
+        raise ValueError("Send a JSON object.")
+    return body
+
+
+async def signup_route(request: Request):
+    if not auth.allow(client_ip(request), "auth", 10, 600):
+        return error(429, "Too many attempts. Wait a few minutes and try again.")
+    try:
+        b = await _json_body(request)
+        token, user = await run_in_threadpool(auth.signup, str(b.get("email", "")), str(b.get("password", "")), str(b.get("name", "")))
+    except ValueError as e:
+        return error(400, str(e))
+    return JSONResponse({"token": token, "user": user})
+
+
+async def login_route(request: Request):
+    if not auth.allow(client_ip(request), "auth", 10, 600):
+        return error(429, "Too many attempts. Wait a few minutes and try again.")
+    try:
+        b = await _json_body(request)
+        token, user = await run_in_threadpool(auth.login, str(b.get("email", "")), str(b.get("password", "")))
+    except ValueError as e:
+        return error(401 if isinstance(e, auth.AuthError) else 400, str(e))
+    return JSONResponse({"token": token, "user": user})
+
+
+async def logout_route(request: Request):
+    t = bearer(request)
+    if t:
+        await run_in_threadpool(auth.logout, t)
+    return JSONResponse({"ok": True})
+
+
+async def me_route(request: Request):
+    u = current_user(request)
+    if not u:
+        return error(401, "Not signed in.")
+    return JSONResponse({"email": u["email"], "name": u["name"]})
+
+
+async def cases_route(request: Request):
+    u = current_user(request)
+    if not u:
+        return error(401, "Sign in to see your cases.")
+    if request.method == "GET":
+        return JSONResponse(auth.list_cases(u["id"]))
+    try:
+        b = await _json_body(request)
+    except ValueError as e:
+        return error(400, str(e))
+    key = str(b.get("key", ""))
+    if b.get("action") == "delete":
+        if key and not valid_key(key):
+            return error(400, "Unknown photo key.")
+        auth.remove_case(u["id"], key or None)
+        return JSONResponse({"ok": True})
+    if not valid_key(key) or not (CACHE / key).is_dir():
+        return error(404, "Unknown photo key.")
+    auth.add_case(u["id"], key, str(b.get("title", "")), str(b.get("kind", "photo")))
+    return JSONResponse({"ok": True})
+
+
+class SecurityHeaders:
+    """Hardening headers on every response."""
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http":
+            return await self.app(scope, receive, send)
+
+        async def send_wrapped(message):
+            if message["type"] == "http.response.start":
+                h = message.setdefault("headers", [])
+                for k, v in ((b"x-content-type-options", b"nosniff"), (b"x-frame-options", b"DENY"),
+                             (b"referrer-policy", b"no-referrer"),
+                             (b"permissions-policy", b"camera=(), microphone=(), geolocation=()"),
+                             (b"cross-origin-resource-policy", b"cross-origin"),
+                             (b"strict-transport-security", b"max-age=31536000")):
+                    h.append((k, v))
+            await send(message)
+        await self.app(scope, receive, send_wrapped)
+
+
 def preload_models() -> None:
     """Load the segmenter, SDXL and CodeFormer once at startup, so the first visitor's
     upload doesn't wait 20-40 s for model loading. Failures are logged, not fatal."""
@@ -508,6 +629,11 @@ routes = [
     Route("/restore", restore_route, methods=["POST"]),
     Route("/propose", propose_route, methods=["POST"]),
     Route("/colorize", colorize_route, methods=["POST"]),
+    Route("/auth/signup", signup_route, methods=["POST"]),
+    Route("/auth/login", login_route, methods=["POST"]),
+    Route("/auth/logout", logout_route, methods=["POST"]),
+    Route("/auth/me", me_route),
+    Route("/cases", cases_route, methods=["GET", "POST"]),
     Route("/jobs/{job_id}", job_route),
     Route("/results/{key}", result_route),
     Route("/results/{key}/{artifact:path}", artifact_route),
@@ -518,10 +644,18 @@ if FRONTEND_DIST.is_dir():  # serve the built site too, so one tunnel URL is eno
 app = Starlette(
     routes=routes,
     lifespan=lifespan,
-    middleware=[Middleware(
-        CORSMiddleware,
-        allow_origins=[o.strip() for o in os.environ.get("CV_ALLOWED_ORIGINS", "*").split(",")],
-        allow_methods=["GET", "POST"],
-        allow_headers=["*"],
-    )],
+    middleware=[
+        Middleware(SecurityHeaders),
+        Middleware(
+            CORSMiddleware,
+            # only our site may call the API from a browser (override with CV_ALLOWED_ORIGINS)
+            allow_origins=[o.strip() for o in os.environ.get(
+                "CV_ALLOWED_ORIGINS",
+                "https://cold-case-t1s8.onrender.com,http://localhost:8000,http://127.0.0.1:8000,http://localhost:5173",
+            ).split(",")],
+            allow_methods=["GET", "POST"],
+            allow_headers=["Authorization", "Content-Type"],
+            max_age=600,
+        ),
+    ],
 )

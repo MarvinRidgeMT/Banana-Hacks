@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiMode, fileUrl } from "../lib/api";
+import { currentUser } from "../lib/auth";
 import { ago, clearHistory, loadHistory, onHistoryChange, removeHistory, type HistoryItem } from "../lib/history";
 import { href } from "../lib/router";
 import { DEFAULT_FIDELITY } from "../lib/types";
@@ -21,7 +22,9 @@ export function YourCases({ dark = false, limit }: { dark?: boolean; limit?: num
     <section aria-labelledby="your-cases">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className={`readout text-xs ${muted}`}>Saved in this browser · {items.length} case{items.length === 1 ? "" : "s"}</p>
+          <p className={`readout text-xs ${muted}`}>
+            {currentUser() ? "Saved to your account" : "Saved in this browser"} · {items.length} case{items.length === 1 ? "" : "s"}
+          </p>
           <h2 id="your-cases" className="mt-2 font-serif text-3xl sm:text-4xl">
             Your restorations
           </h2>
@@ -31,7 +34,7 @@ export function YourCases({ dark = false, limit }: { dark?: boolean; limit?: num
           onClick={clearHistory}
           className={`text-sm underline underline-offset-4 ${muted} hover:text-invented`}
         >
-          Clear history
+          Clear all
         </button>
       </div>
       <ul className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">

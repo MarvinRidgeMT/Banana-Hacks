@@ -25,3 +25,4 @@ backend/sweep_out/
 frontend/.vite/
 training/__pycache__/
 frontend/tsconfig.tsbuildinfo
+accounts.sqlite3*

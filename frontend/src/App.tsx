@@ -8,6 +8,8 @@ import { SiteHeader } from "./components/SiteHeader";
 import { UploadView } from "./components/UploadView";
 import { addHistory, loadHistory } from "./lib/history";
 import { MyCases } from "./pages/MyCases";
+import { Account } from "./pages/Account";
+import { verifySession } from "./lib/auth";
 import { api, fileUrl, waitForJob } from "./lib/api";
 import { href, navigate, useRouter, type Route } from "./lib/router";
 import { failure } from "./lib/format";
@@ -32,6 +34,7 @@ const PAGE_TITLE: Record<Exclude<Route["name"], "result">, string> = {
   home: "Cold Case",
   restore: "Cold Case · Restore a photo",
   cases: "Cold Case · My cases",
+  account: "Cold Case · Sign in",
   "how-it-works": "Cold Case · How it works",
   evidence: "Cold Case · Evidence",
   about: "Cold Case · About",
@@ -40,6 +43,9 @@ const PAGE_TITLE: Record<Exclude<Route["name"], "result">, string> = {
 
 export default function App() {
   const { route, seq } = useRouter();
+  useEffect(() => {
+    void verifySession();
+  }, []);
   const [task, setTask] = useState<Task | null>(null);
   const [demos, setDemos] = useState<Demo[] | null>(null);
   const [demosError, setDemosError] = useState<string | null>(null);
@@ -198,6 +204,8 @@ export default function App() {
         );
       case "cases":
         return <MyCases />;
+      case "account":
+        return <Account />;
       case "result":
         return (
           <ResultView

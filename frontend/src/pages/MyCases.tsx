@@ -1,17 +1,34 @@
 import { Link } from "../components/Link";
 import { useHistory, YourCases } from "../components/YourCases";
 import { href } from "../lib/router";
+import { useEffect, useState } from "react";
+import { currentUser, onAuthChange } from "../lib/auth";
 
 export function MyCases() {
   const items = useHistory();
+  const [user, setUser] = useState(currentUser());
+  useEffect(() => onAuthChange(() => setUser(currentUser())), []);
   return (
     <div className="space-y-12">
       <section className="max-w-3xl">
-        <p className="case-label">Case files · this browser</p>
+        <p className="case-label">Case files</p>
         <h1 className="mt-3 font-serif text-5xl leading-[1.08] sm:text-6xl">My cases</h1>
         <p className="mt-5 text-xl leading-relaxed text-body">
           Every photo you restore is kept here, with its labels, alternatives, color version and signed receipt.
-          The list lives in this browser; the results stay on the restoring server, so each link keeps working.
+          Signed in, the list is private to your account and follows you to any device.
+        </p>
+        <p className="mt-5 rounded-sm border border-line bg-surface px-5 py-3 text-body">
+          {user ? (
+            <>Signed in as <span className="font-semibold">{user.email}</span>. Your cases are saved to your account.</>
+          ) : (
+            <>
+              These cases are saved in this browser only.{" "}
+              <Link to={href.account} className="font-semibold underline underline-offset-4">
+                Sign in or create an account
+              </Link>{" "}
+              to keep them on any device.
+            </>
+          )}
         </p>
       </section>
       {items.length === 0 ? (

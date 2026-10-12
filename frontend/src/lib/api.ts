@@ -66,7 +66,8 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   }
   let res: Response;
   try {
-    res = await fetch(`${API_BASE}${path}`, init);
+    const t = localStorageToken();
+    res = await fetch(`${API_BASE}${path}`, t ? { ...init, headers: { ...(init?.headers ?? {}), Authorization: `Bearer ${t}` } } : init);
   } catch {
     throw new ApiError(
       "Can't reach the Cold Case server. Check that the backend and the tunnel are running.",
@@ -143,4 +144,14 @@ export async function waitForJob(
     onUpdate(current);
   }
   return current;
+}
+
+/** The session token, read directly (lib/auth imports this module, so no import back). */
+function localStorageToken(): string | null {
+  try {
+    const v = JSON.parse(localStorage.getItem("coldcase.session.v1") ?? "null");
+    return typeof v?.token === "string" ? v.token : null;
+  } catch {
+    return null;
+  }
 }

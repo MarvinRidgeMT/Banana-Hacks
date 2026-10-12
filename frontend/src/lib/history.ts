@@ -1,6 +1,8 @@
-/** "Your restorations": the photos this browser has restored, so people can come back to them.
- * Kept in localStorage (this browser only; nothing is sent anywhere). The results themselves stay
- * in the server's cache, keyed by the photo's SHA-256, so a saved link keeps working. */
+/** "My cases". Signed in: kept on the server, per account, on any device.
+ * Signed out: kept in this browser only. Signing in adds this browser's cases to the account. */
+import { API_BASE } from "./api";
+import { authToken, onAuthChange } from "./auth";
+
 export interface HistoryItem {
   key: string;
   title: string;
@@ -11,8 +13,11 @@ export interface HistoryItem {
 const STORE = "coldcase.history.v1";
 const MAX = 60;
 const listeners = new Set<() => void>();
+let server: HistoryItem[] | null = null; // the signed-in account's cases
 
-export function loadHistory(): HistoryItem[] {
+const notify = () => listeners.forEach((f) => f());
+
+function local(): HistoryItem[] {
   try {
     const raw = localStorage.getItem(STORE);
     const list = raw ? (JSON.parse(raw) as HistoryItem[]) : [];
@@ -21,27 +26,89 @@ export function loadHistory(): HistoryItem[] {
     return [];
   }
 }
-
-function save(list: HistoryItem[]) {
+function saveLocal(list: HistoryItem[]) {
   try {
     localStorage.setItem(STORE, JSON.stringify(list.slice(0, MAX)));
   } catch {
-    /* private mode or storage full: history just isn't kept */
+    /* private mode or storage full */
   }
-  listeners.forEach((f) => f());
+  notify();
+}
+
+async function api(method: "GET" | "POST", body?: unknown) {
+  const t = authToken();
+  if (!t) throw new Error("signed out");
+  const r = await fetch(`${API_BASE}/cases`, {
+    method,
+    headers: { Authorization: `Bearer ${t}`, ...(body ? { "Content-Type": "application/json" } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!r.ok) throw new Error(String(r.status));
+  return r.json();
+}
+
+export async function refreshHistory() {
+  if (!authToken()) {
+    server = null;
+    notify();
+    return;
+  }
+  try {
+    server = (await api("GET")) as HistoryItem[];
+  } catch {
+    server = server ?? [];
+  }
+  notify();
+}
+
+/** After signing in: copy this browser's cases into the account, then load the account's list. */
+async function onSignIn() {
+  if (!authToken()) {
+    server = null;
+    notify();
+    return;
+  }
+  for (const h of local()) {
+    await api("POST", { key: h.key, title: h.title, kind: h.kind }).catch(() => {});
+  }
+  await refreshHistory();
+}
+onAuthChange(() => void onSignIn());
+if (authToken()) void refreshHistory();
+
+export function loadHistory(): HistoryItem[] {
+  return authToken() ? (server ?? []) : local();
 }
 
 export function addHistory(item: Omit<HistoryItem, "at">) {
-  const rest = loadHistory().filter((h) => h.key !== item.key);
-  save([{ ...item, at: Date.now() }, ...rest]);
+  const entry = { ...item, at: Date.now() };
+  if (authToken()) {
+    server = [entry, ...(server ?? []).filter((h) => h.key !== item.key)];
+    notify();
+    api("POST", item).catch(() => {});
+    return;
+  }
+  saveLocal([entry, ...local().filter((h) => h.key !== item.key)]);
 }
 
 export function removeHistory(key: string) {
-  save(loadHistory().filter((h) => h.key !== key));
+  if (authToken()) {
+    server = (server ?? []).filter((h) => h.key !== key);
+    notify();
+    api("POST", { action: "delete", key }).catch(() => {});
+    return;
+  }
+  saveLocal(local().filter((h) => h.key !== key));
 }
 
 export function clearHistory() {
-  save([]);
+  if (authToken()) {
+    server = [];
+    notify();
+    api("POST", { action: "delete" }).catch(() => {});
+    return;
+  }
+  saveLocal([]);
 }
 
 export function onHistoryChange(f: () => void): () => void {

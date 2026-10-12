@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { href, NAV_LINKS, type Route } from "../lib/router";
 import { Link } from "./Link";
+import { currentUser, onAuthChange, signOut } from "../lib/auth";
 
 interface Props {
   route: Route;
@@ -11,6 +12,20 @@ const PRIMARY = "rounded-sm bg-ink px-5 py-2.5 font-semibold text-ground hover:b
 
 export function SiteHeader({ route, seq }: Props) {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(currentUser());
+  useEffect(() => onAuthChange(() => setUser(currentUser())), []);
+  const account = user ? (
+    <span className="flex items-center gap-3 text-body">
+      <span className="readout text-xs" title={user.email}>{user.name}</span>
+      <button type="button" onClick={() => void signOut()} className="underline-offset-8 hover:text-ink hover:underline">
+        Sign out
+      </button>
+    </span>
+  ) : (
+    <Link to={href.account} className="text-body underline-offset-8 hover:text-ink hover:underline">
+      Sign in
+    </Link>
+  );
   const menuButton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => setOpen(false), [seq]);
@@ -50,6 +65,7 @@ export function SiteHeader({ route, seq }: Props) {
               </li>
             ))}
           </ul>
+          {account}
           <Link
             to={href.restore}
             aria-current={route.name === "restore" ? "page" : undefined}
@@ -85,6 +101,7 @@ export function SiteHeader({ route, seq }: Props) {
             </li>
           ))}
         </ul>
+        <div className="py-4 text-lg">{account}</div>
         <Link
           to={href.restore}
           aria-current={route.name === "restore" ? "page" : undefined}
