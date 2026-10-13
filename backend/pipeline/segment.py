@@ -21,7 +21,9 @@ def _device():
 def get_model(weights=None):
     w = str(weights or WEIGHTS)
     if w not in _models:
-        m = smp.Unet("resnet34", encoder_weights=None, classes=1)
+        # SEG_ENCODER: the architecture the weights were trained with (finetune_v9.py --encoder)
+        enc = os.environ.get("SEG_ENCODER", "resnet34") if w == str(WEIGHTS) else "resnet34"
+        m = smp.Unet(enc, encoder_weights=None, classes=1)
         m.load_state_dict(torch.load(w, map_location="cpu"))
         _models[w] = m.eval().to(_device())
     return _models[w]
