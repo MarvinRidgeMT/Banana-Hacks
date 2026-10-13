@@ -146,6 +146,18 @@ def remove_case(user_id: int, key: str | None) -> None:
 _hits: dict[tuple[str, str], deque] = defaultdict(deque)
 
 
+def allow_n(ip: str, bucket: str, n: int, limit: int, window_s: float) -> bool:
+    """Take n units from the bucket at once (all or nothing), e.g. one per photo in a batch."""
+    now = time.time()
+    q = _hits[(bucket, ip)]
+    while q and q[0] < now - window_s:
+        q.popleft()
+    if len(q) + n > limit:
+        return False
+    q.extend([now] * n)
+    return True
+
+
 def allow(ip: str, bucket: str, limit: int, window_s: float) -> bool:
     now = time.time()
     q = _hits[(bucket, ip)]

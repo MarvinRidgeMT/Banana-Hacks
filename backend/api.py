@@ -60,6 +60,11 @@ FRONTEND_DIST = Path(os.environ.get("CV_SITE", HERE.parent / "frontend" / "dist"
 FIDELITY_STEPS = (0.3, 0.7, 1.0)
 DEFAULT_FIDELITY = 0.7
 MAX_UPLOAD = 30 * 1024 * 1024
+MAX_PIXELS = 80_000_000          # ~ a 10,000 x 8,000 scan; larger is refused (decompression-bomb guard)
+Image.MAX_IMAGE_PIXELS = MAX_PIXELS
+MAX_QUEUE = 300                  # waiting jobs; beyond this new uploads get a polite 503
+MAX_BODY = {"/batch": 400 * 1024 * 1024}   # whole-request limits; everything else 40 MB
+MAX_BODY_DEFAULT = 40 * 1024 * 1024
 KEY_CHARS = set("0123456789abcdef")
 
 
@@ -77,8 +82,10 @@ def error(status: int, message: str) -> JSONResponse:
 def _normalise_image(data: bytes) -> Image.Image:
     try:
         img = Image.open(io.BytesIO(data))
+        if img.width * img.height > MAX_PIXELS:
+            raise ValueError("That image is too large (over 80 megapixels); please export a smaller copy.")
         img.load()
-    except (UnidentifiedImageError, OSError) as e:
+    except (UnidentifiedImageError, OSError, Image.DecompressionBombError) as e:
         raise ValueError("That file isn't an image we can read (try JPG or PNG).") from e
     img = ImageOps.exif_transpose(img)  # phone photos of prints are often rotated
     if img.mode in ("I;16", "I;16B", "I;16L", "I"):  # 16-bit scans
@@ -94,8 +101,10 @@ def _normalise_mask(data: bytes, size: tuple[int, int]) -> bytes:
     """Any mask image -> PNG, same size as the photo, white = damaged."""
     try:
         m = Image.open(io.BytesIO(data))
+        if m.width * m.height > MAX_PIXELS:
+            raise ValueError("The mask is too large.")
         m.load()
-    except (UnidentifiedImageError, OSError) as e:
+    except (UnidentifiedImageError, OSError, Image.DecompressionBombError) as e:
         raise ValueError("The mask isn't a readable image.") from e
     if m.mode in ("RGBA", "LA"):
         # Painted masks: anything drawn (opaque) counts, transparent does not
@@ -328,13 +337,19 @@ async def demos(request: Request):
     return JSONResponse(out)
 
 
+def queue_full() -> bool:
+    return WORK.qsize() >= MAX_QUEUE
+
+
 async def restore_route(request: Request):
     if not auth.allow(client_ip(request), "upload", 40, 3600):
         return error(429, "Too many uploads from your network this hour. Try again later.")
+    if queue_full():
+        return error(503, "The restorer is very busy right now. Please try again in a few minutes.")
     try:
         form = await request.form(max_files=2, max_fields=10, max_part_size=MAX_UPLOAD)
     except Exception as e:
-        return error(400, f"Couldn't read the upload: {e}")
+        return error(400, "Couldn't read the upload (one image, up to 30 MB).")
 
     try:
         fidelity = parse_fidelity(form.get("fidelity", DEFAULT_FIDELITY))
@@ -416,7 +431,7 @@ async def propose_route(request: Request):
     try:
         form = await request.form(max_files=1, max_fields=4, max_part_size=MAX_UPLOAD)
     except Exception as e:
-        return error(400, f"Couldn't read the upload: {e}")
+        return error(400, "Couldn't read the upload (one image, up to 30 MB).")
     upload = form.get("file")
     if not hasattr(upload, "read"):
         return error(400, "Send a photo as 'file'.")
@@ -490,7 +505,10 @@ async def colorize_route(request: Request):
 # --------------------------------------------------------------------------- #
 def client_ip(request: Request) -> str:
     # behind the Cloudflare tunnel every request comes from localhost; Cloudflare passes the real IP
-    return request.headers.get("cf-connecting-ip") or (request.client.host if request.client else "?")
+    peer = request.client.host if request.client else "?"
+    if peer in ("127.0.0.1", "::1"):
+        return request.headers.get("cf-connecting-ip") or peer
+    return peer
 
 
 def bearer(request: Request) -> str | None:
@@ -573,6 +591,32 @@ async def cases_route(request: Request):
     return JSONResponse({"ok": True})
 
 
+class BodyLimit:
+    """Refuse oversized requests before they are read: by Content-Length, and by counting bytes
+    for uploads that don't send one."""
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http" or scope.get("method") not in ("POST", "PUT", "PATCH"):
+            return await self.app(scope, receive, send)
+        limit = MAX_BODY.get(scope.get("path", ""), MAX_BODY_DEFAULT)
+        for k, v in scope.get("headers", []):
+            if k == b"content-length" and v.isdigit() and int(v) > limit:
+                return await JSONResponse({"error": "That upload is too large."}, status_code=413)(scope, receive, send)
+        seen = 0
+
+        async def counted():
+            nonlocal seen
+            msg = await receive()
+            if msg["type"] == "http.request":
+                seen += len(msg.get("body", b""))
+                if seen > limit:
+                    raise ValueError("request body too large")
+            return msg
+        await self.app(scope, counted, send)
+
+
 class SecurityHeaders:
     """Hardening headers on every response."""
     def __init__(self, app):
@@ -589,7 +633,8 @@ class SecurityHeaders:
                              (b"referrer-policy", b"no-referrer"),
                              (b"permissions-policy", b"camera=(), microphone=(), geolocation=()"),
                              (b"cross-origin-resource-policy", b"cross-origin"),
-                             (b"strict-transport-security", b"max-age=31536000")):
+                             (b"strict-transport-security", b"max-age=31536000"),
+                             (b"x-permitted-cross-domain-policies", b"none")):
                     h.append((k, v))
             await send(message)
         await self.app(scope, receive, send_wrapped)
@@ -621,7 +666,7 @@ async def verify_route(request: Request):
     try:
         form = await _form(request)
     except Exception as e:
-        return error(400, f"Couldn't read the upload: {e}")
+        return error(400, "Couldn't read the upload (one image, up to 30 MB).")
     up = form.get("file")
     if not hasattr(up, "read"):
         return error(400, "Send a file as 'file'.")
@@ -730,13 +775,23 @@ def _batch_file(bid: str) -> Path:
     return BATCHES / f"{bid}.json"
 
 
+def _csv_safe(v):
+    """Spreadsheet apps run cells starting with = + - @ as formulas; a filename must never do that."""
+    if isinstance(v, str) and v[:1] in ("=", "+", "-", "@", "\t", "\r"):
+        return "'" + v
+    return v
+
+
 async def batch_create_route(request: Request):
-    if not auth.allow(client_ip(request), "upload", 40, 3600):
-        return error(429, "Too many uploads from your network this hour. Try again later.")
+    if queue_full():
+        return error(503, "The restorer is very busy right now. Please try again in a few minutes.")
     try:
         form = await request.form(max_files=40, max_fields=50, max_part_size=MAX_UPLOAD)
-    except Exception as e:
-        return error(400, f"Couldn't read the upload (max 40 files, 30 MB each): {e}")
+    except Exception:
+        return error(400, "Couldn't read the upload (max 40 files, 30 MB each).")
+    n_files = sum(1 for up in form.getlist("files") if hasattr(up, "read"))
+    if not auth.allow_n(client_ip(request), "upload", max(1, n_files), 40, 3600):
+        return error(429, "That batch would go over 40 photos this hour from your network. Try fewer, or later.")
     kind = "document" if str(form.get("kind", "")).lower() == "document" else "photo"
     items = []
     for up in form.getlist("files"):
@@ -818,7 +873,7 @@ async def batch_csv_route(request: Request):
         if w is None:
             w = csv.DictWriter(buf, fieldnames=list(row))
             w.writeheader()
-        w.writerow(row)
+        w.writerow({k: _csv_safe(v) for k, v in row.items()})
     return PlainTextResponse(buf.getvalue(), media_type="text/csv",
                              headers={"Content-Disposition": f'attachment; filename="coldcase_batch_{st["id"][:8]}.csv"'})
 
@@ -893,5 +948,6 @@ app = Starlette(
             allow_headers=["Authorization", "Content-Type"],
             max_age=600,
         ),
+        Middleware(BodyLimit),   # inside CORS, so even a 413 reaches the browser readably
     ],
 )
