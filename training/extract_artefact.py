@@ -11,14 +11,23 @@ import numpy as np, pyarrow.parquet as pq
 from PIL import Image
 Image.MAX_IMAGE_PIXELS = None
 ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT / "data" / "artefact"; OUT = ROOT / "data" / "artefact_photos"; OUT.mkdir(parents=True, exist_ok=True)
+SRC = ROOT / "data" / "artefact"
+DOCS = "--docs" in sys.argv   # paper / parchment items that are not photos -> data/artefact_docs
+OUT = ROOT / "data" / ("artefact_docs" if DOCS else "artefact_photos"); OUT.mkdir(parents=True, exist_ok=True)
+
+
+def wanted(r):
+    if DOCS:
+        return r["type"] != "Photo" and r["material"] in ("Paper", "Parchment")
+    return r["type"] == "Photo"
+
 LOST = [1, 2, 3, 4, 5, 6, 7, 9, 13, 14]
 MAX = 1024
 import gc
 n = 0
 for f in sorted(glob.glob(str(SRC / "*.parquet"))):
-    meta = pq.read_table(f, columns=["id", "type"]).to_pylist()
-    rows = [(i, r["id"]) for i, r in enumerate(meta) if r["type"] == "Photo"]
+    meta = pq.read_table(f, columns=["id", "type", "material"]).to_pylist()
+    rows = [(i, r["id"]) for i, r in enumerate(meta) if wanted(r)]
     n += len(rows)
     todo = [(i, rid) for i, rid in rows if not (OUT / f"{rid}.png").exists()]
     if not todo:
@@ -41,4 +50,4 @@ for f in sorted(glob.glob(str(SRC / "*.parquet"))):
         del img
     del col; gc.collect()
     print(Path(f).name, "photos so far", n, flush=True)
-print("photos:", n)
+print("items:", n, "->", OUT)

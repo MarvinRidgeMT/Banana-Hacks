@@ -29,6 +29,7 @@ for d in api.DEMO_INDEX:
         files.add(str(rf.relative_to(folder)))
         files.update(v for v in r["files"].values() if v)
         files.update(f["file"] for f in r["faces"])
+        files.update(g["alternatives"]["file"] for g in r.get("regions", []) if g.get("alternatives"))
         if r.get("face_original"):
             files.add(r["face_original"])
         cmp = rf.parent / "compare" / "compare.json"

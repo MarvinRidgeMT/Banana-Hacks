@@ -101,7 +101,7 @@ export const api = {
     const form = new FormData();
     form.append("file", file);
     form.append("kind", kind);
-    return call<{ key: string; original: string; mask: string | null }>("/propose", { method: "POST", body: form });
+    return call<{ key: string; original: string; mask: string | null; prob?: string | null }>("/propose", { method: "POST", body: form });
   },
 
   /** Colour mode: add colour to a restoration (about 2 s). */

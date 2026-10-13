@@ -29,7 +29,16 @@ type JobOpts = { file?: File; key?: string; mask?: Blob; kind?: Kind };
 /** A brush or job screen shown in place of the current page. It isn't a route:
  * any navigation ends it. */
 type Task =
-  | { name: "brush"; title: string; imageUrl: string; maskUrl?: string | null; file?: File; key?: string; kind?: Kind }
+  | {
+      name: "brush";
+      title: string;
+      imageUrl: string;
+      maskUrl?: string | null;
+      probUrl?: string | null;
+      file?: File;
+      key?: string;
+      kind?: Kind;
+    }
   | { name: "job"; title: string; job: Job | null };
 
 const PAGE_TITLE: Record<Exclude<Route["name"], "result">, string> = {
@@ -154,6 +163,7 @@ export default function App() {
           key: p.key,
           imageUrl: fileUrl(p.key, p.original),
           maskUrl: p.mask ? fileUrl(p.key, p.mask) : null,
+          probUrl: p.prob ? fileUrl(p.key, p.prob) : null,
         });
       } catch {
         if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
@@ -183,6 +193,7 @@ export default function App() {
           key={task.imageUrl}
           imageUrl={task.imageUrl}
           initialMaskUrl={task.maskUrl}
+          probUrl={task.probUrl}
           title={task.title}
           submitting={submitting}
           onCancel={endTask}

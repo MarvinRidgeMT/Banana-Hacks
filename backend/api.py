@@ -451,7 +451,8 @@ async def propose_route(request: Request):
     except Exception as e:  # the brush still works from a blank mask
         print(f"[propose] {key[:8]} failed: {type(e).__name__}: {e}", flush=True)
         mask = None
-    return JSONResponse({"key": key, "original": "input.png", "mask": mask})
+    prob = "proposed_prob.png" if mask and (CACHE / key / "proposed_prob.png").exists() else None
+    return JSONResponse({"key": key, "original": "input.png", "mask": mask, "prob": prob})
 
 
 async def artifact_route(request: Request):

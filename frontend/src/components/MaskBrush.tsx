@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ErrorNote, PhotoSkeleton } from "./Feedback";
+import { buildGrid, smartSelect, type Grid } from "../lib/smartSelect";
 
 interface Props {
   imageUrl: string;
   initialMaskUrl?: string | null;
+  /** The detectors' confidence map, for click-to-fix. */
+  probUrl?: string | null;
   title: string;
   onCancel: () => void;
   onSubmit: (mask: Blob) => void;
@@ -15,14 +18,19 @@ const MAX_UNDO = 20;
 
 /** Paint (or erase) the damaged areas. Exports a PNG at the photo's full size,
  * white = damaged, black = original. The API logs it as a human-edited mask. */
-export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit, submitting }: Props) {
+type Tool = "paint" | "erase" | "fix";
+
+export function MaskBrush({ imageUrl, initialMaskUrl, probUrl, title, onCancel, onSubmit, submitting }: Props) {
   const frameRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const undoRef = useRef<ImageData[]>([]);
   const lastRef = useRef<{ x: number; y: number } | null>(null);
   const [natural, setNatural] = useState<{ w: number; h: number } | null>(null);
   const [display, setDisplay] = useState({ w: 0, h: 0 });
-  const [erase, setErase] = useState(false);
+  const [tool, setTool] = useState<Tool>(probUrl ? "fix" : "paint");
+  const erase = tool === "erase";
+  const gridRef = useRef<Grid | null>(null);
+  const [flash, setFlash] = useState<string | null>(null);
   const [size, setSize] = useState(24); // brush diameter in screen pixels
   const [cursor, setCursor] = useState<{ x: number; y: number } | null>(null);
   const [undoCount, setUndoCount] = useState(0);
@@ -48,6 +56,9 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
         const w = img.naturalWidth;
         const h = img.naturalHeight;
         setNatural({ w, h });
+        buildGrid(img, probUrl).then((g) => {
+          if (!cancelled) gridRef.current = g;
+        });
         const canvas = canvasRef.current!;
         canvas.width = w;
         canvas.height = h;
@@ -81,7 +92,7 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
     return () => {
       cancelled = true;
     };
-  }, [imageUrl, initialMaskUrl, attempt]);
+  }, [imageUrl, initialMaskUrl, probUrl, attempt]);
 
   useLayoutEffect(() => {
     const el = frameRef.current;
@@ -119,8 +130,51 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
     ctx.fill();
   };
 
+  const fixAt = (e: React.PointerEvent) => {
+    const g = gridRef.current;
+    if (!g || !natural) {
+      setFlash("Still loading; try again in a second.");
+      return;
+    }
+    const p = toNatural(e);
+    const k = g.w / natural.w;
+    const sel = smartSelect(g, p.x * k, p.y * k, Math.max(4, Math.round(10 * k * p.k)));
+    const ctx = ctx2d();
+    undoRef.current.push(ctx.getImageData(0, 0, natural.w, natural.h));
+    if (undoRef.current.length > MAX_UNDO) undoRef.current.shift();
+    setUndoCount(undoRef.current.length);
+    const c = document.createElement("canvas");
+    c.width = sel.w;
+    c.height = sel.h;
+    const cx = c.getContext("2d")!;
+    const id = cx.createImageData(sel.w, sel.h);
+    for (let i = 0; i < sel.pixels.length; i++)
+      if (sel.pixels[i]) {
+        id.data[i * 4] = 179;
+        id.data[i * 4 + 1] = 38;
+        id.data[i * 4 + 2] = 30;
+        id.data[i * 4 + 3] = 255;
+      }
+    cx.putImageData(id, 0, 0);
+    ctx.globalCompositeOperation = "source-over";
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(c, 0, 0, natural.w, natural.h);
+    setPainted(true);
+    setFlash(
+      sel.method === "detector"
+        ? "Added the damaged area the detectors found there. Undo (⌘Z) if it took too much."
+        : sel.method === "contrast"
+          ? "Added the spot that stands out from its surroundings. Undo (⌘Z) if it took too much."
+          : "Nothing there stands out, so only the spot you clicked was added. Paint the rest by hand.",
+    );
+  };
+
   const onDown = (e: React.PointerEvent) => {
     if (!natural) return;
+    if (tool === "fix") {
+      fixAt(e);
+      return;
+    }
     e.currentTarget.setPointerCapture(e.pointerId);
     const ctx = ctx2d();
     undoRef.current.push(ctx.getImageData(0, 0, natural.w, natural.h));
@@ -135,7 +189,7 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
   const onMove = (e: React.PointerEvent) => {
     const rect = canvasRef.current!.getBoundingClientRect();
     setCursor({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-    if (!lastRef.current || !natural) return;
+    if (!lastRef.current || !natural || tool === "fix") return;
     const events = "getCoalescedEvents" in e.nativeEvent ? e.nativeEvent.getCoalescedEvents() : [];
     const points = events.length ? events : [e.nativeEvent];
     for (const ev of points) {
@@ -169,7 +223,8 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
       if ((e.metaKey || e.ctrlKey) && e.key === "z") {
         e.preventDefault();
         undo();
-      } else if (e.key === "e") setErase((v) => !v);
+      } else if (e.key === "e") setTool((t) => (t === "erase" ? "paint" : "erase"));
+      else if (e.key === "f") setTool("fix");
       else if (e.key === "[") setSize((s) => Math.max(4, s - 4));
       else if (e.key === "]") setSize((s) => Math.min(120, s + 4));
     };
@@ -233,7 +288,7 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
             />
             <canvas
               ref={canvasRef}
-              className="absolute inset-0 h-full w-full cursor-none opacity-60"
+              className={`absolute inset-0 h-full w-full opacity-60 ${tool === "fix" ? "cursor-crosshair" : "cursor-none"}`}
               style={{ touchAction: "none" }}
               onPointerDown={onDown}
               onPointerMove={onMove}
@@ -241,7 +296,7 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
               onPointerCancel={onUp}
               onPointerLeave={() => setCursor(null)}
             />
-            {cursor && (
+            {cursor && tool !== "fix" && (
               <div
                 aria-hidden
                 className="pointer-events-none absolute rounded-full border-2 border-ground shadow-[0_0_0_1px_var(--color-ink)]"
@@ -259,27 +314,41 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
             <ErrorNote message={loadError} onRetry={() => setAttempt((a) => a + 1)} className={natural ? "mt-6" : ""} />
           )}
           {note && <p className="mt-4 text-invented">{note}</p>}
+          {flash && (
+            <p className="mt-4 text-body" role="status">
+              {flash}
+            </p>
+          )}
         </div>
 
         <aside className="space-y-6">
-          <div className="grid grid-cols-2 overflow-hidden rounded-sm border border-line" role="radiogroup" aria-label="Brush mode">
-            {[
-              [false, "Paint"],
-              [true, "Erase"],
-            ].map(([isErase, label]) => (
+          <div className="grid grid-cols-3 overflow-hidden rounded-sm border border-line" role="radiogroup" aria-label="Brush mode">
+            {(
+              [
+                ["fix", "Click to fix"],
+                ["paint", "Paint"],
+                ["erase", "Erase"],
+              ] as const
+            ).map(([t, label]) => (
               <button
-                key={String(label)}
+                key={t}
                 role="radio"
-                aria-checked={erase === isErase}
-                onClick={() => setErase(isErase as boolean)}
-                className={`py-2 font-semibold not-last:border-r not-last:border-line ${
-                  erase === isErase ? "bg-ink text-ground" : "bg-surface hover:bg-tag"
+                aria-checked={tool === t}
+                onClick={() => setTool(t)}
+                className={`py-2 text-sm font-semibold not-last:border-r not-last:border-line ${
+                  tool === t ? "bg-ink text-ground" : "bg-surface hover:bg-tag"
                 }`}
               >
-                {label as string}
+                {label}
               </button>
             ))}
           </div>
+          {tool === "fix" && (
+            <p className="text-sm text-body">
+              Click a crack, scratch or flake the mask missed: the whole thing is selected, not just where you
+              clicked.
+            </p>
+          )}
           <label className="block">
             <span className="text-sm text-muted">Brush size</span>
             <input
@@ -303,7 +372,9 @@ export function MaskBrush({ imageUrl, initialMaskUrl, title, onCancel, onSubmit,
               Clear
             </button>
           </div>
-          <p className="text-sm text-muted">Keys: E switches paint and erase, [ and ] change the size, Ctrl or ⌘ Z undoes.</p>
+          <p className="text-sm text-muted">
+            Keys: F click to fix, E switches paint and erase, [ and ] change the size, Ctrl or ⌘ Z undoes.
+          </p>
           <button
             onClick={exportMask}
             disabled={!painted || submitting}

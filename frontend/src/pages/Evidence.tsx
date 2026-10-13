@@ -55,6 +55,16 @@ function evidenceNumbers(metrics: Metrics | null) {
 
 const iou3 = (v: number) => v.toFixed(3);
 
+/** Real damage, measured on 40 real damaged photos with expert masks (ARTeFACT) that no model was
+ * trained on. From runs/v7_report.json. */
+const REAL_40 = [
+  { label: "v5: trained on synthetic damage only", iou: 0.034, recall: 0.034, precision: 0.801 },
+  { label: "v5 + Microsoft scratch detector", iou: 0.281, recall: 0.363, precision: 0.555 },
+  { label: "v7: fine-tuned on 90 real damaged photos", iou: 0.377, recall: 0.432, precision: 0.747 },
+  { label: "v7 + Microsoft scratch detector (live)", iou: 0.426, recall: 0.606, precision: 0.59 },
+];
+const pct = (v: number) => `${Math.round(v * 100)}%`;
+
 
 type Row = { key: string; cells: [ReactNode, ReactNode, ReactNode] };
 
@@ -108,7 +118,7 @@ function RecordTable({ caption, columns, rows }: { caption: string; columns: [st
   );
 }
 
-function IouChart({ bars }: { bars: { label: string; value: number }[] }) {
+function IouChart({ bars, title = "Damage detector IoU" }: { bars: { label: string; value: number }[]; title?: string }) {
   const W = 480;
   const plot = 400; // leaves room for the value label after a full-length bar
   const rowH = 66;
@@ -122,11 +132,8 @@ function IouChart({ bars }: { bars: { label: string; value: number }[] }) {
         viewBox={`0 0 ${W} ${axisY + 30}`}
         className="w-full"
         role="img"
-        aria-labelledby="iou-chart-title"
+        aria-label={`${title}: ${bars.map((b) => `${b.label} ${iou3(b.value)}`).join("; ")}.`}
       >
-        <title id="iou-chart-title">
-          {`Damage detector IoU: ${bars.map((b) => `${b.label} ${iou3(b.value)}`).join("; ")}.`}
-        </title>
         {ticks.map((t) => (
           <g key={t}>
             <line x1={t * plot} x2={t * plot} y1={top} y2={axisY} stroke="var(--color-line)" />
@@ -165,9 +172,7 @@ function IouChart({ bars }: { bars: { label: string; value: number }[] }) {
           );
         })}
       </svg>
-      <figcaption className="mt-4 text-sm text-muted">
-        Intersection over union between the detector's damage mask and the true damage. 1.0 is a perfect match.
-      </figcaption>
+      <figcaption className="mt-4 text-sm text-muted">{title}. 1.00 is perfect.</figcaption>
     </figure>
   );
 }
@@ -178,7 +183,7 @@ const BUILT_VS_USED: Row[] = [
     cells: [
       "Damage segmenter",
       "Built (trained this weekend)",
-      "U-Net with a ResNet-34 encoder; procedural damage generator; fine-tuned on 15 hand-labeled real photos",
+      "U-Net with a ResNet-34 encoder; our procedural damage generator on 617 Library of Congress photos; fine-tuned on 90 real damaged photos (ARTeFACT)",
     ],
   },
   {
@@ -209,6 +214,14 @@ const BUILT_VS_USED: Row[] = [
       "React, Vite, TypeScript, Tailwind; job queue, cache, mask brush, region hover",
     ],
   },
+  {
+    key: "ms",
+    cells: ["Scratch detector", "Used", "Microsoft, Bringing Old Photos Back to Life (Wan et al., CVPR 2020), MIT licence; its mask is combined with ours"],
+  },
+  {
+    key: "artefact",
+    cells: ["ARTeFACT dataset", "Used", "Real damaged photos and documents with expert masks (Ivanova et al., 2024): 90 to train, 40 held out to test"],
+  },
   { key: "sdxl", cells: ["SDXL inpainting 0.1", "Used", "Diffusion inpainting, run on Apple silicon (MPS)"] },
   {
     key: "codeformer",
@@ -220,7 +233,6 @@ const BUILT_VS_USED: Row[] = [
 export function Evidence({ metrics }: { metrics: Metrics | null }) {
   const n = evidenceNumbers(metrics);
   const ratio = (n.inventedDe / n.rebuiltDe).toFixed(1);
-  const folds = n.realFolds ? ` (folds ${n.realFolds.map(iou3).join(" / ")})` : "";
 
   const results: Row[] = [
     {
@@ -229,7 +241,19 @@ export function Evidence({ metrics }: { metrics: Metrics | null }) {
     },
     {
       key: "real",
-      cells: ["Damage detection, real photos", `IoU ${iou3(n.realIou)}`, `${n.realNote}${folds}`],
+      cells: [
+        "Damage detection, real photos",
+        "Finds 61% of the damage (IoU 0.426); 3% before",
+        "40 real damaged photos with expert masks (ARTeFACT dataset) that were never used for training. Live setup: our v7 detector, fine-tuned on 90 other ARTeFACT photos, combined with Microsoft's old-photo scratch detector. 59% of what it flags is real damage; a person reviews every mask.",
+      ],
+    },
+    {
+      key: "real-demos",
+      cells: [
+        "Damage detection, our demo scans",
+        "IoU 0.345 (v7) vs 0.062 (v5)",
+        "Our 5 demo photos with hand-painted masks: a different source from the training photos, so not just memorising one collection. Small sample.",
+      ],
     },
     {
       key: "labels",
@@ -312,15 +336,14 @@ export function Evidence({ metrics }: { metrics: Metrics | null }) {
       </section>
 
       <section>
-        <h2 className="font-serif text-3xl">Finding damage: synthetic vs. real</h2>
-        <div className="mt-6">
-          <IouChart
-            bars={[
-              { label: "Synthetic damage", value: n.syntheticIou },
-              { label: "Real photos, before fine-tuning", value: n.realBefore },
-              { label: "Real photos, after fine-tuning", value: n.realIou },
-            ]}
-          />
+        <h2 className="font-serif text-3xl">Finding real damage</h2>
+        <p className="mt-3 max-w-[60ch] text-body">
+          On 40 real damaged photos the models never saw. Share of the true damage found, and overlap (IoU)
+          with the expert mask.
+        </p>
+        <div className="mt-6 grid gap-10 lg:grid-cols-2">
+          <IouChart bars={REAL_40.map((r) => ({ label: r.label, value: r.recall }))} title="Share of real damage found" />
+          <IouChart bars={REAL_40.map((r) => ({ label: r.label, value: r.iou }))} title="Overlap with the expert mask (IoU)" />
         </div>
       </section>
 
@@ -328,10 +351,11 @@ export function Evidence({ metrics }: { metrics: Metrics | null }) {
         <h2 className="font-serif text-3xl">Limitations</h2>
         <ul className="mt-6 list-disc space-y-4 pl-6 text-lg leading-relaxed text-body marker:text-muted">
           <li>
-            <strong className="text-ink">The synthetic-to-real gap.</strong> The detector scored{" "}
-            {n.syntheticIou.toFixed(2)} IoU on synthetic scratches and {iou3(n.realBefore)} on real scans; it
-            had learned fake damage, not real damage. Fine-tuning on 15 hand-labeled real photos raised it to{" "}
-            {n.realIou.toFixed(2)}. That's still low, so the app treats the mask as a proposal a person can fix.
+            <strong className="text-ink">Finding real damage is still the weakest step.</strong> A detector
+            trained on synthetic damage found only 3% of real damage. Real expert-labeled photos and Microsoft's
+            scratch detector raised that to {pct(REAL_40[3].recall)}, but about 4 in 10 real damaged pixels are
+            still missed, so the mask is a proposal: a person reviews it, and can click a missed crack to add
+            all of it.
           </li>
           <li>
             <strong className="text-ink">Disagreement is a signal, not a guarantee.</strong> The per-pixel

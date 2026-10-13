@@ -12,6 +12,8 @@ export interface Region {
   confidence: number;
   confidence_computed: number;
   pipeline_region_id: number | string | null;
+  /** Every restoration attempt of this spot, as one strip image (scan first). */
+  alternatives?: { file: string; tile: [number, number]; seeds: number[]; shown_seed?: number | null; crop: number[] };
 }
 
 export type MaskSource = "segmenter" | "human_file" | "human_brush";

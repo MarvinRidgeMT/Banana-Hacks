@@ -453,7 +453,7 @@ def alternate_faces(result: dict, regions: list[dict], warnings: list[str]) -> t
     return faces, best["bbox"]
 
 
-DOC_WEIGHTS = "weights/seg_doc_best.pth"
+DOC_WEIGHTS = os.environ.get("DOC_WEIGHTS", "weights/seg_doc_best.pth")
 
 
 def propose_mask(image_path: Path, kind: str = "photo") -> Path:
@@ -472,16 +472,21 @@ def propose_mask(image_path: Path, kind: str = "photo") -> Path:
         from pipeline.segment import segment
         k = min(1.0, 1024 / max(W, H))
         small = img.resize((max(1, round(W * k)), max(1, round(H * k))), Image.LANCZOS) if k < 1 else img
-        ms, _ = segment(np.asarray(small), weights=DOC_WEIGHTS if kind == "document" else None)
+        ms, prob = segment(np.asarray(small), weights=DOC_WEIGHTS if kind == "document" else None)
         if kind != "document" and os.environ.get("SEG_WITH_MS", "1") == "1":
-            # Union with Microsoft's old-photo scratch detector: it finds the long thin cracks
-            # and scratches ours misses (real-scan overlap 0.06 -> 0.17 on our 5 demo masks).
+            # Union with Microsoft's old-photo scratch detector: it finds the long thin cracks and
+            # scratches ours misses (on 40 unseen real photos: 43% -> 61% of the damage found).
             try:
                 from pipeline import scratch_ms
                 if scratch_ms.available():
-                    ms = ms | scratch_ms.detect(np.asarray(small))
+                    p_ms = scratch_ms.detect_prob(np.asarray(small))
+                    ms = ms | (p_ms >= 0.4)
+                    prob = np.maximum(prob, p_ms)
             except Exception as e:  # the second detector is a bonus, never a blocker
                 print(f"[propose] scratch detector skipped: {type(e).__name__}: {e}", flush=True)
+        # The detectors' confidence map (at the 1024 px working size) powers click-to-fix in the brush:
+        # one click on a missed crack selects all of it.
+        Image.fromarray((np.clip(prob, 0, 1) * 255).astype(np.uint8), mode="L").save(out.with_name("proposed_prob.png"))
         dil = int(os.environ.get("SEG_DILATE", "2")) if kind != "document" else 2
         if dil:
             ms = ndimage.binary_dilation(ms, iterations=dil)
@@ -511,7 +516,7 @@ def document_restore(image_path: Path) -> dict:
         from pipeline.segment import segment
         mask, _ = segment(orig, weights=DOC_WEIGHTS)
         mask = ndimage.binary_dilation(mask, iterations=2)
-        mask_source = "seg_doc_best (document detector)"
+        mask_source = f"{Path(DOC_WEIGHTS).stem} (document detector)"
     bgr = cv2.cvtColor(orig, cv2.COLOR_RGB2BGR)
     filled = cv2.inpaint(bgr, mask.astype(np.uint8) * 255, 3, cv2.INPAINT_TELEA)
     restored = cv2.cvtColor(filled, cv2.COLOR_BGR2RGB)
@@ -591,6 +596,43 @@ def _save_mask(x: Any, path: Path) -> None:
         m = m[:, :, 0]
     m = (m > 0.5) if m.dtype == bool or (m.dtype.kind == "f" and m.max() <= 1) else (m > 127)
     Image.fromarray(m.astype(np.uint8) * 255, mode="L").save(path)
+
+
+ALT_MAX_REGIONS = 12      # the most-invented regions get an "every attempt" strip
+ALT_TILE = 220            # px, longest side of each attempt in the strip
+
+
+def save_alternatives(folder: Path, rel: str, original: np.ndarray, attempts: list, shown_seed, seeds,
+                      regions: list[dict]) -> int:
+    """For the regions with the most Invented pixels, save one strip image: the damaged scan, then every
+    restoration attempt (one per seed) of that same spot. Clicking a region on the site shows it, so a
+    viewer can see WHY it is labelled Invented: the attempts disagree. Adds region["alternatives"]."""
+    if not attempts:
+        return 0
+    h, w = original.shape[:2]
+    if any(np.asarray(a).shape[:2] != (h, w) for a in attempts):
+        return 0
+    (folder / "alts").mkdir(exist_ok=True)
+    order = sorted((r for r in regions if r.get("invented_px", 0) > 0 and r.get("bbox")),
+                   key=lambda r: -r["invented_px"])[:ALT_MAX_REGIONS]
+    seeds = list(seeds or range(1, len(attempts) + 1))
+    n = 0
+    for r in order:
+        x0, y0, x1, y1 = r["bbox"]
+        pw, ph = max(12, (x1 - x0) // 4), max(12, (y1 - y0) // 4)       # a little context around it
+        x0, y0, x1, y1 = max(0, x0 - pw), max(0, y0 - ph), min(w, x1 + pw), min(h, y1 + ph)
+        k = ALT_TILE / max(x1 - x0, y1 - y0)
+        tw, th = max(1, round((x1 - x0) * k)), max(1, round((y1 - y0) * k))
+        tiles = [original[y0:y1, x0:x1]] + [to_rgb_uint8(a)[y0:y1, x0:x1] for a in attempts]
+        strip = Image.new("RGB", (tw * len(tiles), th))
+        for i, t in enumerate(tiles):
+            strip.paste(Image.fromarray(t).resize((tw, th), Image.LANCZOS), (i * tw, 0))
+        name = f"alts/r{r['id']}.jpg"
+        strip.save(folder / name, quality=88)
+        r["alternatives"] = {"file": f"{rel}/{name}", "tile": [tw, th], "seeds": seeds[:len(attempts)],
+                             "shown_seed": shown_seed, "crop": [x0, y0, x1, y1]}
+        n += 1
+    return n
 
 
 def run_restore(image_path: Path, fidelity: float, source: dict,
@@ -678,6 +720,12 @@ def run_restore(image_path: Path, fidelity: float, source: dict,
                 f"pipeline pixel_summary differs from the label map by up to {drift:.1%}; "
                 "the legend uses the label map so it matches what is drawn"
             )
+
+    try:  # "every attempt" strips for the most-invented regions (extra; never fatal)
+        save_alternatives(tmp, out.name, original, result.get("seed_outputs") or [],
+                          result.get("displayed_seed"), kwargs.get("seeds") or result.get("seeds"), regions)
+    except Exception as e:
+        warnings.append(f"alternatives failed: {type(e).__name__}: {e}")
 
     faces_out = []
     face_box = None

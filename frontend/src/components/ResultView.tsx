@@ -17,6 +17,7 @@ import { MapLegend } from "./MapLegend";
 import { PhotoStage } from "./PhotoStage";
 import { ReadingHint } from "./ReadingHint";
 import { RegionReadout } from "./RegionReadout";
+import { AttemptsPanel } from "./AttemptsPanel";
 
 interface Props {
   photoKey: string;
@@ -44,6 +45,7 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
   const [showMap, setShowMap] = useState(false);
   const [opacity, setOpacity] = useState(0.75);
   const [hover, setHover] = useState<HoverInfo | null>(null);
+  const [picked, setPicked] = useState<number | null>(null);
   const [tab, setTab] = useState<"faces" | "compare" | "manifest">("faces");
   const [colors, setColors] = useState<Record<string, ColorResult>>({});
   const [colorOn, setColorOn] = useState(false);
@@ -208,10 +210,19 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
             showMap={showMap}
             opacity={opacity}
             onHover={setHover}
+            onPick={(r) => setPicked(r.id)}
             busy={busy}
             colorFile={colorOn ? colors[`${shown.key}:${shown.fidelity}`]?.files.colorized : null}
             colorMapFile={colorOn ? colors[`${shown.key}:${shown.fidelity}`]?.files.map : null}
           />
+          {shown.kind !== "document" && (
+            <AttemptsPanel
+              result={shown}
+              region={shown.regions.find((r) => r.id === picked && r.alternatives) ?? null}
+              onPick={(r) => setPicked(r.id)}
+              onClose={() => setPicked(null)}
+            />
+          )}
         </div>
 
         <aside className="space-y-8">

@@ -53,6 +53,11 @@ def _r16(v: float) -> int:
 
 def detect(img: np.ndarray, threshold: float = 0.4) -> np.ndarray:
     """img: HxWx3 uint8 RGB. Returns a bool HxW mask of scratches/cracks."""
+    return detect_prob(img) >= threshold
+
+
+def detect_prob(img: np.ndarray) -> np.ndarray:
+    """img: HxWx3 uint8 RGB. Returns the scratch probability, float32 HxW in [0, 1]."""
     pil = Image.fromarray(img).convert("RGB")
     ow, oh = pil.size
     w, h = _r16(ow), _r16(oh)                                   # data_transforms("full_size")
@@ -68,8 +73,7 @@ def detect(img: np.ndarray, threshold: float = 0.4) -> np.ndarray:
     t = F.interpolate(t, [_r16(nh), _r16(nw)], mode="bilinear")
     with _lock, torch.no_grad():
         p = torch.sigmoid(get_model()(t))
-    p = F.interpolate(p, [H, W], mode="nearest")[0, 0].numpy()
-    m = p >= threshold
+    p = F.interpolate(p, [H, W], mode="nearest")[0, 0].numpy().astype(np.float32)
     if (W, H) != (ow, oh):
-        m = np.asarray(Image.fromarray(m.astype(np.uint8) * 255).resize((ow, oh), Image.NEAREST)) > 127
-    return m
+        p = np.asarray(Image.fromarray(p, mode="F").resize((ow, oh), Image.NEAREST), np.float32)
+    return p

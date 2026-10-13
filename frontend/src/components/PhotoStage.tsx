@@ -10,6 +10,8 @@ interface Props {
   showMap: boolean;
   opacity: number;
   onHover: (h: HoverInfo | null) => void;
+  /** Click on a region that has saved attempts. */
+  onPick?: (r: Region) => void;
   busy?: string | null;
   /** Colour mode: show this file on the restored side, and this guess map as the overlay. */
   colorFile?: string | null;
@@ -17,7 +19,9 @@ interface Props {
 }
 
 /** Before/after slider with the Invention Map over the restored side. */
-export function PhotoStage({ result, showMap, opacity, onHover, busy, colorFile, colorMapFile }: Props) {
+export function PhotoStage({ result, showMap, opacity, onHover, onPick, busy, colorFile, colorMapFile }: Props) {
+  const lastInfo = useRef<HoverInfo | null>(null);
+  const downAt = useRef<{ x: number; y: number } | null>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -102,6 +106,7 @@ export function PhotoStage({ result, showMap, opacity, onHover, busy, colorFile,
       region: id ? regionsById.get(id) ?? null : null,
     };
     setTip({ x: e.clientX - rect.left, y: e.clientY - rect.top, info });
+    lastInfo.current = info;
     onHover(info);
   };
 
@@ -127,10 +132,23 @@ export function PhotoStage({ result, showMap, opacity, onHover, busy, colorFile,
       <div
         ref={stageRef}
         className="exhibit-frame on-dark relative mx-auto select-none overflow-hidden"
-        style={{ width: size.w, height: size.h, touchAction: "pan-y" }}
         onPointerMove={handleMove}
         onPointerLeave={clearHover}
-        onPointerUp={() => (draggingRef.current = false)}
+        onPointerDown={(e) => (downAt.current = { x: e.clientX, y: e.clientY })}
+        onPointerUp={(e) => {
+          draggingRef.current = false;
+          const d = downAt.current;
+          downAt.current = null;
+          const info = lastInfo.current;
+          if (!d || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 6) return; // a drag, not a click
+          if (info?.side === "restored" && info.region?.alternatives) onPick?.(info.region);
+        }}
+        style={{
+          width: size.w,
+          height: size.h,
+          touchAction: "pan-y",
+          cursor: tip?.info.side === "restored" && tip.info.region?.alternatives ? "pointer" : undefined,
+        }}
       >
         {!photoLoaded && <span aria-hidden className="absolute inset-0 animate-pulse bg-ground/5" />}
         <img
@@ -230,6 +248,7 @@ function Tip({ x, y, info, stageW, showMap }: { x: number; y: number; info: Hove
             {kindLabel(info.region.kind)}, {Math.round(info.region.confidence * 100)}% confident
           </span>
         )}
+        {info.region?.alternatives && <span className="block text-sm font-semibold text-ink">Click to see every attempt</span>}
       </>
     );
   if (info.side === "restored" && !showMap && info.cls === "observed") return null;
