@@ -57,7 +57,31 @@
       "stage": "inpainting",
       "confidence": 0.522,
       "confidence_computed": 0.5216,
-      "pipeline_region_id": 3
+      "pipeline_region_id": 3,
+      "alternatives": {
+        "file": "f070/alts/r1.jpg",
+        "tile": [
+          220,
+          183
+        ],
+        "seeds": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "shown_seed": 14,
+        "crop": [
+          201,
+          372,
+          496,
+          618
+        ]
+      }
     },
     {
       "id": 2,

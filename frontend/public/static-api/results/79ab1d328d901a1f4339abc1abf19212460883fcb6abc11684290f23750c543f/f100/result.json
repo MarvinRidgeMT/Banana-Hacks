@@ -57,7 +57,31 @@
       "stage": "inpainting",
       "confidence": 0.791,
       "confidence_computed": 0.7909,
-      "pipeline_region_id": 8
+      "pipeline_region_id": 8,
+      "alternatives": {
+        "file": "f100/alts/r1.jpg",
+        "tile": [
+          162,
+          220
+        ],
+        "seeds": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "shown_seed": 15,
+        "crop": [
+          5,
+          0,
+          760,
+          1024
+        ]
+      }
     },
     {
       "id": 2,
@@ -74,7 +98,31 @@
       "stage": "inpainting",
       "confidence": 0.325,
       "confidence_computed": 0.3249,
-      "pipeline_region_id": 5
+      "pipeline_region_id": 5,
+      "alternatives": {
+        "file": "f100/alts/r2.jpg",
+        "tile": [
+          220,
+          66
+        ],
+        "seeds": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "shown_seed": 15,
+        "crop": [
+          492,
+          33,
+          759,
+          113
+        ]
+      }
     },
     {
       "id": 3,
@@ -91,7 +139,31 @@
       "stage": "inpainting",
       "confidence": 0.545,
       "confidence_computed": 0.545,
-      "pipeline_region_id": 2
+      "pipeline_region_id": 2,
+      "alternatives": {
+        "file": "f100/alts/r3.jpg",
+        "tile": [
+          123,
+          220
+        ],
+        "seeds": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "shown_seed": 15,
+        "crop": [
+          0,
+          0,
+          171,
+          307
+        ]
+      }
     },
     {
       "id": 4,
@@ -108,7 +180,31 @@
       "stage": "inpainting",
       "confidence": 0.142,
       "confidence_computed": 0.1422,
-      "pipeline_region_id": 24
+      "pipeline_region_id": 24,
+      "alternatives": {
+        "file": "f100/alts/r4.jpg",
+        "tile": [
+          208,
+          220
+        ],
+        "seeds": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "shown_seed": 15,
+        "crop": [
+          660,
+          918,
+          760,
+          1024
+        ]
+      }
     },
     {
       "id": 5,
@@ -125,7 +221,31 @@
       "stage": "inpainting",
       "confidence": 0.561,
       "confidence_computed": 0.5607,
-      "pipeline_region_id": 21
+      "pipeline_region_id": 21,
+      "alternatives": {
+        "file": "f100/alts/r5.jpg",
+        "tile": [
+          220,
+          39
+        ],
+        "seeds": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "shown_seed": 15,
+        "crop": [
+          240,
+          884,
+          525,
+          934
+        ]
+      }
     },
     {
       "id": 6,
@@ -142,7 +262,31 @@
       "stage": "inpainting",
       "confidence": 0.091,
       "confidence_computed": 0.0914,
-      "pipeline_region_id": 11
+      "pipeline_region_id": 11,
+      "alternatives": {
+        "file": "f100/alts/r6.jpg",
+        "tile": [
+          174,
+          220
+        ],
+        "seeds": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "shown_seed": 15,
+        "crop": [
+          0,
+          591,
+          168,
+          804
+        ]
+      }
     },
     {
       "id": 7,
@@ -159,7 +303,31 @@
       "stage": "inpainting",
       "confidence": 0.807,
       "confidence_computed": 0.8072,
-      "pipeline_region_id": 23
+      "pipeline_region_id": 23,
+      "alternatives": {
+        "file": "f100/alts/r7.jpg",
+        "tile": [
+          220,
+          106
+        ],
+        "seeds": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "shown_seed": 15,
+        "crop": [
+          220,
+          912,
+          361,
+          980
+        ]
+      }
     },
     {
       "id": 8,
@@ -176,7 +344,31 @@
       "stage": "inpainting",
       "confidence": 0.791,
       "confidence_computed": 0.2687,
-      "pipeline_region_id": 8
+      "pipeline_region_id": 8,
+      "alternatives": {
+        "file": "f100/alts/r8.jpg",
+        "tile": [
+          220,
+          87
+        ],
+        "seeds": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "shown_seed": 15,
+        "crop": [
+          361,
+          805,
+          477,
+          851
+        ]
+      }
     },
     {
       "id": 9,
@@ -193,7 +385,31 @@
       "stage": "inpainting",
       "confidence": 0.057,
       "confidence_computed": 0.0566,
-      "pipeline_region_id": 10
+      "pipeline_region_id": 10,
+      "alternatives": {
+        "file": "f100/alts/r9.jpg",
+        "tile": [
+          220,
+          142
+        ],
+        "seeds": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "shown_seed": 15,
+        "crop": [
+          0,
+          526,
+          93,
+          586
+        ]
+      }
     },
     {
       "id": 10,

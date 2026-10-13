@@ -286,9 +286,9 @@ export function Evidence({ metrics }: { metrics: Metrics | null }) {
     {
       key: "documents",
       cells: [
-        "Documents (experiment)",
-        "IoU 0.914 vs 0.861; ink wrongly flagged 0.18% vs 0.65%",
-        "A document detector fine-tuned in 40 min on 800 synthetic pages, vs our photo model, on 80 held-out synthetic pages. Not yet tested on real damaged documents, and never used to generate text.",
+        "Documents: finding real damage",
+        "Finds 55% of the damage (IoU 0.467); 16% before",
+        "46 real damaged documents (manuscripts, maps, letters, prints; ARTeFACT) held out from training. Doc v2 was fine-tuned on 106 others plus 800 synthetic pages. The cost: on synthetic pages where the ink is known, writing wrongly flagged went from 0.18% to 0.23%, and synthetic-damage IoU from 0.914 to 0.835. No model ever generates text.",
       ],
     },
     {

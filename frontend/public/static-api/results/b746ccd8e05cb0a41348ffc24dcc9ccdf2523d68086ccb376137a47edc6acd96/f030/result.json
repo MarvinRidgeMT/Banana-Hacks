@@ -57,7 +57,31 @@
       "stage": "face_restoration",
       "confidence": 0.522,
       "confidence_computed": 0.5216,
-      "pipeline_region_id": "face-1"
+      "pipeline_region_id": "face-1",
+      "alternatives": {
+        "file": "f030/alts/r1.jpg",
+        "tile": [
+          220,
+          183
+        ],
+        "seeds": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "shown_seed": 12,
+        "crop": [
+          201,
+          372,
+          496,
+          618
+        ]
+      }
     },
     {
       "id": 2,
