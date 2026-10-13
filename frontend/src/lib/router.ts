@@ -30,14 +30,20 @@ export const href = {
   result: (key: string, fidelity: number) => `#/p/${key}/${fidelity}`,
 };
 
-export const NAV_LINKS = [
+/** The top bar keeps two links; the rest live under "More" (and in the footer). */
+export const NAV_PRIMARY = [
   { name: "cases", label: "My cases", to: href.cases },
   { name: "verify", label: "Verify", to: href.verify },
-  { name: "batch", label: "Batch", to: href.batch() },
-  { name: "how-it-works", label: "How it works", to: href.howItWorks },
-  { name: "evidence", label: "Evidence", to: href.evidence },
-  { name: "about", label: "About", to: href.about },
 ] as const satisfies readonly { name: Route["name"]; label: string; to: string }[];
+
+export const NAV_MORE = [
+  { name: "batch", label: "Batch", to: href.batch(), note: "Up to 40 photos, CSV catalog" },
+  { name: "how-it-works", label: "How it works", to: href.howItWorks, note: "The pipeline, step by step" },
+  { name: "evidence", label: "Evidence", to: href.evidence, note: "What we measured" },
+  { name: "about", label: "About", to: href.about, note: "Team and sources" },
+] as const satisfies readonly { name: Route["name"]; label: string; to: string; note: string }[];
+
+export const NAV_LINKS = [...NAV_PRIMARY, ...NAV_MORE];
 
 const STATIC: Record<string, Route> = {
   "/": { name: "home" },
