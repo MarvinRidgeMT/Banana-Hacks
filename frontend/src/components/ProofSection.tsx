@@ -41,7 +41,7 @@ export function ProofSection({ demos }: { demos: Demo[] | null }) {
         if (!live) return;
         const ok = all.filter((x): x is Measured => !!x && typeof x.pct === "number").sort((a, b) => b.pct - a.pct);
         setRows(ok);
-        setPick((p) => p ?? (ok.find((x) => x.demo.id === "backup") ?? ok[0])?.demo.key ?? null);
+        setPick((p) => p ?? (ok.find((x) => x.demo.id === "light") ?? ok[0])?.demo.key ?? null);
       }),
     );
     return () => {
