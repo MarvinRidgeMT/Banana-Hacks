@@ -442,3 +442,86 @@ a.mode-card:hover { transform: translateY(-6px); box-shadow: 0 30px 60px -25px r
 .bleed.tour-on::after { inset: 4px; }
 @keyframes cc-tourglow { to { box-shadow: 0 0 0 2px rgba(143, 180, 255, 0.9), 0 0 60px rgba(143, 180, 255, 0.3); } }
 @media (prefers-reduced-motion: reduce) { .status-dot, .tour-on::after, .tour-progress > span.now::after { animation: none !important; } .tour-progress > span.now { background: #e5483d; } }
+
+/* ---------- v5: floating paper capsule header ---------- */
+.site-header { position: sticky; top: 0; z-index: 50; height: 0; }
+.capsule {
+  width: calc(100% - 24px); max-width: 76rem; margin: 12px auto 0; border-radius: 26px;
+  background: rgba(250, 246, 236, 0.95); backdrop-filter: saturate(150%) blur(18px); -webkit-backdrop-filter: saturate(150%) blur(18px);
+  border: 1px solid rgba(31, 27, 22, 0.1);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 8px 30px -12px rgba(31, 27, 22, 0.35);
+  transition: box-shadow 0.3s, background 0.3s;
+}
+.capsule.is-raised { background: rgba(250, 246, 236, 0.9); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 18px 50px -18px rgba(31, 27, 22, 0.5); }
+.logo-seal {
+  display: grid; place-items: center; width: 34px; height: 34px; border-radius: 999px;
+  font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; color: var(--color-invented);
+  border: 2px solid var(--color-invented); transform: rotate(-8deg); background: rgba(179, 38, 30, 0.05);
+  box-shadow: inset 0 0 0 2px rgba(250, 246, 236, 1), inset 0 0 0 3px rgba(179, 38, 30, 0.35);
+}
+.top-link {
+  position: relative; display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.55rem 0.9rem; border-radius: 999px;
+  font-size: 0.95rem; font-weight: 500; color: var(--color-body); transition: background 0.2s, color 0.2s;
+}
+.top-link:hover { color: var(--color-ink); background: rgba(31, 27, 22, 0.06); }
+.top-link.is-active { color: var(--color-ink); }
+.top-link.is-active::after { content: ""; position: absolute; left: 50%; bottom: 3px; width: 4px; height: 4px; margin-left: -2px; border-radius: 999px; background: var(--color-invented); }
+.top-cta {
+  display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.6rem 0.75rem 0.6rem 1.15rem; border-radius: 999px;
+  background: var(--color-ink); color: var(--color-ground); font-weight: 600; font-size: 0.95rem; transition: background 0.2s, transform 0.2s;
+}
+.top-cta:hover { background: #000; transform: translateY(-1px); }
+.top-cta-arrow { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 999px; background: var(--color-invented); color: #fff; font-size: 0.8rem; transition: transform 0.2s; }
+.top-cta:hover .top-cta-arrow { transform: translateX(2px); }
+.more-panel {
+  position: absolute; left: 50%; top: calc(100% + 14px); transform: translateX(-50%); width: 17rem; padding: 0.4rem; border-radius: 18px;
+  background: rgba(250, 246, 236, 0.97); border: 1px solid rgba(31, 27, 22, 0.1); backdrop-filter: blur(18px);
+  box-shadow: 0 24px 60px -20px rgba(31, 27, 22, 0.45); animation: cc-pop 0.16s ease-out;
+}
+.more-row { display: flex; flex-direction: column; padding: 0.65rem 0.85rem; border-radius: 12px; }
+.more-row:hover, .more-row[aria-current="page"] { background: rgba(31, 27, 22, 0.06); }
+.avatar-light {
+  display: grid; place-items: center; width: 34px; height: 34px; border-radius: 999px; font-family: var(--font-mono); font-weight: 700; font-size: 0.85rem;
+  color: var(--color-ground); background: linear-gradient(135deg, var(--color-inferred), var(--color-invented));
+}
+
+/* ---------- v5: light versions of "Who it's for" and the measurement ---------- */
+.aud-section {
+  background:
+    radial-gradient(50% 40% at 10% 0%, rgba(44, 90, 160, 0.07), transparent 70%),
+    radial-gradient(40% 35% at 100% 100%, rgba(179, 38, 30, 0.07), transparent 70%),
+    linear-gradient(rgba(31, 27, 22, 0.04) 1px, transparent 1px) 0 0 / 56px 56px,
+    linear-gradient(90deg, rgba(31, 27, 22, 0.04) 1px, transparent 1px) 0 0 / 56px 56px,
+    var(--color-surface);
+  color: var(--color-ink);
+  border-block: 1px solid var(--color-line);
+}
+.aud-orb { display: none; }
+.text-gradient { background: linear-gradient(100deg, var(--color-invented) 10%, #7a3a7a 55%, var(--color-inferred) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.aud-card { background: #fffdf7; border: 1px solid var(--color-line); backdrop-filter: none; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 10px 30px -22px rgba(31, 27, 22, 0.4); }
+.aud-card::before { background: radial-gradient(500px 220px at 20% 0%, rgba(44, 90, 160, 0.07), transparent 70%); }
+.aud-card::after { background: linear-gradient(180deg, transparent, rgba(44, 90, 160, 0.06), transparent); }
+.aud-card:hover { border-color: rgba(31, 27, 22, 0.3); box-shadow: 0 30px 60px -30px rgba(31, 27, 22, 0.45); }
+.aud-card-cta { background: linear-gradient(120deg, #2a231c, var(--color-mat)); border-color: var(--color-mat); }
+.aud-dot { background: var(--color-inferred); box-shadow: 0 0 10px rgba(44, 90, 160, 0.6); }
+.aud-stat { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: var(--color-ink); text-shadow: none; }
+.aud-chip { border-color: var(--color-line); color: var(--color-body); background: var(--color-ground); }
+.aud-cta { color: var(--color-ink); border-color: rgba(31, 27, 22, 0.3); }
+.aud-cta:hover { color: var(--color-invented); border-color: var(--color-invented); }
+.hud-tick { box-shadow: none; background: var(--color-invented); }
+
+.proof-section {
+  color: var(--color-ink);
+  background:
+    radial-gradient(45% 55% at 85% 40%, rgba(179, 38, 30, 0.06), transparent 70%),
+    var(--color-ground);
+  border-bottom: 1px solid var(--color-line);
+}
+.proof-stat { background: #fffdf7; border-color: var(--color-line); }
+.proof-them { border-color: rgba(179, 38, 30, 0.35); background: rgba(179, 38, 30, 0.05); }
+.proof-us { border-color: rgba(44, 90, 160, 0.35); background: rgba(44, 90, 160, 0.05); }
+.proof-row:hover, .proof-row[aria-pressed="true"] { background: rgba(31, 27, 22, 0.05); }
+.proof-bar { background: rgba(31, 27, 22, 0.08); }
+.proof-bar > span { background: linear-gradient(90deg, #d36a61, var(--color-invented)); }
+.proof-row[aria-pressed="true"] .proof-bar > span { box-shadow: none; }
+.proof-frame { border-color: var(--color-line); box-shadow: 0 30px 70px -35px rgba(31, 27, 22, 0.6); background: var(--color-mat); }

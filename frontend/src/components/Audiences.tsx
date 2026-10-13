@@ -75,19 +75,19 @@ const AUDIENCES = [
 
 export function Audiences() {
   return (
-    <section data-tour="who" aria-labelledby="who-for" className="bleed aud-section on-dark relative overflow-hidden">
+    <section data-tour="who" aria-labelledby="who-for" className="bleed aud-section relative overflow-hidden">
       <div aria-hidden className="aud-orb" />
       <div className="relative mx-auto max-w-[110rem] px-6 py-24 sm:px-10 sm:py-32">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end">
           <div>
-            <p className="readout flex items-center gap-3 text-xs text-ground/60">
+            <p className="readout flex items-center gap-3 text-xs text-muted">
               <span className="hud-tick" aria-hidden /> Who it's for
             </p>
-            <h2 id="who-for" className="display mt-6 text-[clamp(2.8rem,6vw,6.2rem)] text-ground">
+            <h2 id="who-for" className="display mt-6 text-[clamp(2.8rem,6vw,6.2rem)] text-ink">
               For anyone whose photos are <span className="text-gradient">evidence.</span>
             </h2>
           </div>
-          <p className="max-w-[46ch] text-xl leading-relaxed text-ground/75">
+          <p className="max-w-[46ch] text-xl leading-relaxed text-body">
             An old photo is often the only record of a person, a place or an event. If a restorer invents part of it
             and no one can tell, the record is changed for good. These are the people who can't afford that.
           </p>
@@ -98,35 +98,35 @@ export function Audiences() {
             <li key={a.id} className={`aud-card group ${i < 2 ? "lg:col-span-3" : "lg:col-span-2"}`}>
               <div className="flex h-full flex-col p-7 sm:p-8">
                 <div className="flex items-center justify-between">
-                  <span className="readout text-[0.7rem] text-ground/50">
+                  <span className="readout text-[0.7rem] text-muted">
                     {String(i + 1).padStart(2, "0")} / {String(AUDIENCES.length).padStart(2, "0")}
                   </span>
                   <span className="aud-dot" aria-hidden />
                 </div>
-                <h3 className="mt-5 text-2xl font-semibold text-ground">{a.who}</h3>
+                <h3 className="mt-5 text-2xl font-semibold text-ink">{a.who}</h3>
                 <p className={`aud-stat mt-6 font-serif leading-none ${i < 2 ? "text-7xl" : "text-6xl"}`}>
                   {/^\d/.test(a.stat) ? <CountUp text={a.stat} /> : a.stat}
                 </p>
-                <p className="mt-3 text-ground/70">
+                <p className="mt-3 text-muted">
                   {a.statText}{" "}
                   <a
                     href={a.source.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="readout whitespace-nowrap text-[0.68rem] text-ground/45 underline underline-offset-4 hover:text-ground"
+                    className="readout whitespace-nowrap text-[0.68rem] text-faint underline underline-offset-4 hover:text-ink"
                   >
                     {a.source.label}
                     <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 </p>
-                <dl className="mt-7 space-y-4 border-t border-ground/10 pt-6">
+                <dl className="mt-7 space-y-4 border-t border-line pt-6">
                   <div>
-                    <dt className="readout text-[0.68rem] text-[#ff8a80]">The risk</dt>
-                    <dd className="mt-1 text-ground/80">{a.risk}</dd>
+                    <dt className="readout text-[0.68rem] text-invented">The risk</dt>
+                    <dd className="mt-1 text-body">{a.risk}</dd>
                   </div>
                   <div>
-                    <dt className="readout text-[0.68rem] text-[#8fb4ff]">What Cold Case gives them</dt>
-                    <dd className="mt-1 text-ground/80">{a.gives}</dd>
+                    <dt className="readout text-[0.68rem] text-inferred">What Cold Case gives them</dt>
+                    <dd className="mt-1 text-body">{a.gives}</dd>
                   </div>
                 </dl>
                 <ul className="mt-6 flex flex-wrap gap-2" aria-label="Features">
@@ -144,10 +144,10 @@ export function Audiences() {
               </div>
             </li>
           ))}
-          <li className="aud-card aud-card-cta md:col-span-2 lg:col-span-6">
+          <li className="aud-card aud-card-cta on-dark md:col-span-2 lg:col-span-6">
             <div className="flex flex-wrap items-center justify-between gap-6 p-7 sm:p-8">
               <div>
-                <p className="readout text-[0.7rem] text-ground/50">And anyone with a shoebox of old photos</p>
+                <p className="readout text-[0.7rem] text-ground/60">And anyone with a shoebox of old photos</p>
                 <p className="mt-3 font-serif text-3xl leading-tight text-ground sm:text-4xl">
                   Free, open source, and every result signed.
                 </p>

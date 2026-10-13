@@ -256,10 +256,10 @@ export default function App() {
           Test mode: the server is running a fake pipeline. These results are not real restorations.
         </p>
       )}
-      <SiteHeader route={route} seq={seq} pipeline={pipeline} />
+      <SiteHeader route={route} seq={seq} />
 
       {banner && (
-        <div className="mx-auto mt-6 flex w-full max-w-[110rem] flex-wrap items-center justify-between gap-4 px-6 sm:px-10">
+        <div className="mx-auto mt-28 flex w-full max-w-[110rem] flex-wrap items-center justify-between gap-4 px-6 sm:px-10">
           <ErrorNote
             message={banner}
             onRetry={() => lastJob.current && runJob(lastJob.current.title, lastJob.current.opts)}
@@ -274,7 +274,7 @@ export default function App() {
         ref={mainRef}
         id="main-content"
         tabIndex={-1}
-        className="mx-auto w-full max-w-[110rem] flex-1 px-6 py-12 outline-none sm:px-10"
+        className="mx-auto w-full max-w-[110rem] flex-1 px-6 pb-12 pt-32 outline-none sm:px-10"
       >
         {page()}
       </main>

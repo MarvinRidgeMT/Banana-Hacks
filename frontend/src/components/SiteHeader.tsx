@@ -6,33 +6,15 @@ import { currentUser, onAuthChange, signOut } from "../lib/auth";
 interface Props {
   route: Route;
   seq: number;
-  /** From /health: null while checking, "static" when only saved results are available. */
-  pipeline: string | null;
 }
 
-function Status({ pipeline }: { pipeline: string | null }) {
-  const [cls, label, tip] =
-    pipeline === null
-      ? ["is-wait", "Connecting", "Checking whether the restoring server is up"]
-      : pipeline === "static"
-        ? ["is-demo", "Demo mode", "The restoring server is offline. Saved cases work; new uploads need the server."]
-        : pipeline === "stub"
-          ? ["is-demo", "Test mode", "The server is running a fake pipeline. Results are not real restorations."]
-          : ["is-live", "Live", "The restoring server is online: you can restore your own photos."];
-  return (
-    <span className={`status-chip readout ${cls}`} title={tip} role="status">
-      <span className="status-dot" aria-hidden />
-      {label}
-      <span className="sr-only">. {tip}</span>
-    </span>
-  );
-}
-
-/* A dark glass console bar: logo, two links, "More", account, one call to action. */
-export function SiteHeader({ route, seq, pipeline }: Props) {
+/* A floating frosted-paper capsule: logo, three links, account, one call to action.
+ * It takes no height in the page (pages leave room for it), so it floats over the hero. */
+export function SiteHeader({ route, seq }: Props) {
   const [open, setOpen] = useState(false);
   const [more, setMore] = useState(false);
   const [user, setUser] = useState(currentUser());
+  const [scrolled, setScrolled] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
   const moreRef = useRef<HTMLDivElement>(null);
   useEffect(() => onAuthChange(() => setUser(currentUser())), []);
@@ -40,6 +22,12 @@ export function SiteHeader({ route, seq, pipeline }: Props) {
     setOpen(false);
     setMore(false);
   }, [seq]);
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 12);
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
+  }, []);
 
   useEffect(() => {
     if (!open && !more) return;
@@ -60,142 +48,122 @@ export function SiteHeader({ route, seq, pipeline }: Props) {
     };
   }, [open, more]);
 
-  // On the home page the bar melts into the hero until you scroll.
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 24);
-    on();
-    window.addEventListener("scroll", on, { passive: true });
-    return () => window.removeEventListener("scroll", on);
-  }, []);
-  const flat = route.name === "home" && !scrolled && !open;
-
   const moreActive = NAV_MORE.some((l) => l.name === route.name);
-  const initials = user ? (user.name || user.email).trim().slice(0, 1).toUpperCase() : "";
+  const initial = user ? (user.name || user.email).trim().slice(0, 1).toUpperCase() : "";
+  const link = (active: boolean) => `top-link ${active ? "is-active" : ""}`;
 
   return (
-    <header className={`glass-header on-dark sticky top-0 z-50 ${flat ? "is-flat" : ""}`}>
-      <div className="mx-auto flex max-w-[110rem] items-center justify-between gap-6 px-6 py-3 sm:px-10">
-        <Link to={href.home} className="brand flex items-center gap-3" aria-label="Cold Case, home">
-          <span className="brand-mark" aria-hidden>
-            <span />
-          </span>
-          <span className="readout whitespace-nowrap text-sm font-semibold tracking-[0.22em] text-ground">Cold Case</span>
-        </Link>
-
-        <div className="hidden items-center gap-1 md:flex">
-        <nav aria-label="Main" className="flex items-center gap-1">
-          {NAV_PRIMARY.map((l) => (
-            <Link
-              key={l.name}
-              to={l.to}
-              aria-current={route.name === l.name ? "page" : undefined}
-              className={`nav-pill ${route.name === l.name ? "is-active" : ""}`}
-            >
-              {l.label}
-            </Link>
-          ))}
-          <div className="relative" ref={moreRef}>
-            <button
-              type="button"
-              aria-expanded={more}
-              aria-controls="more-menu"
-              onClick={() => setMore((m) => !m)}
-              className={`nav-pill ${moreActive ? "is-active" : ""}`}
-            >
-              More <span aria-hidden className={`inline-block transition ${more ? "rotate-180" : ""}`}>▾</span>
-            </button>
-            <div id="more-menu" hidden={!more} className="more-menu">
-              <ul>
-                {NAV_MORE.map((l) => (
-                  <li key={l.name}>
-                    <Link
-                      to={l.to}
-                      aria-current={route.name === l.name ? "page" : undefined}
-                      className="more-item"
-                    >
-                      <span className="font-medium text-ground">{l.label}</span>
-                      <span className="text-sm text-ground/55">{l.note}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </nav>
-
-        <span className="mx-3 h-6 w-px bg-ground/15" aria-hidden />
-        <div className="flex items-center gap-2">
-          <Status pipeline={pipeline} />
-          {user ? (
-            <div className="flex items-center gap-2">
-              <span className="avatar" title={user.email} aria-label={`Signed in as ${user.name || user.email}`}>
-                {initials}
-              </span>
-              <button type="button" onClick={() => void signOut()} className="nav-pill">
-                Sign out
-              </button>
-            </div>
-          ) : (
-            <Link to={href.account} className={`nav-pill ${route.name === "account" ? "is-active" : ""}`}>
-              Sign in
-            </Link>
-          )}
-          <Link
-            to={href.restore}
-            aria-current={route.name === "restore" ? "page" : undefined}
-            className="cta-glow"
-          >
-            Restore a photo <span aria-hidden>→</span>
+    <header className="site-header">
+      <div className={`capsule ${scrolled || open ? "is-raised" : ""}`}>
+        <div className="flex items-center justify-between gap-4 py-2 pl-5 pr-2">
+          <Link to={href.home} className="flex items-center gap-2.5" aria-label="Cold Case, home">
+            <span className="logo-seal" aria-hidden>
+              CC
+            </span>
+            <span className="font-serif text-[1.35rem] leading-none tracking-tight text-ink">Cold Case</span>
           </Link>
-        </div>
-        </div>
 
-        <div className="flex items-center gap-2 md:hidden">
-          <Status pipeline={pipeline} />
-        <button
-          ref={menuButton}
-          type="button"
-          aria-expanded={open}
-          aria-controls="site-menu"
-          onClick={() => setOpen((o) => !o)}
-          className="nav-pill min-h-11"
-        >
-          {open ? "Close" : "Menu"}
-        </button>
-        </div>
-      </div>
-      <div className="header-scan" aria-hidden />
-
-      <nav id="site-menu" aria-label="Main" hidden={!open} className="px-6 pb-6 sm:px-10 md:hidden">
-        <ul>
-          {NAV_LINKS.map((l) => (
-            <li key={l.name} className="border-b border-ground/10">
-              <Link
-                to={l.to}
-                aria-current={route.name === l.name ? "page" : undefined}
-                className={`block py-4 text-lg ${route.name === l.name ? "text-ground" : "text-ground/70"}`}
-              >
+          <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
+            {NAV_PRIMARY.map((l) => (
+              <Link key={l.name} to={l.to} aria-current={route.name === l.name ? "page" : undefined} className={link(route.name === l.name)}>
                 {l.label}
               </Link>
-            </li>
-          ))}
-          <li className="border-b border-ground/10 py-4 text-lg">
-            {user ? (
-              <button type="button" onClick={() => void signOut()} className="text-ground/70">
-                Sign out ({user.name || user.email})
+            ))}
+            <div className="relative" ref={moreRef}>
+              <button
+                type="button"
+                aria-expanded={more}
+                aria-controls="more-menu"
+                onClick={() => setMore((m) => !m)}
+                className={link(moreActive)}
+              >
+                More
+                <svg aria-hidden width="10" height="10" viewBox="0 0 10 10" className={`transition ${more ? "rotate-180" : ""}`}>
+                  <path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
               </button>
+              <div id="more-menu" hidden={!more} className="more-panel">
+                <ul>
+                  {NAV_MORE.map((l) => (
+                    <li key={l.name}>
+                      <Link to={l.to} aria-current={route.name === l.name ? "page" : undefined} className="more-row">
+                        <span className="font-semibold text-ink">{l.label}</span>
+                        <span className="text-sm text-muted">{l.note}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </nav>
+
+          <div className="hidden items-center gap-2 md:flex">
+            {user ? (
+              <>
+                <span className="avatar-light" title={user.email} aria-label={`Signed in as ${user.name || user.email}`}>
+                  {initial}
+                </span>
+                <button type="button" onClick={() => void signOut()} className="top-link">
+                  Sign out
+                </button>
+              </>
             ) : (
-              <Link to={href.account} className="text-ground/70">
+              <Link to={href.account} className={link(route.name === "account")}>
                 Sign in
               </Link>
             )}
-          </li>
-        </ul>
-        <Link to={href.restore} className="cta-glow mt-6 flex justify-center">
-          Restore a photo <span aria-hidden>→</span>
-        </Link>
-      </nav>
+            <Link to={href.restore} aria-current={route.name === "restore" ? "page" : undefined} className="top-cta">
+              Restore a photo
+              <span aria-hidden className="top-cta-arrow">
+                →
+              </span>
+            </Link>
+          </div>
+
+          <div className="md:hidden">
+            <button
+              ref={menuButton}
+              type="button"
+              aria-expanded={open}
+              aria-controls="site-menu"
+              onClick={() => setOpen((o) => !o)}
+              className="top-link min-h-11"
+            >
+              {open ? "Close" : "Menu"}
+            </button>
+          </div>
+        </div>
+
+        <nav id="site-menu" aria-label="Main" hidden={!open} className="px-5 pb-5 md:hidden">
+          <ul>
+            {NAV_LINKS.map((l) => (
+              <li key={l.name} className="border-t border-line">
+                <Link
+                  to={l.to}
+                  aria-current={route.name === l.name ? "page" : undefined}
+                  className={`block py-3.5 text-lg ${route.name === l.name ? "font-semibold text-ink" : "text-body"}`}
+                >
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+            <li className="border-t border-line py-3.5 text-lg">
+              {user ? (
+                <button type="button" onClick={() => void signOut()} className="text-body">
+                  Sign out ({user.name || user.email})
+                </button>
+              ) : (
+                <Link to={href.account} className="text-body">
+                  Sign in
+                </Link>
+              )}
+            </li>
+          </ul>
+          <Link to={href.restore} className="top-cta mt-2 flex justify-center">
+            Restore a photo <span aria-hidden>→</span>
+          </Link>
+        </nav>
+      </div>
     </header>
   );
 }

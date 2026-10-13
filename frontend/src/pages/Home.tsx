@@ -72,11 +72,11 @@ export function Home({ demos, demosError, onRetryDemos, onUpload, pipeline }: Pr
   const colorCase = demos?.find((d) => d.id === "inferred") ?? null;
 
   return (
-    <div className="-mt-12">
+    <div className="-mt-32">
       {/* 1. HERO: the examination table */}
       <section data-tour="hero" className="bleed desk on-dark hero-grid relative overflow-hidden">
         <div aria-hidden className="hero-glow" />
-        <div className="relative mx-auto grid max-w-[110rem] items-center gap-14 px-6 pb-20 pt-12 sm:px-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:pb-24 lg:pt-14">
+        <div className="relative mx-auto grid max-w-[110rem] items-center gap-14 px-6 pb-20 pt-32 sm:px-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:pb-24 lg:pt-36">
           <div>
             <p className="readout flex items-center gap-3 text-xs text-ground/60">
               <span className="live-dot" aria-hidden />
