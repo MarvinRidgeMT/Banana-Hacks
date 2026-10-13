@@ -12,7 +12,7 @@ export function TrueFaceExhibit() {
     <section>
       <p className="tag">The answer key</p>
       <h2 className="mt-5 font-serif text-4xl leading-tight sm:text-5xl">
-        Three confident faces. <span className="text-invented">None of them is Lincoln's.</span>
+        Three confident faces. None of them is Lincoln's.
       </h2>
       <p className="mt-4 max-w-[62ch] text-xl leading-relaxed text-body">
         We erased part of a public-domain Lincoln portrait ourselves, so for once the true face is known.

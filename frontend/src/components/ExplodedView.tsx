@@ -100,7 +100,7 @@ export function ExplodedView({ result }: { result: Result }) {
           <div>
             <p className="tag !bg-ground/10 !text-ground/80">Take it apart</p>
             <h2 className="mt-5 font-serif text-4xl leading-tight sm:text-5xl">
-              One restoration. <span className="text-[#E7B7B1]">Five layers of evidence.</span>
+              One restoration, five layers of evidence.
             </h2>
             <p className="mt-4 max-w-[52ch] text-lg text-ground/70">
               A real case from our pipeline, separated into what it's made of. Scroll to take it apart.

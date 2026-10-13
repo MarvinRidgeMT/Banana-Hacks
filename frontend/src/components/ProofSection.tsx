@@ -58,11 +58,11 @@ export function ProofSection({ demos }: { demos: Demo[] | null }) {
     <section data-tour="proof" id="proof" aria-labelledby="proof-h" className="bleed proof-section scroll-mt-20">
       <div className="mx-auto grid max-w-[110rem] gap-14 px-6 py-24 [&>*]:min-w-0 sm:px-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
         <div>
-          <p className="readout flex items-center gap-3 text-xs text-muted">
+          <p className="eyebrow flex items-center gap-3 text-muted">
             <span className="hud-tick" aria-hidden /> The measurement
           </p>
           <h2 id="proof-h" className="display mt-6 text-[clamp(2.6rem,5vw,5rem)] text-ink">
-            They repaint the whole photo. <span className="text-gradient">We don't.</span>
+            They repaint the whole photo. We don't.
           </h2>
           <p className="mt-6 max-w-[48ch] text-lg leading-relaxed text-body">
             Share of the <em>undamaged</em> photo that gets changed, on our {rows.length} demo photos:
@@ -88,7 +88,7 @@ export function ProofSection({ demos }: { demos: Demo[] | null }) {
                   aria-pressed={r.demo.key === pick}
                   className="proof-row group w-full text-left"
                 >
-                  <span className="truncate text-sm text-body">{r.demo.title.replace(/^Document: /, "")}</span>
+                  <span className="truncate text-sm text-body">{r.demo.title.replace(/^Document: (.)/, (_, c) => c.toUpperCase())}</span>
                   <span className="proof-bar" aria-hidden>
                     <span style={{ width: `${r.pct}%` }} />
                   </span>
@@ -138,7 +138,7 @@ export function ProofSection({ demos }: { demos: Demo[] | null }) {
             </p>
           </div>
           <p className="mt-3 text-sm text-muted">
-            {current.demo.title.replace(/^Document: /, "")}: the typical restorer changed {current.pct.toFixed(1)}% of
+            {current.demo.title.replace(/^Document: (.)/, (_, c) => c.toUpperCase())}: the typical restorer changed {current.pct.toFixed(1)}% of
             the undamaged pixels (average color shift ΔE {current.deltaE.toFixed(1)}). Drag to compare.
           </p>
         </div>

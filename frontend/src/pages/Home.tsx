@@ -78,7 +78,7 @@ export function Home({ demos, demosError, onRetryDemos, onUpload, pipeline }: Pr
         <div aria-hidden className="hero-glow" />
         <div className="relative mx-auto grid max-w-[110rem] items-center gap-14 px-6 pb-20 pt-32 sm:px-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:pb-24 lg:pt-36">
           <div>
-            <p className="readout flex items-center gap-3 text-xs text-ground/60">
+            <p className="eyebrow flex items-center gap-3 text-ground/60">
               <span className="live-dot" aria-hidden />
               Forensic photo restoration · Banana Hacks 2026
             </p>
@@ -188,10 +188,10 @@ export function Home({ demos, demosError, onRetryDemos, onUpload, pipeline }: Pr
               <h2 className="mt-5 font-serif text-4xl leading-tight sm:text-6xl">
                 Photos, documents, color.
                 <br />
-                <span className="text-invented">Same honesty.</span>
+                Same honesty.
               </h2>
             </div>
-            <ol className="pipeline readout" aria-label="The pipeline">
+            <ol className="pipeline" aria-label="The pipeline">
               {PIPELINE.map((s, i) => (
                 <li key={s}>
                   <span className="text-faint">{String(i + 1).padStart(2, "0")}</span> {s}
@@ -247,7 +247,7 @@ export function Home({ demos, demosError, onRetryDemos, onUpload, pipeline }: Pr
           <div className="mx-auto max-w-[110rem] px-6 py-20 sm:px-10 sm:py-24">
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div>
-                <p className="readout text-xs text-ground/60">Case files · all public domain</p>
+                <p className="eyebrow text-ground/60">Every case file is public domain</p>
                 <h2 className="mt-4 font-serif text-4xl leading-tight sm:text-6xl">Open a case</h2>
               </div>
               <p className="max-w-[48ch] text-ground/70">
@@ -283,7 +283,7 @@ export function Home({ demos, demosError, onRetryDemos, onUpload, pipeline }: Pr
                       {d.kind === "document" && <span className="scanner-chip bottom-3 left-3">Document</span>}
                     </div>
                     <p className="mt-4 text-lg font-semibold leading-snug text-ground group-hover:underline">
-                      {d.title.replace(/^Document: /, "")}
+                      {d.title.replace(/^Document: (.)/, (_, c) => c.toUpperCase())}
                     </p>
                   </Link>
                   <DemoCredit demo={d} className="mt-1 !text-ground/55 [&_a]:!text-ground/55" />
@@ -295,9 +295,9 @@ export function Home({ demos, demosError, onRetryDemos, onUpload, pipeline }: Pr
 
         {/* 9. The way in */}
         <section className="pb-8 text-center">
-          <p className="readout text-xs text-muted">Free · open source · every result signed</p>
+          <p className="eyebrow text-muted">Free and open source. Every result is signed.</p>
           <h2 className="display mx-auto mt-6 max-w-[20ch] text-[clamp(3rem,7vw,7rem)]">
-            Got a damaged photo? <span className="text-invented">See what's real.</span>
+            Got a damaged photo? See what's real.
           </h2>
           <div className="mt-12 flex flex-wrap justify-center gap-4">
             <Link
@@ -374,10 +374,10 @@ function ModeCard(props: {
         )}
       </div>
       <div className="p-6">
-        <p className="readout text-xs text-muted">{eyebrow}</p>
+        <p className="eyebrow text-muted">{eyebrow}</p>
         <h3 className="mt-2 font-serif text-3xl leading-tight">{title}</h3>
         <p className="mt-3 text-body">{text}</p>
-        {stat && <p className="readout mt-5 inline-block bg-tag px-2 py-1 text-xs text-ink">{stat}</p>}
+        {stat && <p className="mt-5 inline-block rounded-sm bg-tag px-2 py-1 text-sm text-ink">{stat}</p>}
       </div>
     </>
   );

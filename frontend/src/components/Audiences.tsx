@@ -80,11 +80,11 @@ export function Audiences() {
       <div className="relative mx-auto max-w-[110rem] px-6 py-24 sm:px-10 sm:py-32">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end">
           <div>
-            <p className="readout flex items-center gap-3 text-xs text-muted">
+            <p className="eyebrow flex items-center gap-3 text-muted">
               <span className="hud-tick" aria-hidden /> Who it's for
             </p>
             <h2 id="who-for" className="display mt-6 text-[clamp(2.8rem,6vw,6.2rem)] text-ink">
-              For anyone whose photos are <span className="text-gradient">evidence.</span>
+              For anyone whose photos are evidence.
             </h2>
           </div>
           <p className="max-w-[46ch] text-xl leading-relaxed text-body">
@@ -97,14 +97,8 @@ export function Audiences() {
           {AUDIENCES.map((a, i) => (
             <li key={a.id} className={`aud-card group ${i < 2 ? "lg:col-span-3" : "lg:col-span-2"}`}>
               <div className="flex h-full flex-col p-7 sm:p-8">
-                <div className="flex items-center justify-between">
-                  <span className="readout text-[0.7rem] text-muted">
-                    {String(i + 1).padStart(2, "0")} / {String(AUDIENCES.length).padStart(2, "0")}
-                  </span>
-                  <span className="aud-dot" aria-hidden />
-                </div>
-                <h3 className="mt-5 text-2xl font-semibold text-ink">{a.who}</h3>
-                <p className={`aud-stat mt-6 font-serif leading-none ${i < 2 ? "text-7xl" : "text-6xl"}`}>
+                <h3 className="text-2xl font-semibold text-ink">{a.who}</h3>
+                <p className={`aud-stat mt-6 font-serif leading-none ${i < 2 ? "text-5xl sm:text-7xl" : "text-5xl sm:text-6xl"}`}>
                   {/^\d/.test(a.stat) ? <CountUp text={a.stat} /> : a.stat}
                 </p>
                 <p className="mt-3 text-muted">
@@ -113,7 +107,7 @@ export function Audiences() {
                     href={a.source.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="readout whitespace-nowrap text-[0.68rem] text-faint underline underline-offset-4 hover:text-ink"
+                    className="whitespace-nowrap text-sm text-faint underline underline-offset-4 hover:text-ink"
                   >
                     {a.source.label}
                     <span className="sr-only"> (opens in a new tab)</span>
@@ -121,17 +115,17 @@ export function Audiences() {
                 </p>
                 <dl className="mt-7 space-y-4 border-t border-line pt-6">
                   <div>
-                    <dt className="readout text-[0.68rem] text-invented">The risk</dt>
+                    <dt className="eyebrow text-invented">The risk</dt>
                     <dd className="mt-1 text-body">{a.risk}</dd>
                   </div>
                   <div>
-                    <dt className="readout text-[0.68rem] text-inferred">What Cold Case gives them</dt>
+                    <dt className="eyebrow text-inferred">What Cold Case gives them</dt>
                     <dd className="mt-1 text-body">{a.gives}</dd>
                   </div>
                 </dl>
                 <ul className="mt-6 flex flex-wrap gap-2" aria-label="Features">
                   {a.features.map((f) => (
-                    <li key={f} className="aud-chip readout">
+                    <li key={f} className="aud-chip">
                       {f}
                     </li>
                   ))}
@@ -147,7 +141,7 @@ export function Audiences() {
           <li className="aud-card aud-card-cta on-dark md:col-span-2 lg:col-span-6">
             <div className="flex flex-wrap items-center justify-between gap-6 p-7 sm:p-8">
               <div>
-                <p className="readout text-[0.7rem] text-ground/60">And anyone with a shoebox of old photos</p>
+                <p className="eyebrow text-ground/60">And anyone with a shoebox of old photos</p>
                 <p className="mt-3 font-serif text-3xl leading-tight text-ground sm:text-4xl">
                   Free, open source, and every result signed.
                 </p>

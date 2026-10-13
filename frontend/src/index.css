@@ -525,3 +525,17 @@ a.mode-card:hover { transform: translateY(-6px); box-shadow: 0 30px 60px -25px r
 .proof-bar > span { background: linear-gradient(90deg, #d36a61, var(--color-invented)); }
 .proof-row[aria-pressed="true"] .proof-bar > span { box-shadow: none; }
 .proof-frame { border-color: var(--color-line); box-shadow: 0 30px 70px -35px rgba(31, 27, 22, 0.6); background: var(--color-mat); }
+
+/* ---------- v6: quieter labels; red is reserved for "Invented" ---------- */
+.eyebrow { font-family: var(--font-sans); font-size: 0.92rem; font-weight: 500; letter-spacing: 0; text-transform: none; }
+.tag {
+  background: none; padding: 0; font-family: var(--font-sans); font-size: 0.95rem; font-weight: 500;
+  letter-spacing: 0; text-transform: none; color: var(--color-muted);
+  display: inline-flex; align-items: center; gap: 0.6rem;
+}
+.tag::before { content: ""; width: 18px; height: 2px; background: currentColor; opacity: 0.5; }
+.tag-warn { background: var(--color-warn); padding: 0.15em 0.6em; color: var(--color-ink); }
+.tag-warn::before { display: none; }
+.ticker-row li { font-family: var(--font-sans); font-size: 0.95rem; letter-spacing: 0; text-transform: none; font-weight: 500; }
+.aud-chip { font-size: 0.8rem; text-transform: none; letter-spacing: 0; font-family: var(--font-sans); }
+.pipeline { font-family: var(--font-sans); text-transform: none; letter-spacing: 0; font-size: 0.85rem; }

@@ -14,7 +14,7 @@ export function Comparison() {
     <section>
       <p className="tag">Why it's different</p>
       <h2 className="mt-5 font-serif text-4xl leading-tight sm:text-5xl">
-        Other restorers make it look right. <span className="text-invented">Cold Case tells you what's real.</span>
+        Other restorers make it look right. Cold Case tells you what's real.
       </h2>
       <div className="mt-10 overflow-hidden rounded-sm border border-line">
         <div className="hidden grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1.2fr)] bg-tag font-semibold sm:grid">
