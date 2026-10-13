@@ -6,10 +6,30 @@ import { currentUser, onAuthChange, signOut } from "../lib/auth";
 interface Props {
   route: Route;
   seq: number;
+  /** From /health: null while checking, "static" when only saved results are available. */
+  pipeline: string | null;
+}
+
+function Status({ pipeline }: { pipeline: string | null }) {
+  const [cls, label, tip] =
+    pipeline === null
+      ? ["is-wait", "Connecting", "Checking whether the restoring server is up"]
+      : pipeline === "static"
+        ? ["is-demo", "Demo mode", "The restoring server is offline. Saved cases work; new uploads need the server."]
+        : pipeline === "stub"
+          ? ["is-demo", "Test mode", "The server is running a fake pipeline. Results are not real restorations."]
+          : ["is-live", "Live", "The restoring server is online: you can restore your own photos."];
+  return (
+    <span className={`status-chip readout ${cls}`} title={tip} role="status">
+      <span className="status-dot" aria-hidden />
+      {label}
+      <span className="sr-only">. {tip}</span>
+    </span>
+  );
 }
 
 /* A dark glass console bar: logo, two links, "More", account, one call to action. */
-export function SiteHeader({ route, seq }: Props) {
+export function SiteHeader({ route, seq, pipeline }: Props) {
   const [open, setOpen] = useState(false);
   const [more, setMore] = useState(false);
   const [user, setUser] = useState(currentUser());
@@ -40,20 +60,31 @@ export function SiteHeader({ route, seq }: Props) {
     };
   }, [open, more]);
 
+  // On the home page the bar melts into the hero until you scroll.
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 24);
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
+  }, []);
+  const flat = route.name === "home" && !scrolled && !open;
+
   const moreActive = NAV_MORE.some((l) => l.name === route.name);
   const initials = user ? (user.name || user.email).trim().slice(0, 1).toUpperCase() : "";
 
   return (
-    <header className="glass-header on-dark sticky top-0 z-50">
+    <header className={`glass-header on-dark sticky top-0 z-50 ${flat ? "is-flat" : ""}`}>
       <div className="mx-auto flex max-w-[110rem] items-center justify-between gap-6 px-6 py-3 sm:px-10">
         <Link to={href.home} className="brand flex items-center gap-3" aria-label="Cold Case, home">
           <span className="brand-mark" aria-hidden>
             <span />
           </span>
-          <span className="readout text-sm font-semibold tracking-[0.22em] text-ground">Cold Case</span>
+          <span className="readout whitespace-nowrap text-sm font-semibold tracking-[0.22em] text-ground">Cold Case</span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-1 md:flex">
+        <nav aria-label="Main" className="flex items-center gap-1">
           {NAV_PRIMARY.map((l) => (
             <Link
               key={l.name}
@@ -93,7 +124,9 @@ export function SiteHeader({ route, seq }: Props) {
           </div>
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <span className="mx-3 h-6 w-px bg-ground/15" aria-hidden />
+        <div className="flex items-center gap-2">
+          <Status pipeline={pipeline} />
           {user ? (
             <div className="flex items-center gap-2">
               <span className="avatar" title={user.email} aria-label={`Signed in as ${user.name || user.email}`}>
@@ -116,8 +149,10 @@ export function SiteHeader({ route, seq }: Props) {
             Restore a photo <span aria-hidden>→</span>
           </Link>
         </div>
+        </div>
 
-        <div className="md:hidden">
+        <div className="flex items-center gap-2 md:hidden">
+          <Status pipeline={pipeline} />
         <button
           ref={menuButton}
           type="button"

@@ -75,7 +75,7 @@ const AUDIENCES = [
 
 export function Audiences() {
   return (
-    <section aria-labelledby="who-for" className="bleed aud-section on-dark relative overflow-hidden">
+    <section data-tour="who" aria-labelledby="who-for" className="bleed aud-section on-dark relative overflow-hidden">
       <div aria-hidden className="aud-orb" />
       <div className="relative mx-auto max-w-[110rem] px-6 py-24 sm:px-10 sm:py-32">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end">

@@ -195,7 +195,9 @@ export default function App() {
     }
     switch (route.name) {
       case "home":
-        return <Home demos={demos} demosError={demosError} onRetryDemos={loadDemos} />;
+        return (
+          <Home demos={demos} demosError={demosError} onRetryDemos={loadDemos} onUpload={onUpload} pipeline={pipeline} />
+        );
       case "restore":
         return (
           <UploadView
@@ -249,17 +251,12 @@ export default function App() {
       >
         Skip to content
       </a>
-      {pipeline === "static" && (
-        <p className="bg-tag px-6 py-2 text-center text-ink sm:px-10">
-          The restoring server is offline right now. The demo cases below are saved results; uploading a new photo needs the server.
-        </p>
-      )}
       {pipeline === "stub" && (
         <p className="bg-warn px-6 py-2 text-center font-semibold text-ink sm:px-10">
           Test mode: the server is running a fake pipeline. These results are not real restorations.
         </p>
       )}
-      <SiteHeader route={route} seq={seq} />
+      <SiteHeader route={route} seq={seq} pipeline={pipeline} />
 
       {banner && (
         <div className="mx-auto mt-6 flex w-full max-w-[110rem] flex-wrap items-center justify-between gap-4 px-6 sm:px-10">

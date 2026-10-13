@@ -29,7 +29,7 @@ export function UploadView({ demos, demosError, onRetryDemos, onOpenDemo, onUplo
       setNote("That isn't an image. Use a JPG, PNG or TIFF scan.");
       return;
     }
-    setNote(images.length > 1 ? `Restoring the first photo, ${images[0].name}. Batch restore isn't available yet.` : null);
+    setNote(images.length > 1 ? `Restoring the first photo, ${images[0].name}. For many at once, use Batch (More → Batch).` : null);
     onUpload(images[0], markMyself, kind);
   };
 

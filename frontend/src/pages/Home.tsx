@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { Audiences } from "../components/Audiences";
+import { HeroDrop } from "../components/HeroDrop";
+import { ProofSection } from "../components/ProofSection";
+import { Tour, useTour } from "../components/Tour";
 import { Comparison } from "../components/Comparison";
 import { DemoCredit } from "../components/DemoCredit";
 import { ExplodedView } from "../components/ExplodedView";
@@ -17,6 +20,9 @@ interface Props {
   demos: Demo[] | null;
   demosError: string | null;
   onRetryDemos: () => void;
+  onUpload: (file: File, markMyself: boolean, kind: "photo" | "document") => void;
+  /** "static" when the restoring server is offline and the site shows saved results. */
+  pipeline: string | null;
 }
 
 const PRIMARY_DARK =
@@ -56,7 +62,8 @@ const TICKER = [
 
 const PIPELINE = ["Detect damage", "Restore × 8 seeds", "Measure disagreement", "Label every pixel", "Sign the receipt"];
 
-export function Home({ demos, demosError, onRetryDemos }: Props) {
+export function Home({ demos, demosError, onRetryDemos, onUpload, pipeline }: Props) {
+  const tour = useTour();
   const hero = demos?.find((d) => d.id === "face_missing") ?? demos?.[0] ?? null;
   const heroResult = useResult(hero?.key);
   const caseHref = hero ? href.result(hero.key, DEFAULT_FIDELITY) : href.restore;
@@ -67,7 +74,7 @@ export function Home({ demos, demosError, onRetryDemos }: Props) {
   return (
     <div className="-mt-12">
       {/* 1. HERO: the examination table */}
-      <section className="bleed desk on-dark hero-grid relative overflow-hidden">
+      <section data-tour="hero" className="bleed desk on-dark hero-grid relative overflow-hidden">
         <div aria-hidden className="hero-glow" />
         <div className="relative mx-auto grid max-w-[110rem] items-center gap-14 px-6 pb-20 pt-12 sm:px-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:pb-24 lg:pt-14">
           <div>
@@ -93,10 +100,11 @@ export function Home({ demos, demosError, onRetryDemos }: Props) {
               <Link to={href.restore} className={PRIMARY_DARK}>
                 Restore a photo <span aria-hidden>→</span>
               </Link>
-              <Link to={caseHref} className={SECONDARY_DARK}>
-                Open this case
-              </Link>
+              <button type="button" onClick={tour.start} className={SECONDARY_DARK}>
+                <span className="play-dot" aria-hidden>▶</span> 60-second tour
+              </button>
             </div>
+            <HeroDrop onUpload={onUpload} offline={pipeline === "static"} caseHref={caseHref} />
           </div>
           <div className="relative">
             {heroResult ? (
@@ -128,6 +136,9 @@ export function Home({ demos, demosError, onRetryDemos }: Props) {
           ))}
         </div>
       </div>
+
+      {/* 2b. The measurement */}
+      <ProofSection demos={demos} />
 
       <div className="mt-24 space-y-28 sm:mt-32 sm:space-y-36">
         {/* 3. The problem, in one line */}
@@ -162,13 +173,15 @@ export function Home({ demos, demosError, onRetryDemos }: Props) {
         <Audiences />
 
         {/* 4. The answer key */}
-        <TrueFaceExhibit />
+        <div data-tour="answer-key">
+          <TrueFaceExhibit />
+        </div>
 
         {/* 5. Take it apart */}
         {heroResult && <ExplodedView result={heroResult} />}
 
         {/* 6. Three kinds of evidence */}
-        <section>
+        <section data-tour="modes">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
               <p className="tag">What it handles</p>
@@ -230,7 +243,7 @@ export function Home({ demos, demosError, onRetryDemos }: Props) {
         <Comparison />
 
         {/* 8. Cases */}
-        <section className="bleed desk on-dark hero-grid">
+        <section data-tour="cases" className="bleed desk on-dark hero-grid">
           <div className="mx-auto max-w-[110rem] px-6 py-20 sm:px-10 sm:py-24">
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div>
@@ -299,6 +312,7 @@ export function Home({ demos, demosError, onRetryDemos }: Props) {
           </div>
         </section>
       </div>
+      <Tour step={tour.step} setStep={tour.setStep} />
     </div>
   );
 }
