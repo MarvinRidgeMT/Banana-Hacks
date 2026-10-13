@@ -82,6 +82,9 @@ for f in files:
         full = cv2.resize(mask, (w, h), interpolation=cv2.INTER_NEAREST)
         cv2.imwrite(str(mp), np.where(full > 127, 255, 0).astype(np.uint8))
         print(f"saved {mp}  ({(full > 127).mean():.1%} of photo marked as damage)")
+        marker = f.with_name(f.stem + "_unchecked")
+        if marker.exists():
+            marker.unlink()                       # a person has now checked this mask
         if faces:
             fp.write_text(json.dumps([[round(v / scale) for v in b] for b in faces]))
             print(f"saved {fp}  ({len(faces)} face box)")

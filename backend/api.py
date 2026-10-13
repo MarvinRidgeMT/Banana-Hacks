@@ -828,6 +828,7 @@ def preload_models() -> None:
     upload doesn't wait 20-40 s for model loading. Failures are logged, not fatal."""
     t0 = time.time()
     for name, load in (("segmenter", "pipeline.segment:get_model"),
+                       ("scratch detector", "pipeline.scratch_ms:get_model"),
                        ("SDXL", "pipeline.inpaint:get_pipe"),
                        ("CodeFormer", "pipeline.codeformer:get_net"),
                        ("colorizers", "colorize:get_models")):

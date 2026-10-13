@@ -22,6 +22,12 @@ def get_mask(path, img):
         return np.asarray(m) > 127, "provided mask file"
     from .segment import segment, MODEL_NAME
     m, _ = segment(img)
+    try:
+        from . import scratch_ms
+        if scratch_ms.available():
+            return m | scratch_ms.detect(img), f"{MODEL_NAME} + {scratch_ms.MODEL_NAME}"
+    except Exception as e:
+        print(f"[mask] scratch detector skipped: {type(e).__name__}: {e}", flush=True)
     return m, MODEL_NAME
 
 def _cache_key(sha, mask, seeds, steps, color=False):

@@ -473,6 +473,15 @@ def propose_mask(image_path: Path, kind: str = "photo") -> Path:
         k = min(1.0, 1024 / max(W, H))
         small = img.resize((max(1, round(W * k)), max(1, round(H * k))), Image.LANCZOS) if k < 1 else img
         ms, _ = segment(np.asarray(small), weights=DOC_WEIGHTS if kind == "document" else None)
+        if kind != "document":
+            # Union with Microsoft's old-photo scratch detector: it finds the long thin cracks
+            # and scratches ours misses (real-scan overlap 0.06 -> 0.17 on our 5 demo masks).
+            try:
+                from pipeline import scratch_ms
+                if scratch_ms.available():
+                    ms = ms | scratch_ms.detect(np.asarray(small))
+            except Exception as e:  # the second detector is a bonus, never a blocker
+                print(f"[propose] scratch detector skipped: {type(e).__name__}: {e}", flush=True)
         ms = ndimage.binary_dilation(ms, iterations=2)
         m = np.asarray(Image.fromarray(ms.astype(np.uint8) * 255, mode="L").resize((W, H), Image.NEAREST)) > 127
     Image.fromarray(m.astype(np.uint8) * 255, mode="L").save(out)
