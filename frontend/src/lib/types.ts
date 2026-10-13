@@ -119,3 +119,58 @@ export interface ColorResult {
   models: string[];
   seconds: number;
 }
+
+export interface VerifyResult {
+  filename?: string;
+  has_receipt: boolean;
+  valid: boolean;
+  tampered: boolean;
+  signer_trusted: boolean;
+  case_key: string | null;
+  fidelity: number | null;
+  matched_file?: "restored" | "color";
+  pixels_match_record?: boolean;
+  pixel_summary: Summary | null;
+  stages: string[];
+  kind?: "photo" | "document" | "color";
+  issues: string[];
+  validation_codes?: string[];
+}
+
+export interface LikenessResult {
+  model: string;
+  threshold: number;
+  scores: { name: string; similarity: number; same_person: boolean; method: string }[];
+  best: string | null;
+  verdict: string;
+}
+
+export interface CompareResult {
+  files: { typical: string; changed: string };
+  method: string;
+  faces_restored: number;
+  undamaged_pixels: number;
+  undamaged_changed: number;
+  undamaged_changed_pct: number;
+  mean_delta_e_undamaged: number;
+  cold_case_undamaged_changed: number;
+  seconds: number;
+}
+
+export interface BatchItem {
+  filename: string | null;
+  key: string | null;
+  status: "queued" | "running" | "done" | "error";
+  error?: string | null;
+  position?: number | null;
+  pixel_summary?: Summary;
+  thumb?: string;
+}
+
+export interface BatchStatus {
+  id: string;
+  created: number;
+  total: number;
+  done: number;
+  items: BatchItem[];
+}

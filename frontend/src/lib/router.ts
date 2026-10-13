@@ -9,6 +9,8 @@ export type Route =
   | { name: "restore" }
   | { name: "cases" }
   | { name: "account" }
+  | { name: "verify" }
+  | { name: "batch"; id?: string }
   | { name: "result"; key: string; fidelity: number }
   | { name: "how-it-works" }
   | { name: "evidence" }
@@ -20,6 +22,8 @@ export const href = {
   restore: "#/restore",
   cases: "#/cases",
   account: "#/account",
+  verify: "#/verify",
+  batch: (id?: string) => (id ? `#/batch/${id}` : "#/batch"),
   howItWorks: "#/how-it-works",
   evidence: "#/evidence",
   about: "#/about",
@@ -28,6 +32,8 @@ export const href = {
 
 export const NAV_LINKS = [
   { name: "cases", label: "My cases", to: href.cases },
+  { name: "verify", label: "Verify", to: href.verify },
+  { name: "batch", label: "Batch", to: href.batch() },
   { name: "how-it-works", label: "How it works", to: href.howItWorks },
   { name: "evidence", label: "Evidence", to: href.evidence },
   { name: "about", label: "About", to: href.about },
@@ -38,6 +44,8 @@ const STATIC: Record<string, Route> = {
   "/restore": { name: "restore" },
   "/cases": { name: "cases" },
   "/account": { name: "account" },
+  "/verify": { name: "verify" },
+  "/batch": { name: "batch" },
   "/how-it-works": { name: "how-it-works" },
   "/evidence": { name: "evidence" },
   "/about": { name: "about" },
@@ -47,6 +55,8 @@ export function parseHash(hash: string): Route {
   const path = hash.replace(/^#/, "").replace(/\/+$/, "") || "/";
   const fixed = STATIC[path];
   if (fixed) return fixed;
+  const b = path.match(/^\/batch\/([0-9a-f]{32})$/);
+  if (b) return { name: "batch", id: b[1] };
   // #/p/<key>/<fidelity> opens a result directly, so a link can go in the Devpost write-up.
   const m = path.match(/^\/p\/([0-9a-f]{64})(?:\/([\d.]+))?$/);
   if (m) {

@@ -1,0 +1,14 @@
+{
+  "files": {
+    "typical": "f070/compare/typical.png",
+    "changed": "f070/compare/changed.png"
+  },
+  "method": "Telea fill + non-local-means denoise + unsharp mask over the whole frame + CodeFormer on every face, feathered paste",
+  "faces_restored": 4,
+  "undamaged_pixels": 753454,
+  "undamaged_changed": 241181,
+  "undamaged_changed_pct": 32.01,
+  "mean_delta_e_undamaged": 3.02,
+  "cold_case_undamaged_changed": 0,
+  "seconds": 0.73
+}

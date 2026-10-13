@@ -1,4 +1,4 @@
-import type { ColorResult, Demo, Job, Metrics, Result } from "./types";
+import type { BatchStatus, ColorResult, CompareResult, Demo, Job, LikenessResult, Metrics, Result, VerifyResult } from "./types";
 
 /** Empty when the site is served by the backend or the Vite dev proxy;
  * the Cloudflare Tunnel URL when the site is on Vercel. */
@@ -117,6 +117,43 @@ export const api = {
     return call<ColorResult>("/colorize", { method: "POST", body: form });
   },
 
+  /** Read a file's Cold Case receipt and check it against the record. */
+  verify(file: File) {
+    const form = new FormData();
+    form.append("file", file);
+    return call<VerifyResult>("/verify", { method: "POST", body: form });
+  },
+
+  /** Score the face guesses against a reference photo of the same person. */
+  likeness(key: string, fidelity: number, reference: File) {
+    const form = new FormData();
+    form.append("key", key);
+    form.append("fidelity", String(fidelity));
+    form.append("reference", reference);
+    return call<LikenessResult>("/likeness", { method: "POST", body: form });
+  },
+
+  /** What a typical whole-image restorer would have done to the same scan. */
+  async compare(key: string, fidelity: number): Promise<CompareResult> {
+    if ((await apiMode()) === "static") {
+      const r = await fetch(`${STATIC_BASE}/results/${key}/${fidelityDir(fidelity)}/compare/compare.json`);
+      if (!r.ok) throw new ApiError(OFFLINE_MSG);
+      return json<CompareResult>(r);
+    }
+    const form = new FormData();
+    form.append("key", key);
+    form.append("fidelity", String(fidelity));
+    return call<CompareResult>("/compare", { method: "POST", body: form });
+  },
+
+  batchCreate(files: File[], kind: "photo" | "document") {
+    const form = new FormData();
+    form.append("kind", kind);
+    files.forEach((f) => form.append("files", f));
+    return call<BatchStatus>("/batch", { method: "POST", body: form });
+  },
+  batch: (id: string) => call<BatchStatus>(`/batch/${id}`),
+
   restore(opts: { file?: File; key?: string; mask?: Blob; kind?: "photo" | "document"; fidelity: number; allFidelities?: boolean }) {
     const form = new FormData();
     if (opts.kind) form.append("kind", opts.kind);
@@ -155,3 +192,7 @@ function localStorageToken(): string | null {
     return null;
   }
 }
+
+export const sidecarUrl = (key: string, fidelity: number, format: "xmp" | "json") =>
+  `${API_BASE}/sidecar/${key}?fidelity=${fidelity}${format === "json" ? "&format=json" : ""}`;
+export const batchCsvUrl = (id: string) => `${API_BASE}/batch/${id}/csv`;

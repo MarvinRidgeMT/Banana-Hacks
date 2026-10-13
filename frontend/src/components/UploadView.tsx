@@ -125,6 +125,12 @@ export function UploadView({ demos, demosError, onRetryDemos, onOpenDemo, onUplo
         </div>
       </section>
 
+      <p className="-mt-6 text-body">
+        Restoring a whole box?{" "}
+        <a href="#/batch" className="font-semibold underline underline-offset-4">Use batch mode</a> to restore up to 40
+        scans and export a catalog CSV.
+      </p>
+
       <YourCases />
 
       <section>

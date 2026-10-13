@@ -5,6 +5,7 @@ import { href } from "../lib/router";
 import type { ColorResult, HoverInfo, Job, Metrics, Result } from "../lib/types";
 import { FIDELITY_STEPS } from "../lib/types";
 import { ColorPanel } from "./ColorPanel";
+import { ComparePanel } from "./ComparePanel";
 import { CopyLink } from "./CopyLink";
 import { EvidenceNotes } from "./EvidenceNotes";
 import { FacesPanel } from "./FacesPanel";
@@ -43,7 +44,7 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
   const [showMap, setShowMap] = useState(false);
   const [opacity, setOpacity] = useState(0.75);
   const [hover, setHover] = useState<HoverInfo | null>(null);
-  const [tab, setTab] = useState<"faces" | "manifest">("faces");
+  const [tab, setTab] = useState<"faces" | "compare" | "manifest">("faces");
   const [colors, setColors] = useState<Record<string, ColorResult>>({});
   const [colorOn, setColorOn] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
@@ -291,6 +292,7 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
           {(
             [
               ["faces", "Three faces"],
+              ["compare", "vs. a typical restorer"],
               ["manifest", "The receipt"],
             ] as const
           ).map(([id, label]) => (
@@ -310,6 +312,8 @@ export function ResultView({ photoKey, title, initialFidelity, metrics, onFixMas
         <div role="tabpanel">
           {tab === "faces" ? (
             <FacesPanel result={shown} />
+          ) : tab === "compare" ? (
+            <ComparePanel result={shown} />
           ) : (
             <ManifestPanel
               result={shown}

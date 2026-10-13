@@ -31,6 +31,10 @@ for d in api.DEMO_INDEX:
         files.update(f["file"] for f in r["faces"])
         if r.get("face_original"):
             files.add(r["face_original"])
+        cmp = rf.parent / "compare" / "compare.json"
+        if cmp.exists():  # typical-restorer comparison, if precomputed (archive_demos.py)
+            files.add(str(cmp.relative_to(folder)))
+            files.update(v for v in json.loads(cmp.read_text())["files"].values() if v)
         cj = rf.parent / "color" / "color.json"
         if cj.exists():  # colour mode, if precomputed (colorize_demos.py)
             files.add(str(cj.relative_to(folder)))

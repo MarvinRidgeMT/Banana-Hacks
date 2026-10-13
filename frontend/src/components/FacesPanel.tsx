@@ -1,5 +1,6 @@
 import { fileUrl } from "../lib/api";
 import type { Result } from "../lib/types";
+import { LikenessCheck } from "./LikenessCheck";
 
 export function FacesPanel({ result }: { result: Result }) {
   if (result.faces.length === 0) {
@@ -12,6 +13,7 @@ export function FacesPanel({ result }: { result: Result }) {
   }
   const faces = result.faces.slice(0, 3);
   return (
+    <>
     <figure>
       <div className="flex flex-wrap items-end gap-6">
         {result.face_original && (
@@ -47,6 +49,8 @@ export function FacesPanel({ result }: { result: Result }) {
         <span className="mt-2 block text-lg text-body">The AI was equally sure of all three.</span>
       </figcaption>
     </figure>
+    <LikenessCheck result={result} />
+    </>
   );
 }
 

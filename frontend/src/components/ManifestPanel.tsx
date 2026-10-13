@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api, fileUrl } from "../lib/api";
+import { api, fileUrl, sidecarUrl } from "../lib/api";
 import { failure } from "../lib/format";
 import type { ColorResult, Result } from "../lib/types";
 
@@ -58,6 +58,23 @@ export function ManifestPanel({ result, color, onColor }: Props) {
     <div className="grid gap-8 lg:grid-cols-[18rem_1fr]">
       <div className="space-y-8">
         <ul className="space-y-3">{downloads.filter((d) => d.file).map(item)}</ul>
+        <div>
+          <p className="case-label mb-3">For your catalog</p>
+          <ul className="space-y-3">
+            <li>
+              <a href={sidecarUrl(result.key, result.fidelity, "xmp")} className="block rounded-sm border border-line bg-surface px-4 py-3 hover:bg-tag">
+                <span className="block font-semibold">Download XMP sidecar</span>
+                <span className="block text-sm text-muted">Dublin Core + IPTC fields your collection software can import</span>
+              </a>
+            </li>
+            <li>
+              <a href={sidecarUrl(result.key, result.fidelity, "json")} className="block rounded-sm border border-line bg-surface px-4 py-3 hover:bg-tag">
+                <span className="block font-semibold">Download catalog record (JSON)</span>
+                <span className="block text-sm text-muted">Description, source hash, Real / Rebuilt / Invented shares</span>
+              </a>
+            </li>
+          </ul>
+        </div>
         {result.kind !== "document" && (
           <div>
             <p className="case-label mb-3">Color version</p>

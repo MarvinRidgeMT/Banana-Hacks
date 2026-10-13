@@ -9,6 +9,8 @@ import { UploadView } from "./components/UploadView";
 import { addHistory, loadHistory } from "./lib/history";
 import { MyCases } from "./pages/MyCases";
 import { Account } from "./pages/Account";
+import { Verify } from "./pages/Verify";
+import { Batch } from "./pages/Batch";
 import { verifySession } from "./lib/auth";
 import { api, fileUrl, waitForJob } from "./lib/api";
 import { href, navigate, useRouter, type Route } from "./lib/router";
@@ -35,6 +37,8 @@ const PAGE_TITLE: Record<Exclude<Route["name"], "result">, string> = {
   restore: "Cold Case · Restore a photo",
   cases: "Cold Case · My cases",
   account: "Cold Case · Sign in",
+  verify: "Cold Case · Verify a photo",
+  batch: "Cold Case · Batch mode",
   "how-it-works": "Cold Case · How it works",
   evidence: "Cold Case · Evidence",
   about: "Cold Case · About",
@@ -206,6 +210,10 @@ export default function App() {
         return <MyCases />;
       case "account":
         return <Account />;
+      case "verify":
+        return <Verify />;
+      case "batch":
+        return <Batch batchId={route.id} key={route.id ?? "new"} />;
       case "result":
         return (
           <ResultView

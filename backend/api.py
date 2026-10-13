@@ -595,6 +595,234 @@ class SecurityHeaders:
         await self.app(scope, receive, send_wrapped)
 
 
+# --------------------------------------------------------------------------- #
+# Archive features: verify, likeness, typical-restorer comparison, catalog metadata, batch
+# --------------------------------------------------------------------------- #
+import csv
+import features
+from starlette.responses import PlainTextResponse, Response
+
+FEATURE_LOCK = threading.Lock()   # CodeFormer / face models: one at a time
+BATCHES = CACHE / "_batches"
+
+
+def _result_or_404(key: str, fidelity: float):
+    r = cached_result(key, fidelity) if valid_key(key) else None
+    return r
+
+
+async def _form(request: Request, files: int = 1, fields: int = 6):
+    return await request.form(max_files=files, max_fields=fields, max_part_size=MAX_UPLOAD)
+
+
+async def verify_route(request: Request):
+    if not auth.allow(client_ip(request), "verify", 60, 3600):
+        return error(429, "Too many checks from your network this hour.")
+    try:
+        form = await _form(request)
+    except Exception as e:
+        return error(400, f"Couldn't read the upload: {e}")
+    up = form.get("file")
+    if not hasattr(up, "read"):
+        return error(400, "Send a file as 'file'.")
+    data = await up.read()
+    if not data or len(data) > MAX_UPLOAD:
+        return error(400, "Send an image under 30 MB.")
+    try:
+        out = await run_in_threadpool(features.verify_file, data, CACHE)
+    except Exception as e:
+        return error(400, f"Couldn't read that image: {type(e).__name__}")
+    out["filename"] = up.filename
+    return JSONResponse(out)
+
+
+async def likeness_route(request: Request):
+    if not auth.allow(client_ip(request), "likeness", 30, 3600):
+        return error(429, "Too many checks from your network this hour.")
+    try:
+        form = await _form(request, fields=6)
+        fidelity = parse_fidelity(form.get("fidelity", DEFAULT_FIDELITY))
+    except Exception as e:
+        return error(400, str(e))
+    key, up = str(form.get("key", "")), form.get("reference")
+    r = _result_or_404(key, fidelity)
+    if not r:
+        return error(404, "Restore the photo first.")
+    if not hasattr(up, "read"):
+        return error(400, "Add a reference photo of the same person.")
+    try:
+        ref = np.asarray(_normalise_image(await up.read()).convert("RGB"))
+    except ValueError as e:
+        return error(400, str(e))
+    folder = CACHE / key
+    cands = []
+    if r.get("face_original") and (folder / r["face_original"]).exists():
+        cands.append(("The damaged scan", np.asarray(Image.open(folder / r["face_original"]).convert("RGB"))))
+    for i, f in enumerate(r.get("faces") or [], 1):
+        if (folder / f["file"]).exists():
+            cands.append((f"Guess {i}", np.asarray(Image.open(folder / f["file"]).convert("RGB"))))
+    if not cands:
+        return error(409, "This photo has no invented face to check.")
+    try:
+        with FEATURE_LOCK:
+            out = await run_in_threadpool(features.likeness, ref, cands)
+    except ValueError as e:
+        return error(422, str(e))
+    return JSONResponse(out)
+
+
+async def compare_route(request: Request):
+    if not auth.allow(client_ip(request), "compare", 30, 3600):
+        return error(429, "Too many comparisons from your network this hour.")
+    try:
+        form = await _form(request, files=0)
+        fidelity = parse_fidelity(form.get("fidelity", DEFAULT_FIDELITY))
+    except Exception as e:
+        return error(400, str(e))
+    key = str(form.get("key", ""))
+    r = _result_or_404(key, fidelity)
+    if not r:
+        return error(404, "Restore the photo first.")
+    folder = CACHE / key
+    orig = np.asarray(Image.open(folder / r["files"]["original"]).convert("RGB"))
+    mfile = r["files"].get("mask")
+    if mfile and (folder / mfile).exists():
+        dmg = np.asarray(Image.open(folder / mfile).convert("L")) > 127
+    else:
+        dmg = np.asarray(Image.open(folder / r["files"]["label"]).convert("L")) > 0
+    face = None
+    if hook.pipeline_name() == "real":
+        from pipeline.codeformer import restore_face as face
+    out_dir = hook.fidelity_dir(folder, fidelity) / "compare"
+    try:
+        with FEATURE_LOCK:
+            meta = await run_in_threadpool(features.typical_restore, orig, dmg, out_dir, face)
+    except Exception as e:
+        traceback.print_exc()
+        return error(500, f"Comparison failed: {type(e).__name__}: {e}")
+    return JSONResponse(meta)
+
+
+def _color_meta(key: str, fidelity: float):
+    f = hook.fidelity_dir(CACHE / key, fidelity) / "color" / "color.json"
+    return json.loads(f.read_text()) if f.exists() else None
+
+
+async def sidecar_route(request: Request):
+    key = request.path_params["key"]
+    try:
+        fidelity = parse_fidelity(request.query_params.get("fidelity", DEFAULT_FIDELITY))
+    except ValueError as e:
+        return error(400, str(e))
+    r = _result_or_404(key, fidelity)
+    if not r:
+        return error(404, "Restore the photo first.")
+    source = json.loads((CACHE / key / "source.json").read_text())
+    row = features.catalog_row(key, r, source, _color_meta(key, fidelity))
+    stem = Path(source.get("filename", "photo")).stem or "photo"
+    if request.query_params.get("format") == "json":
+        return JSONResponse(features.sidecar_json(row), headers={"Content-Disposition": f'attachment; filename="{stem}.coldcase.json"'})
+    return Response(features.sidecar_xmp(row), media_type="application/rdf+xml",
+                    headers={"Content-Disposition": f'attachment; filename="{stem}.xmp"'})
+
+
+def _batch_file(bid: str) -> Path:
+    return BATCHES / f"{bid}.json"
+
+
+async def batch_create_route(request: Request):
+    if not auth.allow(client_ip(request), "upload", 40, 3600):
+        return error(429, "Too many uploads from your network this hour. Try again later.")
+    try:
+        form = await request.form(max_files=40, max_fields=50, max_part_size=MAX_UPLOAD)
+    except Exception as e:
+        return error(400, f"Couldn't read the upload (max 40 files, 30 MB each): {e}")
+    kind = "document" if str(form.get("kind", "")).lower() == "document" else "photo"
+    items = []
+    for up in form.getlist("files"):
+        if not hasattr(up, "read"):
+            continue
+        data = await up.read()
+        if not data or len(data) > MAX_UPLOAD:
+            items.append({"filename": up.filename, "error": "empty or over 30 MB"})
+            continue
+        try:
+            key = await run_in_threadpool(ingest, data, filename=up.filename or "upload", kind=kind)
+        except ValueError as e:
+            items.append({"filename": up.filename, "error": str(e)})
+            continue
+        enqueue(key, DEFAULT_FIDELITY)
+        items.append({"filename": up.filename, "key": key, "kind": kind})
+    if not any(i.get("key") for i in items):
+        return error(400, "None of those files could be read as images.")
+    u = current_user(request)
+    if u:
+        for i in items:
+            if i.get("key"):
+                auth.add_case(u["id"], i["key"], i["filename"] or "Batch photo", kind)
+    bid = uuid.uuid4().hex
+    BATCHES.mkdir(parents=True, exist_ok=True)
+    _batch_file(bid).write_text(json.dumps({"id": bid, "created": now(), "items": items}))
+    return JSONResponse(_batch_status(bid))
+
+
+def _batch_status(bid: str) -> dict | None:
+    f = _batch_file(bid)
+    if not (len(bid) == 32 and set(bid) <= KEY_CHARS and f.exists()):
+        return None
+    b = json.loads(f.read_text())
+    rows = []
+    for it in b["items"]:
+        row = {"filename": it.get("filename"), "key": it.get("key"), "status": "error" if it.get("error") else "queued",
+               "error": it.get("error")}
+        if it.get("key"):
+            r = cached_result(it["key"], DEFAULT_FIDELITY)
+            if r:
+                row["status"] = "done"
+                row["pixel_summary"] = r.get("pixel_summary")
+                row["thumb"] = r["files"].get("restored")
+            else:
+                jid = ACTIVE.get((it["key"], DEFAULT_FIDELITY))
+                job = JOBS.get(jid) if jid else None
+                if job:
+                    row["status"] = job.status
+                    row["position"] = queue_position(job)
+                    if job.status == "error":
+                        row["error"] = job.error
+                else:  # not queued (e.g. the server restarted): queue it again
+                    enqueue(it["key"], DEFAULT_FIDELITY)
+        rows.append(row)
+    rows_done = [r for r in rows if r["status"] == "done"]
+    rows_sorted = sorted(rows, key=lambda r: -((r.get("pixel_summary") or {}).get("invented") or -1))
+    return {"id": bid, "created": b["created"], "total": len(rows), "done": len(rows_done), "items": rows_sorted}
+
+
+async def batch_route(request: Request):
+    st = _batch_status(request.path_params["bid"])
+    return JSONResponse(st) if st else error(404, "No such batch.")
+
+
+async def batch_csv_route(request: Request):
+    st = _batch_status(request.path_params["bid"])
+    if not st:
+        return error(404, "No such batch.")
+    buf = io.StringIO()
+    w = None
+    for it in st["items"]:
+        if not it.get("key"):
+            continue
+        source = json.loads((CACHE / it["key"] / "source.json").read_text())
+        row = features.catalog_row(it["key"], cached_result(it["key"], DEFAULT_FIDELITY), source,
+                                   _color_meta(it["key"], DEFAULT_FIDELITY))
+        row["status"] = it["status"]
+        if w is None:
+            w = csv.DictWriter(buf, fieldnames=list(row))
+            w.writeheader()
+        w.writerow(row)
+    return PlainTextResponse(buf.getvalue(), media_type="text/csv",
+                             headers={"Content-Disposition": f'attachment; filename="coldcase_batch_{st["id"][:8]}.csv"'})
+
+
 def preload_models() -> None:
     """Load the segmenter, SDXL and CodeFormer once at startup, so the first visitor's
     upload doesn't wait 20-40 s for model loading. Failures are logged, not fatal."""
@@ -634,6 +862,13 @@ routes = [
     Route("/auth/logout", logout_route, methods=["POST"]),
     Route("/auth/me", me_route),
     Route("/cases", cases_route, methods=["GET", "POST"]),
+    Route("/verify", verify_route, methods=["POST"]),
+    Route("/likeness", likeness_route, methods=["POST"]),
+    Route("/compare", compare_route, methods=["POST"]),
+    Route("/sidecar/{key}", sidecar_route),
+    Route("/batch", batch_create_route, methods=["POST"]),
+    Route("/batch/{bid}", batch_route),
+    Route("/batch/{bid}/csv", batch_csv_route),
     Route("/jobs/{job_id}", job_route),
     Route("/results/{key}", result_route),
     Route("/results/{key}/{artifact:path}", artifact_route),
