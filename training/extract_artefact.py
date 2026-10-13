@@ -13,7 +13,9 @@ Image.MAX_IMAGE_PIXELS = None
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "data" / "artefact"
 DOCS = "--docs" in sys.argv   # paper / parchment items that are not photos -> data/artefact_docs
-OUT = ROOT / "data" / ("artefact_docs" if DOCS else "artefact_photos"); OUT.mkdir(parents=True, exist_ok=True)
+MAX = int(sys.argv[sys.argv.index("--max") + 1]) if "--max" in sys.argv else 1024
+OUT = ROOT / "data" / (("artefact_docs" if DOCS else "artefact_photos") + ("" if MAX == 1024 else f"_{MAX}"))
+OUT.mkdir(parents=True, exist_ok=True)
 
 
 def wanted(r):
@@ -22,7 +24,6 @@ def wanted(r):
     return r["type"] == "Photo"
 
 LOST = [1, 2, 3, 4, 5, 6, 7, 9, 13, 14]
-MAX = 1024
 import gc
 n = 0
 for f in sorted(glob.glob(str(SRC / "*.parquet"))):

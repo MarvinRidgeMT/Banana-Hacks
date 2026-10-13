@@ -248,6 +248,14 @@ export function Evidence({ metrics }: { metrics: Metrics | null }) {
       ],
     },
     {
+      key: "recall-levels",
+      cells: [
+        "Catching more damage (mask editor)",
+        "Standard 68% · More 83% · Most 90% found",
+        "A person can ask for more: a lower cutoff and a wider mask. Picked on 20 unseen real photos, scored on 20 others. The cost is a bigger mask (1.2x, 2.1x, 3.5x the true damage area), and every masked pixel is regenerated and labelled, so we keep Standard as the default.",
+      ],
+    },
+    {
       key: "real-demos",
       cells: [
         "Damage detection, our demo scans",

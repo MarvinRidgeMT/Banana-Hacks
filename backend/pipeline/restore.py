@@ -20,15 +20,9 @@ def get_mask(path, img):
         if m.size != (shape[1], shape[0]):
             m = m.resize((shape[1], shape[0]), Image.NEAREST)
         return np.asarray(m) > 127, "provided mask file"
-    from .segment import segment, MODEL_NAME
-    m, _ = segment(img)
-    try:
-        from . import scratch_ms
-        if scratch_ms.available():
-            return m | scratch_ms.detect(img), f"{MODEL_NAME} + {scratch_ms.MODEL_NAME}"
-    except Exception as e:
-        print(f"[mask] scratch detector skipped: {type(e).__name__}: {e}", flush=True)
-    return m, MODEL_NAME
+    from .detect import detect_damage
+    m, _, desc = detect_damage(img)
+    return m, desc
 
 def _cache_key(sha, mask, seeds, steps, color=False):
     mh = hashlib.sha256(np.packbits(mask).tobytes()).hexdigest()[:12]

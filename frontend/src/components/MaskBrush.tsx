@@ -20,6 +20,14 @@ const MAX_UNDO = 20;
  * white = damaged, black = original. The API logs it as a human-edited mask. */
 type Tool = "paint" | "erase" | "fix";
 
+/** Detection levels, measured on 20 real damaged photos the model never saw (training/recall_mode.py):
+ * Standard finds 68% of the damage, More 83% (mask about 2x the true damage area), Most 90% (about 3.5x). */
+const LEVELS = [
+  { id: "standard", label: "Standard", note: "Finds about 2 in 3 damaged pixels. Tightest mask.", t: 0, d: 0 },
+  { id: "more", label: "More", note: "Finds about 83% of the damage; the mask is about twice the real damage.", t: 0.03, d: 4 },
+  { id: "most", label: "Most", note: "Finds about 90% of the damage; the mask is about 3.5x the real damage, so more of the photo is regenerated. Erase what isn't damaged.", t: 0.03, d: 12 },
+] as const;
+
 export function MaskBrush({ imageUrl, initialMaskUrl, probUrl, title, onCancel, onSubmit, submitting }: Props) {
   const frameRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -30,6 +38,8 @@ export function MaskBrush({ imageUrl, initialMaskUrl, probUrl, title, onCancel, 
   const [tool, setTool] = useState<Tool>(probUrl ? "fix" : "paint");
   const erase = tool === "erase";
   const gridRef = useRef<Grid | null>(null);
+  const initialRef = useRef<ImageData | null>(null);
+  const [level, setLevel] = useState<(typeof LEVELS)[number]["id"]>("standard");
   const [flash, setFlash] = useState<string | null>(null);
   const [size, setSize] = useState(24); // brush diameter in screen pixels
   const [cursor, setCursor] = useState<{ x: number; y: number } | null>(null);
@@ -85,6 +95,7 @@ export function MaskBrush({ imageUrl, initialMaskUrl, probUrl, title, onCancel, 
             }
           }
           ctx.putImageData(out, 0, 0);
+          initialRef.current = out;
           setPainted(true);
         }
       })
@@ -128,6 +139,58 @@ export function MaskBrush({ imageUrl, initialMaskUrl, probUrl, title, onCancel, 
     ctx.beginPath();
     ctx.arc(to.x, to.y, (size * k) / 2, 0, Math.PI * 2);
     ctx.fill();
+  };
+
+  const applyLevel = (id: (typeof LEVELS)[number]["id"]) => {
+    const g = gridRef.current;
+    if (!natural) return;
+    const L = LEVELS.find((l) => l.id === id)!;
+    const ctx = ctx2d();
+    undoRef.current.push(ctx.getImageData(0, 0, natural.w, natural.h));
+    if (undoRef.current.length > MAX_UNDO) undoRef.current.shift();
+    setUndoCount(undoRef.current.length);
+    setLevel(id);
+    if (L.id === "standard" || !g?.prob) {
+      ctx.clearRect(0, 0, natural.w, natural.h);
+      if (initialRef.current) ctx.putImageData(initialRef.current, 0, 0);
+      setFlash(L.id === "standard" ? "Back to the detectors' standard mask." : "No confidence map for this photo; showing the standard mask.");
+      return;
+    }
+    // threshold the detectors' confidence map, then widen by d px (in the 1024-px grid)
+    const { w, h, prob } = g;
+    let m = new Uint8Array(w * h);
+    for (let i = 0; i < m.length; i++) m[i] = prob[i] >= L.t ? 1 : 0;
+    for (let it = 0; it < L.d; it++) {
+      const o = new Uint8Array(m);
+      for (let y = 0; y < h; y++)
+        for (let x = 0; x < w; x++) {
+          if (m[y * w + x]) continue;
+          const yes =
+            (x > 0 && m[y * w + x - 1]) || (x < w - 1 && m[y * w + x + 1]) || (y > 0 && m[(y - 1) * w + x]) || (y < h - 1 && m[(y + 1) * w + x]);
+          if (yes) o[y * w + x] = 1;
+        }
+      m = o;
+    }
+    const c = document.createElement("canvas");
+    c.width = w;
+    c.height = h;
+    const cx = c.getContext("2d")!;
+    const id2 = cx.createImageData(w, h);
+    for (let i = 0; i < m.length; i++)
+      if (m[i]) {
+        id2.data[i * 4] = 179;
+        id2.data[i * 4 + 1] = 38;
+        id2.data[i * 4 + 2] = 30;
+        id2.data[i * 4 + 3] = 255;
+      }
+    cx.putImageData(id2, 0, 0);
+    ctx.clearRect(0, 0, natural.w, natural.h);
+    if (initialRef.current) ctx.putImageData(initialRef.current, 0, 0); // never drop what the standard mask had
+    ctx.globalCompositeOperation = "source-over";
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(c, 0, 0, natural.w, natural.h);
+    setPainted(true);
+    setFlash(`${L.label}: ${L.note}`);
   };
 
   const fixAt = (e: React.PointerEvent) => {
@@ -322,6 +385,27 @@ export function MaskBrush({ imageUrl, initialMaskUrl, probUrl, title, onCancel, 
         </div>
 
         <aside className="space-y-6">
+          {probUrl && (
+            <div>
+              <p className="text-sm font-semibold">How much damage to catch</p>
+              <div className="mt-2 grid grid-cols-3 overflow-hidden rounded-sm border border-line" role="radiogroup" aria-label="Detection level">
+                {LEVELS.map((l) => (
+                  <button
+                    key={l.id}
+                    role="radio"
+                    aria-checked={level === l.id}
+                    onClick={() => applyLevel(l.id)}
+                    className={`py-2 text-sm font-semibold not-last:border-r not-last:border-line ${
+                      level === l.id ? "bg-ink text-ground" : "bg-surface hover:bg-tag"
+                    }`}
+                  >
+                    {l.label}
+                  </button>
+                ))}
+              </div>
+              <p className="mt-2 text-sm text-muted">{LEVELS.find((l) => l.id === level)!.note}</p>
+            </div>
+          )}
           <div className="grid grid-cols-3 overflow-hidden rounded-sm border border-line" role="radiogroup" aria-label="Brush mode">
             {(
               [

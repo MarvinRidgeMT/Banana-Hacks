@@ -470,24 +470,26 @@ def propose_mask(image_path: Path, kind: str = "photo") -> Path:
         m = np.zeros((H, W), bool)
     else:
         from pipeline.segment import segment
-        k = min(1.0, 1024 / max(W, H))
-        small = img.resize((max(1, round(W * k)), max(1, round(H * k))), Image.LANCZOS) if k < 1 else img
-        ms, prob = segment(np.asarray(small), weights=DOC_WEIGHTS if kind == "document" else None)
-        if kind != "document" and os.environ.get("SEG_WITH_MS", "1") == "1":
-            # Union with Microsoft's old-photo scratch detector: it finds the long thin cracks and
-            # scratches ours misses (on 40 unseen real photos: 43% -> 61% of the damage found).
-            try:
-                from pipeline import scratch_ms
-                if scratch_ms.available():
-                    p_ms = scratch_ms.detect_prob(np.asarray(small))
-                    ms = ms | (p_ms >= 0.4)
-                    prob = np.maximum(prob, p_ms)
-            except Exception as e:  # the second detector is a bonus, never a blocker
-                print(f"[propose] scratch detector skipped: {type(e).__name__}: {e}", flush=True)
-        # The detectors' confidence map (at the 1024 px working size) powers click-to-fix in the brush:
+        if kind == "document":
+            k = min(1.0, 1024 / max(W, H))
+            small = img.resize((max(1, round(W * k)), max(1, round(H * k))), Image.LANCZOS) if k < 1 else img
+            ms, prob = segment(np.asarray(small), weights=DOC_WEIGHTS)
+        else:
+            # our segmenter + Microsoft's scratch detector, settings from the environment (pipeline/detect.py);
+            # run on a copy of at most 4096 px, the mask is scaled back to the upload's size below
+            from pipeline.detect import detect_damage
+            k = min(1.0, 4096 / max(W, H))
+            small = img.resize((max(1, round(W * k)), max(1, round(H * k))), Image.LANCZOS) if k < 1 else img
+            ms, prob, _ = detect_damage(np.asarray(small))
+        # The detectors' confidence map (at most 1024 px) powers click-to-fix in the brush:
         # one click on a missed crack selects all of it.
-        Image.fromarray((np.clip(prob, 0, 1) * 255).astype(np.uint8), mode="L").save(out.with_name("proposed_prob.png"))
+        pk = min(1.0, 1024 / max(prob.shape))
+        pimg = Image.fromarray((np.clip(prob, 0, 1) * 255).astype(np.uint8), mode="L")
+        if pk < 1:
+            pimg = pimg.resize((round(prob.shape[1] * pk), round(prob.shape[0] * pk)), Image.BILINEAR)
+        pimg.save(out.with_name("proposed_prob.png"))
         dil = int(os.environ.get("SEG_DILATE", "2")) if kind != "document" else 2
+        dil = max(1, round(dil * max(ms.shape) / 1024)) if dil else 0   # SEG_DILATE is in 1024-px units
         if dil:
             ms = ndimage.binary_dilation(ms, iterations=dil)
         m = np.asarray(Image.fromarray(ms.astype(np.uint8) * 255, mode="L").resize((W, H), Image.NEAREST)) > 127

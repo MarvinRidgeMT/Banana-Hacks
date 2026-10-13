@@ -51,12 +51,12 @@ def _r16(v: float) -> int:
     return int(round(v / 16) * 16)
 
 
-def detect(img: np.ndarray, threshold: float = 0.4) -> np.ndarray:
+def detect(img: np.ndarray, threshold: float = 0.4, scale: int = 256) -> np.ndarray:
     """img: HxWx3 uint8 RGB. Returns a bool HxW mask of scratches/cracks."""
-    return detect_prob(img) >= threshold
+    return detect_prob(img, scale) >= threshold
 
 
-def detect_prob(img: np.ndarray) -> np.ndarray:
+def detect_prob(img: np.ndarray, scale: int = 256) -> np.ndarray:
     """img: HxWx3 uint8 RGB. Returns the scratch probability, float32 HxW in [0, 1]."""
     pil = Image.fromarray(img).convert("RGB")
     ow, oh = pil.size
@@ -67,9 +67,9 @@ def detect_prob(img: np.ndarray) -> np.ndarray:
     t = torch.from_numpy((g - 0.5) / 0.5)[None, None]          # ToTensor + Normalize([.5],[.5])
     _, _, H, W = t.shape                                        # scale_tensor(default_scale=256)
     if H < W:
-        nh, nw = 256, W / H * 256
+        nh, nw = scale, W / H * scale
     else:
-        nw, nh = 256, H / W * 256
+        nw, nh = scale, H / W * scale
     t = F.interpolate(t, [_r16(nh), _r16(nw)], mode="bilinear")
     with _lock, torch.no_grad():
         p = torch.sigmoid(get_model()(t))
